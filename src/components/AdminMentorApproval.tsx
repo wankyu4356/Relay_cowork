@@ -115,9 +115,11 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
   const [selectedApp, setSelectedApp] = useState<MentorApplication | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Load pending mentors from API on mount with fallback to mock data
   useEffect(() => {
+    setLoading(true);
     api.getPendingMentors().then(res => {
       if (res.mentors?.length > 0) {
         const mapped: MentorApplication[] = res.mentors.map((m: any) => ({
@@ -136,29 +138,53 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
         }));
         setApplications(mapped);
       }
-    }).catch(() => {}); // keep mock data
+    }).catch(() => {
+      // keep mock data as fallback
+    }).finally(() => setLoading(false));
   }, []);
 
   const pendingApps = applications.filter(a => a.status === 'pending');
   const approvedApps = applications.filter(a => a.status === 'approved');
   const rejectedApps = applications.filter(a => a.status === 'rejected');
 
-  const handleApprove = (app: MentorApplication) => {
-    setApplications(prev => prev.map(a => 
+  const handleApprove = async (app: MentorApplication) => {
+    // Optimistic UI update
+    setApplications(prev => prev.map(a =>
       a.id === app.id ? { ...a, status: 'approved' as const } : a
     ));
     setSelectedApp(null);
-    toast.success(`${app.name} 멘토를 승인했습니다 ✅`);
+
+    try {
+      await api.verifyMentor(app.id, true);
+      toast.success(`${app.name} 멘토를 승인했습니다`);
+    } catch {
+      // Revert on failure
+      setApplications(prev => prev.map(a =>
+        a.id === app.id ? { ...a, status: 'pending' as const } : a
+      ));
+      toast.error('승인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const handleReject = (app: MentorApplication, reason: string) => {
-    setApplications(prev => prev.map(a => 
+  const handleReject = async (app: MentorApplication, reason: string) => {
+    // Optimistic UI update
+    setApplications(prev => prev.map(a =>
       a.id === app.id ? { ...a, status: 'rejected' as const, rejectionReason: reason } : a
     ));
     setSelectedApp(null);
     setShowRejectModal(false);
     setRejectionReason('');
-    toast.error(`${app.name} 멘토를 반려했습니다`);
+
+    try {
+      await api.verifyMentor(app.id, false);
+      toast.error(`${app.name} 멘토를 반려했습니다`);
+    } catch {
+      // Revert on failure
+      setApplications(prev => prev.map(a =>
+        a.id === app.id ? { ...a, status: 'pending' as const, rejectionReason: undefined } : a
+      ));
+      toast.error('반려 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   const ApplicationCard = ({ app, index }: { app: MentorApplication; index: number }) => (
@@ -254,6 +280,12 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
 
       <div className="container-web py-8 pb-24">
         <div className="max-w-5xl mx-auto">
+          {loading && (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600" />
+              <span className="ml-3 text-gray-500">멘토 신청 목록을 불러오는 중...</span>
+            </div>
+          )}
           {/* Stats */}
           <div className="grid md:grid-cols-3 gap-4 mb-8">
             <Card className="p-4 text-center">

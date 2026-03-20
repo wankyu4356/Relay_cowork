@@ -101,26 +101,36 @@ const mockReviews: Review[] = [
 
 export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>(mockReviews);
+  const [loading, setLoading] = useState(true);
   const [filterRating, setFilterRating] = useState<number | 'all'>('all');
   const [filterSuccess, setFilterSuccess] = useState<'all' | 'passed' | 'pending'>('all');
 
   useEffect(() => {
-    api.getMentorReviews('me').then((res: any) => {
-      if (res.reviews?.length > 0) {
-        setReviews(res.reviews.map((r: any) => ({
-          id: r.id,
-          menteeName: r.mentee_name || '멘티',
-          menteeAvatar: r.mentee_avatar || '👤',
-          rating: r.rating,
-          date: r.date || r.created_at,
-          content: r.content,
-          tags: r.tags || [],
-          university: r.university || '',
-          successStatus: r.success_status,
-          helpful: r.helpful || 0,
-        })));
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getMentorReviews('me');
+        if (res.reviews?.length > 0) {
+          setReviews(res.reviews.map((r: any) => ({
+            id: r.id,
+            menteeName: r.mentee_name || '멘티',
+            menteeAvatar: r.mentee_avatar || '👤',
+            rating: r.rating,
+            date: r.date || r.created_at,
+            content: r.content,
+            tags: r.tags || [],
+            university: r.university || '',
+            successStatus: r.success_status,
+            helpful: r.helpful || 0,
+          })));
+        }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchReviews();
   }, []);
 
   const filteredReviews = reviews.filter(review => {

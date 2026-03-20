@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -33,6 +33,7 @@ import type { Category } from './GlobalNav';
 import { CATEGORY_CONTENT } from '../lib/categoryContent';
 import { CATEGORY_STATS } from '../lib/categoryStats';
 import { useMentors } from '../hooks/useMentors';
+import * as api from './api';
 
 interface UnifiedHomeProps {
   onNavigate: (screen: Screen) => void;
@@ -59,6 +60,61 @@ export function UnifiedHome({
   const [showMentorOnboarding, setShowMentorOnboarding] = useState(false);
   const [showSuccessRateModal, setShowSuccessRateModal] = useState(false);
   const { mentors: recommendedMentors, loading: mentorsLoading } = useMentors();
+
+  // Dashboard stats fetched from API with mock fallbacks
+  const [draftCount, setDraftCount] = useState(2);
+  const [upcomingSessionCount, setUpcomingSessionCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchDashboardData() {
+      setDashboardLoading(true);
+
+      // Fetch all data in parallel, each with its own try/catch
+      const [draftsResult, sessionsResult, notificationsResult] = await Promise.allSettled([
+        api.getDrafts(),
+        api.getSessions(),
+        api.getNotifications(),
+      ]);
+
+      if (cancelled) return;
+
+      // Drafts count
+      if (draftsResult.status === 'fulfilled') {
+        const drafts = draftsResult.value?.drafts;
+        if (Array.isArray(drafts)) {
+          setDraftCount(drafts.length);
+        }
+      }
+
+      // Upcoming sessions count
+      if (sessionsResult.status === 'fulfilled') {
+        const sessions = sessionsResult.value?.sessions;
+        if (Array.isArray(sessions)) {
+          const upcoming = sessions.filter((s: any) => s.status === 'upcoming');
+          setUpcomingSessionCount(upcoming.length);
+        }
+      }
+
+      // Notifications count
+      if (notificationsResult.status === 'fulfilled') {
+        const notifications = notificationsResult.value?.notifications;
+        if (Array.isArray(notifications)) {
+          const unread = notifications.filter((n: any) => !n.read);
+          setNotificationCount(unread.length);
+        }
+      }
+
+      setDashboardLoading(false);
+    }
+
+    fetchDashboardData();
+
+    return () => { cancelled = true; };
+  }, []);
 
   const handleTabChange = (tab: 'mentee' | 'mentor') => {
     if (tab === 'mentor' && !isMentorActive) {
@@ -124,7 +180,9 @@ export function UnifiedHome({
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" size="icon" onClick={() => onNavigate('notifications')} className="relative">
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  {notificationCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  )}
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -307,7 +365,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <BookOpen className="w-7 h-7 text-purple-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">2</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{draftCount}</div>
                     <div className="text-sm text-gray-600">{content.docLabel}</div>
                   </Card>
                 </motion.div>
@@ -317,7 +375,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-sky-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Calendar className="w-7 h-7 text-sky-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">3</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{upcomingSessionCount}</div>
                     <div className="text-sm text-gray-600">예정된 세션</div>
                   </Card>
                 </motion.div>

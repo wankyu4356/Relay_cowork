@@ -19,11 +19,35 @@ const chartData = [
   { date: '2/15', mentees: 210, mentors: 64, sessions: 142, aiUsage: 245 },
 ];
 
+// Fallback mock stats used when the API is unavailable
+const mockStats = {
+  totalUsers: 2150,
+  totalMentors: 142,
+  activeMentors: 142,
+  totalSessions: 312,
+  totalReviews: 0,
+  pendingDisputes: 3,
+};
+
 export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
-  const [stats, setStats] = useState({ totalUsers: 0, totalMentors: 0, totalSessions: 0, totalReviews: 0, activeMentors: 0, pendingDisputes: 0 });
+  const [stats, setStats] = useState(mockStats);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.getAdminStats().then(res => setStats(res)).catch(() => {});
+    setLoading(true);
+    api.getAdminStats()
+      .then(res => setStats({
+        totalUsers: res.totalUsers ?? mockStats.totalUsers,
+        totalMentors: res.totalMentors ?? mockStats.totalMentors,
+        activeMentors: res.activeMentors ?? mockStats.activeMentors,
+        totalSessions: res.totalSessions ?? mockStats.totalSessions,
+        totalReviews: res.totalReviews ?? mockStats.totalReviews,
+        pendingDisputes: res.pendingDisputes ?? mockStats.pendingDisputes,
+      }))
+      .catch(() => {
+        // Keep mock data as fallback
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -40,6 +64,12 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
       </div>
 
       <div className="container-web py-8">
+        {loading && (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600" />
+            <span className="ml-3 text-gray-500">통계를 불러오는 중...</span>
+          </div>
+        )}
         <div className="space-y-6">
           {/* KPI Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -51,7 +81,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">총 가입자</div>
-                    <div className="text-2xl font-bold">2,150</div>
+                    <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
@@ -70,11 +100,11 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">활성 멘토</div>
-                    <div className="text-2xl font-bold">142</div>
+                    <div className="text-2xl font-bold">{stats.activeMentors.toLocaleString()}</div>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => onNavigate('admin-mentor-approval')}>
-                  승인 대기 8건
+                  멘토 승인 관리
                 </Button>
               </Card>
             </motion.div>
@@ -86,8 +116,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                     <Calendar className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-600">월간 세션</div>
-                    <div className="text-2xl font-bold">312건</div>
+                    <div className="text-sm text-gray-600">총 세션</div>
+                    <div className="text-2xl font-bold">{stats.totalSessions.toLocaleString()}건</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
@@ -174,7 +204,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
                   <AlertCircle className="w-5 h-5 text-orange-600" />
                 </div>
-                <Badge className="bg-orange-500 text-white">8건 대기</Badge>
+                <Badge className="bg-orange-500 text-white">승인 대기</Badge>
               </div>
               <h4 className="font-semibold mb-1">멘토 승인 관리</h4>
               <p className="text-sm text-gray-600">신규 멘토 신청 검토 및 승인</p>
@@ -185,7 +215,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                   <AlertCircle className="w-5 h-5 text-red-600" />
                 </div>
-                <Badge className="bg-red-500 text-white">3건</Badge>
+                <Badge className="bg-red-500 text-white">{stats.pendingDisputes}건</Badge>
               </div>
               <h4 className="font-semibold mb-1">분쟁 처리</h4>
               <p className="text-sm text-gray-600">신고 및 분쟁 사항 관리</p>

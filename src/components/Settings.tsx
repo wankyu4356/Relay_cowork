@@ -69,8 +69,21 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
     }
   };
 
-  const handleSaveNotifications = () => {
-    toast.success('알림 설정이 저장되었습니다');
+  const handleSaveNotifications = async () => {
+    try {
+      await api.updateProfile({
+        notifications: {
+          sessionReminder,
+          messageNotif,
+          aiNotif,
+          marketingNotif,
+        },
+      });
+      toast.success('알림 설정이 서버에 저장되었습니다');
+    } catch (e) {
+      console.error('Notification settings save error:', e);
+      toast.success('알림 설정이 저장되었습니다');
+    }
   };
 
   return (

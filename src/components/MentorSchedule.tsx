@@ -115,24 +115,35 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'week' | 'day'>('week');
   const [schedule, setSchedule] = useState<TimeSlot[]>(mockSchedule);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api.getMentorSchedule('me').then((res: any) => {
-      if (res.schedules?.length > 0) {
-        setSchedule(res.schedules.map((s: any, idx: number) => ({
-          id: s.id || `api-${idx}`,
-          day: daysOfWeek[s.dayOfWeek] || s.day || '월',
-          startTime: s.startTime || s.start_time,
-          endTime: s.endTime || s.end_time,
-          isAvailable: s.available !== false,
-          session: s.session ? {
-            mentee: s.session.mentee,
-            avatar: s.session.avatar || '👤',
-            topic: s.session.topic || '',
-          } : undefined,
-        })));
+    const fetchSchedule = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getMentorSchedule('me');
+        if (res.schedules?.length > 0) {
+          setSchedule(res.schedules.map((s: any, idx: number) => ({
+            id: s.id || `api-${idx}`,
+            day: daysOfWeek[s.dayOfWeek] || s.day || '월',
+            startTime: s.startTime || s.start_time,
+            endTime: s.endTime || s.end_time,
+            isAvailable: s.available !== false,
+            session: s.session ? {
+              mentee: s.session.mentee,
+              avatar: s.session.avatar || '👤',
+              topic: s.session.topic || '',
+            } : undefined,
+          })));
+        }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchSchedule();
   }, []);
 
   const getScheduleForDay = (day: string) => {
@@ -158,7 +169,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
     );
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     // Add selected slots to schedule as available
     const newSlots = selectedSlots.map((slotKey, index) => {
       const [day, time] = slotKey.split('-');
@@ -170,9 +181,25 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
         isAvailable: true,
       };
     });
-    
-    setSchedule([...schedule, ...newSlots]);
+
+    const updatedSchedule = [...schedule, ...newSlots];
+    setSchedule(updatedSchedule);
     setSelectedSlots([]);
+
+    // Save to backend
+    setSaving(true);
+    try {
+      await api.updateMentorSchedule(updatedSchedule.map(s => ({
+        dayOfWeek: daysOfWeek.indexOf(s.day),
+        startTime: s.startTime,
+        endTime: s.endTime,
+        available: s.isAvailable,
+      })));
+    } catch {
+      // Local state already updated, silent fail
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -235,7 +262,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
 
             {/* Session Cards */}
             <div className="grid md:grid-cols-3 gap-4">
-              {mockSchedule.filter(slot => slot.session).map((slot, index) => (
+              {schedule.filter(slot => slot.session).map((slot, index) => (
                 <motion.div
                   key={slot.id}
                   initial={{ opacity: 0, y: 20 }}

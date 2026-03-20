@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -15,9 +15,11 @@ import {
   CheckCircle,
   FileText,
   Network,
-  Users
+  Users,
+  Loader2
 } from 'lucide-react';
 import type { Mentor } from '../App';
+import * as api from './api';
 
 interface MentorProfileProps {
   onBack: () => void;
@@ -28,7 +30,16 @@ interface MentorProfileProps {
   onNavigate?: (screen: string) => void;
 }
 
-const mockReviews = [
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  content: string;
+  tags: string[];
+}
+
+const mockReviewsFallback: Review[] = [
   {
     id: '1',
     author: '박지원',
@@ -71,6 +82,28 @@ const availableTimes = [
 
 export function MentorProfile({ onBack, onBook, mentor, networkDistance, connectionPath, onNavigate }: MentorProfileProps) {
   const [selectedTab, setSelectedTab] = useState('about');
+  const [reviews, setReviews] = useState<Review[]>(mockReviewsFallback);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchReviews() {
+      setReviewsLoading(true);
+      try {
+        const data = await api.getMentorReviews(mentor.id);
+        if (!cancelled && Array.isArray(data?.reviews) && data.reviews.length > 0) {
+          setReviews(data.reviews);
+        }
+      } catch (err) {
+        console.log('Failed to fetch reviews from API, using mock fallback:', err);
+        // Keep mockReviewsFallback (already set as default)
+      } finally {
+        if (!cancelled) setReviewsLoading(false);
+      }
+    }
+    fetchReviews();
+    return () => { cancelled = true; };
+  }, [mentor.id]);
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
@@ -357,7 +390,14 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     </div>
                   </div>
 
-                  {mockReviews.map((review, index) => (
+                  {reviewsLoading && (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-sky-500 mr-2" />
+                      <span className="text-gray-500">리뷰를 불러오는 중...</span>
+                    </div>
+                  )}
+
+                  {!reviewsLoading && reviews.map((review, index) => (
                     <motion.div
                       key={review.id}
                       initial={{ opacity: 0, y: 20 }}

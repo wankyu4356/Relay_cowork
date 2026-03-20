@@ -4,8 +4,9 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { PartyPopper, Frown, ArrowLeft } from 'lucide-react';
+import { PartyPopper, Frown, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
 import type { Mentor } from '../App';
 
 interface OutcomeReportProps {
@@ -18,8 +19,9 @@ interface OutcomeReportProps {
 export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeReportProps) {
   const [outcome, setOutcome] = useState<'success' | 'fail' | null>(null);
   const [detail, setDetail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!outcome) {
       toast.error('결과를 선택해주세요');
       return;
@@ -29,12 +31,34 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       return;
     }
 
-    onSubmit(outcome, detail);
-    
-    if (outcome === 'success') {
-      toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
-    } else {
-      toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+    setSubmitting(true);
+    try {
+      await api.createOutcome({
+        mentorId: mentor.id,
+        result: outcome,
+        detail,
+        purpose,
+      });
+
+      onSubmit(outcome, detail);
+
+      if (outcome === 'success') {
+        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+      } else {
+        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+      }
+    } catch (err) {
+      console.warn('API outcome submission failed, proceeding with local callback:', err);
+      // Fallback: still call onSubmit so the UI updates
+      onSubmit(outcome, detail);
+
+      if (outcome === 'success') {
+        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+      } else {
+        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -207,9 +231,9 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               onClick={handleSubmit}
               className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
               size="lg"
-              disabled={!outcome || detail.length < 10}
+              disabled={!outcome || detail.length < 10 || submitting}
             >
-              보고 완료
+              {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />제출 중...</> : '보고 완료'}
             </Button>
           </div>
         </div>

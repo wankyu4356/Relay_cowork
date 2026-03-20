@@ -40,9 +40,8 @@ interface MentorSearchProps {
 export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCategory = 'transfer' }: MentorSearchProps) {
   const catContent = CATEGORY_CONTENT[selectedCategory];
   const mentorConfig = CATEGORY_MENTORS[selectedCategory];
-  const { mentors: apiMentors, loading: mentorsLoading } = useMentors();
-  // Use API mentors when available (more than default 6), otherwise use large local set
-  const allMentors = apiMentors.length > 6 ? apiMentors : mentorConfig.mentors;
+  // Pass category-specific mock mentors as fallback for when the API is unavailable
+  const { mentors: allMentors, loading: mentorsLoading } = useMentors(mentorConfig.mentors);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<string>('all');
@@ -50,7 +49,12 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
   const [priceRange, setPriceRange] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'rating' | 'price' | 'successRate'>('rating');
 
-  const universities = mentorConfig.filterOptions;
+  // Derive filter options from actual mentor data, with category defaults as base
+  const universities = Array.from(new Set([
+    'all',
+    ...mentorConfig.filterOptions.filter((o: string) => o !== 'all'),
+    ...allMentors.map(m => m.university).filter(Boolean),
+  ]));
   const badges = ['all', 'gold', 'silver', 'bronze'];
   const priceRanges = [
     { value: 'all', label: '전체 가격' },

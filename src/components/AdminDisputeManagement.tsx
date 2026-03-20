@@ -236,9 +236,11 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [adminResponse, setAdminResponse] = useState('');
+  const [loading, setLoading] = useState(true);
 
   // Load disputes from API on mount with fallback to mock data
   useEffect(() => {
+    setLoading(true);
     api.getDisputes().then(res => {
       if (res.disputes?.length > 0) {
         const mapped: Dispute[] = res.disputes.map((d: any) => ({
@@ -261,7 +263,9 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
         }));
         setDisputes(mapped);
       }
-    }).catch(() => {}); // keep mock data
+    }).catch(() => {
+      // keep mock data as fallback
+    }).finally(() => setLoading(false));
   }, []);
 
   const filteredDisputes = disputes.filter(d => {
@@ -285,17 +289,22 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
     resolved: disputes.filter(d => d.status === 'resolved' || d.status === 'dismissed').length,
   };
 
-  const handleStatusChange = (disputeId: string, newStatus: DisputeStatus, note?: string) => {
+  const handleStatusChange = async (disputeId: string, newStatus: DisputeStatus, note?: string) => {
+    const now = new Date().toLocaleString('ko-KR');
+    const actionMap: Record<DisputeStatus, string> = {
+      pending: '접수 상태로 변경',
+      investigating: '조사 시작',
+      resolved: '분쟁 해결 처리',
+      dismissed: '분쟁 기각 처리',
+    };
+
+    // Find old status for rollback
+    const oldDispute = disputes.find(d => d.id === disputeId);
+
+    // Optimistic UI update
     setDisputes(prev =>
       prev.map(d => {
         if (d.id === disputeId) {
-          const now = new Date().toLocaleString('ko-KR');
-          const actionMap: Record<DisputeStatus, string> = {
-            pending: '접수 상태로 변경',
-            investigating: '조사 시작',
-            resolved: '분쟁 해결 처리',
-            dismissed: '분쟁 기각 처리',
-          };
           return {
             ...d,
             status: newStatus,
@@ -321,7 +330,25 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
       resolved: '해결됨',
       dismissed: '기각됨',
     };
-    toast.success(`분쟁 ${disputeId}이(가) "${statusLabels[newStatus]}"(으)로 변경되었습니다`);
+
+    try {
+      await api.updateDispute(disputeId, {
+        status: newStatus,
+        resolution: note,
+      });
+      toast.success(`분쟁 ${disputeId}이(가) "${statusLabels[newStatus]}"(으)로 변경되었습니다`);
+    } catch {
+      // Revert on failure
+      if (oldDispute) {
+        setDisputes(prev =>
+          prev.map(d => d.id === disputeId ? oldDispute : d)
+        );
+        if (selectedDispute?.id === disputeId) {
+          setSelectedDispute(oldDispute);
+        }
+      }
+      toast.error('상태 변경 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleAddNote = (disputeId: string) => {

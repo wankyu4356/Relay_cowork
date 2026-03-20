@@ -56,28 +56,62 @@ const upcomingSessions = [
 
 export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardProps) {
   const [dashboardSessions, setDashboardSessions] = useState(upcomingSessions);
-
-  useEffect(() => {
-    api.getSessions().then((res: any) => {
-      if (res.sessions?.length > 0) {
-        setDashboardSessions(res.sessions.filter((s: any) => s.status === 'upcoming').map((s: any) => ({
-          id: s.id,
-          mentee: s.mentor_name || '멘티',
-          date: s.date,
-          time: s.time,
-          duration: s.duration || 60,
-          status: s.status === 'upcoming' ? 'confirmed' : s.status,
-        })));
-      }
-    }).catch(() => {}); // keep mock data on failure
-  }, []);
-
-  const stats = {
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
     totalRevenue: 450000,
     monthlySessions: 12,
     rating: 4.9,
     totalMentees: 35,
-  };
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [sessionsRes, reviewsRes] = await Promise.allSettled([
+          api.getSessions(),
+          api.getMentorReviews('me'),
+        ]);
+
+        if (sessionsRes.status === 'fulfilled' && sessionsRes.value.sessions?.length > 0) {
+          const sessions = sessionsRes.value.sessions;
+          setDashboardSessions(sessions.filter((s: any) => s.status === 'upcoming').map((s: any) => ({
+            id: s.id,
+            mentee: s.mentee_name || s.mentor_name || '멘티',
+            date: s.date,
+            time: s.time,
+            duration: s.duration || 60,
+            status: s.status === 'upcoming' ? 'confirmed' : s.status,
+          })));
+
+          // Derive stats from sessions
+          const uniqueMentees = new Set(sessions.map((s: any) => s.mentee_id).filter(Boolean));
+          const completedSessions = sessions.filter((s: any) => s.status === 'completed');
+          const totalRevenue = completedSessions.reduce((sum: number, s: any) => sum + (s.price || 0), 0);
+          setStats(prev => ({
+            ...prev,
+            monthlySessions: completedSessions.length,
+            totalMentees: uniqueMentees.size || prev.totalMentees,
+            totalRevenue: totalRevenue || prev.totalRevenue,
+          }));
+        }
+
+        if (reviewsRes.status === 'fulfilled' && reviewsRes.value.reviews?.length > 0) {
+          const reviews = reviewsRes.value.reviews;
+          const avgRating = reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length;
+          setStats(prev => ({
+            ...prev,
+            rating: parseFloat(avgRating.toFixed(1)),
+          }));
+        }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSwitchToMentee = () => {
     onRoleChange?.('mentee');
@@ -134,7 +168,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">이번 달 수익</div>
-                    <div className="text-2xl font-bold">₩640k</div>
+                    <div className="text-2xl font-bold">₩{(stats.totalRevenue / 1000).toFixed(0)}k</div>
                   </div>
                 </div>
               </Card>
@@ -148,7 +182,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">이번 주 세션</div>
-                    <div className="text-2xl font-bold">5건</div>
+                    <div className="text-2xl font-bold">{stats.monthlySessions}건</div>
                   </div>
                 </div>
               </Card>
@@ -162,7 +196,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">총 멘티</div>
-                    <div className="text-2xl font-bold">35명</div>
+                    <div className="text-2xl font-bold">{stats.totalMentees}명</div>
                   </div>
                 </div>
               </Card>
@@ -176,7 +210,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">평균 평점</div>
-                    <div className="text-2xl font-bold">4.9</div>
+                    <div className="text-2xl font-bold">{stats.rating}</div>
                   </div>
                 </div>
               </Card>
@@ -365,7 +399,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
               </h2>
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-sky-600 mb-1">12건</div>
+                  <div className="text-3xl font-bold text-sky-600 mb-1">{stats.monthlySessions}건</div>
                   <div className="text-sm text-gray-600">완료한 세션</div>
                 </div>
                 <div 
@@ -380,7 +414,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   <div className="text-sm text-gray-600">평균 응답시간</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600 mb-1">4.9</div>
+                  <div className="text-3xl font-bold text-amber-600 mb-1">{stats.rating}</div>
                   <div className="text-sm text-gray-600">평균 평점</div>
                 </div>
               </div>

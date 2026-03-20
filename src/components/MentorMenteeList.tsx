@@ -134,39 +134,49 @@ const mockMentees: Mentee[] = [
 
 export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) {
   const [mentees, setMentees] = useState<Mentee[]>(mockMentees);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed'>('all');
 
   useEffect(() => {
-    api.getSessions().then((res: any) => {
-      if (res.sessions?.length > 0) {
-        const menteeMap = new Map<string, Mentee>();
-        res.sessions.forEach((s: any) => {
-          if (s.mentee_id && !menteeMap.has(s.mentee_id)) {
-            menteeMap.set(s.mentee_id, {
-              id: s.mentee_id,
-              name: s.mentee_name || '멘티',
-              avatar: s.mentee_avatar || '👤',
-              university: s.university || '',
-              major: s.major || '',
-              status: s.status === 'completed' ? 'completed' : 'active',
-              sessions: 1,
-              lastSession: s.date,
-              totalPaid: s.price || 0,
-              joinedDate: s.created_at || s.date,
-              goal: s.topic || '',
-            });
-          } else if (s.mentee_id) {
-            const existing = menteeMap.get(s.mentee_id)!;
-            existing.sessions += 1;
-            existing.totalPaid += (s.price || 0);
+    const fetchMentees = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getSessions();
+        if (res.sessions?.length > 0) {
+          const menteeMap = new Map<string, Mentee>();
+          res.sessions.forEach((s: any) => {
+            if (s.mentee_id && !menteeMap.has(s.mentee_id)) {
+              menteeMap.set(s.mentee_id, {
+                id: s.mentee_id,
+                name: s.mentee_name || '멘티',
+                avatar: s.mentee_avatar || '👤',
+                university: s.university || '',
+                major: s.major || '',
+                status: s.status === 'completed' ? 'completed' : 'active',
+                sessions: 1,
+                lastSession: s.date,
+                totalPaid: s.price || 0,
+                joinedDate: s.created_at || s.date,
+                goal: s.topic || '',
+              });
+            } else if (s.mentee_id) {
+              const existing = menteeMap.get(s.mentee_id)!;
+              existing.sessions += 1;
+              existing.totalPaid += (s.price || 0);
+            }
+          });
+          if (menteeMap.size > 0) {
+            setMentees(Array.from(menteeMap.values()));
           }
-        });
-        if (menteeMap.size > 0) {
-          setMentees(Array.from(menteeMap.values()));
         }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchMentees();
   }, []);
 
   const filteredMentees = mentees.filter(mentee => {
