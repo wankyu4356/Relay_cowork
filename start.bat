@@ -64,22 +64,26 @@ goto INSTALL
 :ALREADY_INSIDE
 echo       Already inside project folder.
 echo       Pulling latest changes from GitHub...
-git pull origin main
+for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
+echo       Current branch: %CURRENT_BRANCH%
+git pull origin %CURRENT_BRANCH%
 if %errorlevel% neq 0 (
     color 0E
     echo       [WARN] git pull failed. Running with local version.
-    echo       Check your network or run "git pull origin main" manually.
+    echo       Check your network or run "git pull origin %CURRENT_BRANCH%" manually.
 )
 goto INSTALL
 
 :UPDATE_REPO
 echo       Updating existing repository...
 cd %REPO_DIR%
-git pull origin main
+for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
+echo       Current branch: %CURRENT_BRANCH%
+git pull origin %CURRENT_BRANCH%
 if %errorlevel% neq 0 (
     color 0E
     echo       [WARN] git pull failed. Running with local version.
-    echo       Check your network or run "git pull origin main" manually.
+    echo       Check your network or run "git pull origin %CURRENT_BRANCH%" manually.
 )
 goto INSTALL
 
