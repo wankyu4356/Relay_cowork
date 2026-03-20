@@ -62,14 +62,25 @@ cd %REPO_DIR%
 goto INSTALL
 
 :ALREADY_INSIDE
-echo       Already inside project folder. Pulling latest...
-git pull origin main 2>nul
+echo       Already inside project folder.
+echo       Pulling latest changes from GitHub...
+git pull origin main
+if %errorlevel% neq 0 (
+    color 0E
+    echo       [WARN] git pull failed. Running with local version.
+    echo       Check your network or run "git pull origin main" manually.
+)
 goto INSTALL
 
 :UPDATE_REPO
 echo       Updating existing repository...
 cd %REPO_DIR%
-git pull origin main 2>nul
+git pull origin main
+if %errorlevel% neq 0 (
+    color 0E
+    echo       [WARN] git pull failed. Running with local version.
+    echo       Check your network or run "git pull origin main" manually.
+)
 goto INSTALL
 
 :INSTALL
