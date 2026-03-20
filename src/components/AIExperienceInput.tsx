@@ -12,14 +12,18 @@ import { Progress } from './ui/progress';
 import { ArrowLeft, Plus, X, Sparkles, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import type { AIData } from '../App';
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
 
 interface AIExperienceInputProps {
   onBack: () => void;
   onSubmit: (data: AIData) => void;
   credits: number;
+  selectedCategory?: Category;
 }
 
-export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInputProps) {
+export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory = 'transfer' }: AIExperienceInputProps) {
+  const catContent = CATEGORY_CONTENT[selectedCategory];
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<Partial<AIData>>({
     university: '',
@@ -123,7 +127,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInp
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold">✨ AI 학업계획서 작성</h1>
+              <h1 className="text-2xl font-bold">✨ {catContent.aiToolTitle}</h1>
               <p className="text-gray-600 mt-1">Step {step}/3</p>
             </div>
             <Badge className="bg-gradient-to-r from-sky-500 to-blue-600 text-white border-0 px-4 py-2">
@@ -159,16 +163,16 @@ export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInp
               <Card className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <Label className="text-base">지원 대학/학과 *</Label>
+                    <Label className="text-base">{catContent.field1Label}/{catContent.field2Label} *</Label>
                     <div className="grid md:grid-cols-2 gap-4 mt-3">
                       <Input
-                        placeholder="예: 연세대"
+                        placeholder={catContent.field1Placeholder}
                         value={formData.university}
                         onChange={(e) => setFormData(prev => ({ ...prev, university: e.target.value }))}
                         className="h-12"
                       />
                       <Input
-                        placeholder="예: 경영학과"
+                        placeholder={catContent.field2Placeholder}
                         value={formData.major}
                         onChange={(e) => setFormData(prev => ({ ...prev, major: e.target.value }))}
                         className="h-12"
@@ -206,12 +210,12 @@ export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInp
 
               <Card className="p-6 space-y-6">
                 <div>
-                  <Label className="text-base">편입 지원 동기 (핵심 소재) *</Label>
+                  <Label className="text-base">{catContent.motivationLabel} (핵심 소재) *</Label>
                   <p className="text-sm text-gray-600 mt-1 mb-3">
                     왜 이 학과에 지원하나요? 핵심 경험이나 계기를 자유롭게 적어주세요 (200자 이상)
                   </p>
                   <Textarea
-                    placeholder="예: 정치외교학을 전공하며 국제관계를 공부하던 중, 실제 기업의 글로벌 전략 수립에 관심이 생겼습니다..."
+                    placeholder={catContent.motivationPlaceholder}
                     value={formData.motivation}
                     onChange={(e) => setFormData(prev => ({ ...prev, motivation: e.target.value }))}
                     className="min-h-40"
@@ -279,13 +283,13 @@ export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInp
                 </div>
 
                 <div>
-                  <Label className="text-base">입학 후 학업 계획 키워드</Label>
+                  <Label className="text-base">{catContent.keywordsLabel}</Label>
                   <p className="text-sm text-gray-600 mt-1 mb-3">
                     관심 분야나 수강 희망 과목을 태그로 입력해주세요
                   </p>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="예: 재무관리, 마케팅전략"
+                      placeholder={catContent.keywordsPlaceholder}
                       value={keywordInput}
                       onChange={(e) => setKeywordInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddKeyword())}
@@ -323,12 +327,12 @@ export function AIExperienceInput({ onBack, onSubmit, credits }: AIExperienceInp
             >
               <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
                 <h2 className="font-semibold text-lg mb-1">📌 Step 3: 선호 설정</h2>
-                <p className="text-gray-600">학업계획서 작성 스타일을 선택해주세요</p>
+                <p className="text-gray-600">{catContent.styleDescription}</p>
               </Card>
 
               <Card className="p-6 space-y-6">
                 <div>
-                  <Label className="text-base mb-4 block">학계서 톤</Label>
+                  <Label className="text-base mb-4 block">{catContent.styleLabel}</Label>
                   <RadioGroup 
                     value={formData.tone}
                     onValueChange={(value: any) => setFormData(prev => ({ ...prev, tone: value }))}

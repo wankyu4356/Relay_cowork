@@ -24,6 +24,9 @@ import {
   Sparkles
 } from 'lucide-react';
 import type { Mentor, Screen } from '../App';
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
+import { CATEGORY_MENTORS } from '../lib/categoryMentors';
 import { getRunnerColor, getRunnerAvatar } from '../lib/runnerUtils';
 import { useMentors } from '../hooks/useMentors';
 
@@ -31,415 +34,15 @@ interface MentorSearchProps {
   onBack: () => void;
   onMentorSelect: (mentor: Mentor) => void;
   onNavigate?: (screen: Screen) => void;
+  selectedCategory?: Category;
 }
 
-const LOCAL_MENTORS: Mentor[] = [
-  {
-    id: '1',
-    name: '러너 #2847',
-    university: '연세대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.9,
-    reviews: 23,
-    sessions: 35,
-    successRate: 87,
-    responseTime: '2시간',
-    price: 80000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '2',
-    name: '러너 #1923',
-    university: '고려대',
-    major: '경제학과',
-    year: '23학번',
-    rating: 4.8,
-    reviews: 18,
-    sessions: 22,
-    successRate: 82,
-    responseTime: '1시간',
-    price: 70000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '3',
-    name: '러너 #5621',
-    university: '성균관대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.7,
-    reviews: 12,
-    sessions: 15,
-    successRate: 80,
-    responseTime: '3시간',
-    price: 60000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '4',
-    name: '러너 #3142',
-    university: '서강대',
-    major: '경영학과',
-    year: '21학번',
-    rating: 4.9,
-    reviews: 31,
-    sessions: 48,
-    successRate: 91,
-    responseTime: '1시간',
-    price: 100000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '5',
-    name: '러너 #7834',
-    university: '한양대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.6,
-    reviews: 9,
-    sessions: 12,
-    successRate: 75,
-    responseTime: '4시간',
-    price: 50000,
-    badge: 'bronze',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '6',
-    name: '러너 #4521',
-    university: '중앙대',
-    major: '경제학과',
-    year: '21학번',
-    rating: 4.8,
-    reviews: 27,
-    sessions: 42,
-    successRate: 88,
-    responseTime: '2시간',
-    price: 90000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '7',
-    name: '러너 #9234',
-    university: '경희대',
-    major: '글로벌경영',
-    year: '22학번',
-    rating: 4.7,
-    reviews: 15,
-    sessions: 20,
-    successRate: 81,
-    responseTime: '3시간',
-    price: 65000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '8',
-    name: '러너 #6712',
-    university: '연세대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.9,
-    reviews: 34,
-    sessions: 51,
-    successRate: 92,
-    responseTime: '1시간',
-    price: 110000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '9',
-    name: '러너 #2156',
-    university: '이화여대',
-    major: '경제학과',
-    year: '22학번',
-    rating: 4.6,
-    reviews: 11,
-    sessions: 14,
-    successRate: 77,
-    responseTime: '5시간',
-    price: 55000,
-    badge: 'bronze',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '10',
-    name: '러너 #8945',
-    university: '고려대',
-    major: '경영학과',
-    year: '21학번',
-    rating: 4.8,
-    reviews: 29,
-    sessions: 44,
-    successRate: 89,
-    responseTime: '2시간',
-    price: 95000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '11',
-    name: '러너 #3678',
-    university: '서강대',
-    major: '글로벌경영',
-    year: '23학번',
-    rating: 4.7,
-    reviews: 16,
-    sessions: 21,
-    successRate: 83,
-    responseTime: '3시간',
-    price: 68000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '12',
-    name: '러너 #5289',
-    university: '성균관대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.5,
-    reviews: 8,
-    sessions: 10,
-    successRate: 72,
-    responseTime: '6시간',
-    price: 48000,
-    badge: 'bronze',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '13',
-    name: '러너 #7123',
-    university: '한양대',
-    major: '경제학과',
-    year: '21학번',
-    rating: 4.9,
-    reviews: 38,
-    sessions: 56,
-    successRate: 93,
-    responseTime: '1시간',
-    price: 120000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '14',
-    name: '러너 #4892',
-    university: '중앙대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.7,
-    reviews: 19,
-    sessions: 25,
-    successRate: 84,
-    responseTime: '2시간',
-    price: 72000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '15',
-    name: '러너 #1567',
-    university: '경희대',
-    major: '글로벌경영',
-    year: '22학번',
-    rating: 4.8,
-    reviews: 24,
-    sessions: 36,
-    successRate: 86,
-    responseTime: '2시간',
-    price: 82000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '16',
-    name: '러너 #9431',
-    university: '연세대',
-    major: '경영학과',
-    year: '21학번',
-    rating: 4.6,
-    reviews: 13,
-    sessions: 17,
-    successRate: 78,
-    responseTime: '4시간',
-    price: 58000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '17',
-    name: '러너 #6254',
-    university: '이화여대',
-    major: '경제학과',
-    year: '22학번',
-    rating: 4.9,
-    reviews: 41,
-    sessions: 62,
-    successRate: 94,
-    responseTime: '1시간',
-    price: 130000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '18',
-    name: '러너 #3789',
-    university: '고려대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.7,
-    reviews: 17,
-    sessions: 23,
-    successRate: 82,
-    responseTime: '3시간',
-    price: 67000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '19',
-    name: '러너 #8123',
-    university: '서강대',
-    major: '글로벌경영',
-    year: '21학번',
-    rating: 4.8,
-    reviews: 32,
-    sessions: 49,
-    successRate: 90,
-    responseTime: '2시간',
-    price: 98000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '20',
-    name: '러너 #2945',
-    university: '성균관대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.6,
-    reviews: 14,
-    sessions: 18,
-    successRate: 79,
-    responseTime: '4시간',
-    price: 62000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '21',
-    name: '러너 #5678',
-    university: '한양대',
-    major: '경제학과',
-    year: '23학번',
-    rating: 4.5,
-    reviews: 10,
-    sessions: 13,
-    successRate: 74,
-    responseTime: '5시간',
-    price: 52000,
-    badge: 'bronze',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-  {
-    id: '22',
-    name: '러너 #7891',
-    university: '중앙대',
-    major: '경영학과',
-    year: '21학번',
-    rating: 4.9,
-    reviews: 45,
-    sessions: 68,
-    successRate: 95,
-    responseTime: '1시간',
-    price: 140000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-  {
-    id: '23',
-    name: '러너 #4234',
-    university: '경희대',
-    major: '글로벌경영',
-    year: '22학번',
-    rating: 4.7,
-    reviews: 20,
-    sessions: 28,
-    successRate: 85,
-    responseTime: '3시간',
-    price: 75000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '24',
-    name: '러너 #9567',
-    university: '연세대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.8,
-    reviews: 26,
-    sessions: 39,
-    successRate: 87,
-    responseTime: '2시간',
-    price: 85000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '25',
-    name: '러너 #1289',
-    university: '이화여대',
-    major: '경제학과',
-    year: '21학번',
-    rating: 4.6,
-    reviews: 15,
-    sessions: 19,
-    successRate: 80,
-    responseTime: '4시간',
-    price: 60000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍💼',
-  },
-];
-
-export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearchProps) {
+export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCategory = 'transfer' }: MentorSearchProps) {
+  const catContent = CATEGORY_CONTENT[selectedCategory];
+  const mentorConfig = CATEGORY_MENTORS[selectedCategory];
   const { mentors: apiMentors, loading: mentorsLoading } = useMentors();
   // Use API mentors when available (more than default 6), otherwise use large local set
-  const allMentors = apiMentors.length > 6 ? apiMentors : LOCAL_MENTORS;
+  const allMentors = apiMentors.length > 6 ? apiMentors : mentorConfig.mentors;
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<string>('all');
@@ -447,7 +50,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
   const [priceRange, setPriceRange] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'rating' | 'price' | 'successRate'>('rating');
 
-  const universities = ['all', '연세대', '고려대', '서강대', '성균관대'];
+  const universities = mentorConfig.filterOptions;
   const badges = ['all', 'gold', 'silver', 'bronze'];
   const priceRanges = [
     { value: 'all', label: '전체 가격' },
@@ -523,7 +126,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
           <div className="relative max-w-3xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
-              placeholder="학교, 전공, 경험으로 검색..."
+              placeholder={`${catContent.field1Label}, ${catContent.field2Label}, 경험으로 검색...`}
               className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -544,7 +147,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                 <div className="grid md:grid-cols-4 gap-6">
                   {/* University Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">학교</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-3 block">{catContent.field1Label}</label>
                     <div className="space-y-2">
                       {universities.map(uni => (
                         <button
@@ -634,7 +237,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                             : 'hover:bg-gray-100 text-gray-700'
                         }`}
                       >
-                        합격률 높은 순
+                        {catContent.successLabel.replace('평균 ', '')} 높은 순
                       </button>
                     </div>
                   </div>
@@ -735,7 +338,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 border border-green-100">
                       <div className="flex items-center gap-1 mb-1">
                         <Target className="w-4 h-4 text-green-600" />
-                        <span className="text-xs text-gray-600">합격률</span>
+                        <span className="text-xs text-gray-600">{catContent.successLabel.replace('평균 ', '')}</span>
                       </div>
                       <div className="text-xl font-bold text-green-700">{mentor.successRate}%</div>
                       {/* Progress bar */}

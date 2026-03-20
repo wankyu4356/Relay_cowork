@@ -46,7 +46,6 @@ interface CategoryConfig {
   color: string;
   bgColor: string;
   description: string;
-  comingSoon?: boolean;
 }
 
 const categories: CategoryConfig[] = [
@@ -65,7 +64,6 @@ const categories: CategoryConfig[] = [
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
     description: '정시/수시 입시',
-    comingSoon: true,
   },
   {
     id: 'career',
@@ -74,7 +72,6 @@ const categories: CategoryConfig[] = [
     color: 'text-cyan-600',
     bgColor: 'bg-cyan-100',
     description: '인턴/이직',
-    comingSoon: true,
   },
   {
     id: 'certification',
@@ -83,7 +80,6 @@ const categories: CategoryConfig[] = [
     color: 'text-teal-600',
     bgColor: 'bg-teal-100',
     description: '자격증/공모전',
-    comingSoon: true,
   },
   {
     id: 'other',
@@ -92,7 +88,6 @@ const categories: CategoryConfig[] = [
     color: 'text-indigo-600',
     bgColor: 'bg-indigo-100',
     description: '다양한 경험',
-    comingSoon: true,
   },
 ];
 
@@ -122,12 +117,9 @@ export function GlobalNav({
   };
 
   const handleCategoryChange = (category: Category) => {
-    if (category === 'transfer') {
-      onCategoryChange?.(category);
-      setShowCategoryMenu(false);
-      onNavigate('unified-home');
-    }
-    // 다른 카테고리는 Coming Soon
+    onCategoryChange?.(category);
+    setShowCategoryMenu(false);
+    onNavigate('unified-home');
   };
 
   const currentCategory = categories.find(c => c.id === selectedCategory);
@@ -224,10 +216,9 @@ export function GlobalNav({
                             <button
                               key={category.id}
                               onClick={() => handleCategoryChange(category.id)}
-                              disabled={category.comingSoon}
-                              className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left ${
+                              className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left cursor-pointer ${
                                 category.id === selectedCategory ? 'bg-sky-50' : ''
-                              } ${category.comingSoon ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                              }`}
                             >
                               <div className={`w-10 h-10 ${category.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
                                 <Icon className={`w-5 h-5 ${category.color}`} />
@@ -235,11 +226,6 @@ export function GlobalNav({
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                   <span className="font-semibold text-gray-900">{category.label}</span>
-                                  {category.comingSoon && (
-                                    <Badge className="bg-gray-100 text-gray-600 text-xs border-0">
-                                      Coming Soon
-                                    </Badge>
-                                  )}
                                 </div>
                                 <p className="text-xs text-gray-600">{category.description}</p>
                               </div>
@@ -437,12 +423,11 @@ export function GlobalNav({
                             handleCategoryChange(category.id);
                             setIsMobileMenuOpen(false);
                           }}
-                          disabled={category.comingSoon}
                           className={`w-full p-3 flex items-center gap-3 rounded-xl transition-colors ${
                             category.id === selectedCategory
                               ? 'bg-sky-50 border-2 border-sky-200'
                               : 'bg-gray-50 border-2 border-transparent'
-                          } ${category.comingSoon ? 'opacity-50' : ''}`}
+                          }`}
                         >
                           <div className={`w-10 h-10 ${category.bgColor} rounded-lg flex items-center justify-center`}>
                             <Icon className={`w-5 h-5 ${category.color}`} />
@@ -450,9 +435,6 @@ export function GlobalNav({
                           <div className="flex-1 text-left">
                             <div className="flex items-center gap-2">
                               <span className="font-semibold text-sm">{category.label}</span>
-                              {category.comingSoon && (
-                                <Badge className="bg-gray-100 text-gray-600 text-xs border-0">Soon</Badge>
-                              )}
                             </div>
                             <p className="text-xs text-gray-600">{category.description}</p>
                           </div>

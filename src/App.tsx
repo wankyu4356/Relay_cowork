@@ -41,6 +41,7 @@ import { SupabaseHealthCheck } from './components/SupabaseHealthCheck';
 import { Toaster } from './components/ui/sonner';
 import * as api from './components/api';
 import { toast } from 'sonner';
+import { CATEGORY_CONTENT } from './lib/categoryContent';
 
 // Screen name to URL path mapping
 const screenToPath: Record<string, string> = {
@@ -549,8 +550,9 @@ function App() {
         )}
         
         {currentScreen === 'mentee-onboarding' && (
-          <MenteeOnboarding 
+          <MenteeOnboarding
             onComplete={handleOnboardingComplete}
+            selectedCategory={selectedCategory}
           />
         )}
         
@@ -560,14 +562,16 @@ function App() {
             onMentorSelect={handleMentorSelect}
             credits={credits}
             isMentorActive={false}
+            selectedCategory={selectedCategory}
           />
         )}
         
         {currentScreen === 'ai-experience' && (
-          <AIExperienceInput 
+          <AIExperienceInput
             onBack={() => navigateTo('unified-home')}
             onSubmit={handleAISubmit}
             credits={credits}
+            selectedCategory={selectedCategory}
           />
         )}
         
@@ -597,7 +601,7 @@ function App() {
               if (!selectedStoryline) {
                 setSelectedStoryline({
                   id: 'edit-default',
-                  title: `${data.university} ${data.major} 학업계획서`,
+                  title: `${data.university} ${data.major} ${CATEGORY_CONTENT[selectedCategory].label}`,
                   message: '기존 초안을 기반으로 편집합니다',
                   structure: '기존 구조 유지',
                   strength: '기존 강점 활용',
@@ -612,17 +616,19 @@ function App() {
         )}
         
         {currentScreen === 'ai-recommendation' && (
-          <AIRecommendation 
+          <AIRecommendation
             onBack={() => navigateTo('unified-home')}
             onComplete={() => navigateTo('mentor-search')}
+            selectedCategory={selectedCategory}
           />
         )}
         
         {currentScreen === 'mentor-search' && (
-          <MentorSearch 
+          <MentorSearch
             onBack={() => navigateTo('unified-home')}
             onMentorSelect={handleMentorSelect}
             onNavigate={navigateTo}
+            selectedCategory={selectedCategory}
           />
         )}
         
@@ -676,7 +682,7 @@ function App() {
               totalSessions: 156,
               isVerified: true,
               responseTime: '2시간 이내',
-              expertise: ['학업계획서', '자기소개서', '면접 준비']
+              expertise: [CATEGORY_CONTENT[selectedCategory].docLabel.replace('내 AI ', ''), '자기소개서', '면접 준비']
             }}
           />
         )}
@@ -713,7 +719,7 @@ function App() {
               navigateTo('unified-home');
             }}
             mentor={selectedMentor}
-            purpose="연세대 경영학과 편입"
+            purpose={`${aiData?.university || ''} ${aiData?.major || ''} ${CATEGORY_CONTENT[selectedCategory].label}`}
           />
         )}
         
@@ -812,7 +818,7 @@ function App() {
         )}
         
         {currentScreen === 'credit-purchase' && (
-          <CreditPurchase 
+          <CreditPurchase
             onBack={() => {
               if (userRole === 'mentee') navigateTo('unified-home');
               else if (userRole === 'mentor') navigateTo('mentor-dashboard');
@@ -820,6 +826,7 @@ function App() {
             }}
             currentCredits={credits}
             onPurchaseComplete={handleCreditPurchase}
+            selectedCategory={selectedCategory}
           />
         )}
         

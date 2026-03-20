@@ -21,30 +21,24 @@ import {
   DollarSign,
   Brain
 } from 'lucide-react';
+import type { Category } from './GlobalNav';
+import { CATEGORY_RECOMMENDATIONS } from '../lib/categoryRecommendations';
+import type { Recommendation } from '../lib/categoryRecommendations';
 
 interface AIRecommendationProps {
   onBack: () => void;
   onComplete?: () => void;
+  selectedCategory?: Category;
 }
 
-interface UniversityRecommendation {
-  id: string;
-  name: string;
-  major: string;
-  matchScore: number;
-  admissionType: string;
-  competitionRate: string;
-  tuition: string;
-  strengths: string[];
-  requirements: string[];
-  recentTrends: string;
-  successRate: string;
-}
-
-export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) {
+export function AIRecommendation({ onBack, onComplete, selectedCategory }: AIRecommendationProps) {
   const [step, setStep] = useState<'input' | 'analyzing' | 'results'>('input');
   const [expandedSchool, setExpandedSchool] = useState<string | null>(null);
-  
+
+  const config = CATEGORY_RECOMMENDATIONS[selectedCategory ?? 'transfer'];
+  const recommendations = config.recommendations;
+  const alternatives = config.alternatives;
+
   // Form state
   const [formData, setFormData] = useState({
     currentUniversity: '',
@@ -63,108 +57,6 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
     }, 3000);
   };
 
-  const recommendations: UniversityRecommendation[] = [
-    {
-      id: '1',
-      name: '연세대학교',
-      major: '경영학과',
-      matchScore: 94,
-      admissionType: '일반편입',
-      competitionRate: '15:1',
-      tuition: '약 450만원/학기',
-      strengths: [
-        '현재 전공과 높은 연계성',
-        '학점 경쟁력 우수',
-        '봉사활동 경험이 플러스 요인',
-        '목표와 전공 방향성 일치',
-      ],
-      requirements: [
-        '학업계획서 (1,000자)',
-        '자기소개서 (1,500자)',
-        '영어 성적 (TOEIC 800+ 권장)',
-        '전적대 성적증명서',
-      ],
-      recentTrends: '최근 3년간 합격자 평균 학점 3.8 이상, 전공 관련 활동 경험 보유자 선호',
-      successRate: '87%',
-    },
-    {
-      id: '2',
-      name: '고려대학교',
-      major: '경영학과',
-      matchScore: 91,
-      admissionType: '일반편입',
-      competitionRate: '18:1',
-      tuition: '약 430만원/학기',
-      strengths: [
-        '학점 우수',
-        '리더십 경험 보유',
-        '전공 적합성 높음',
-        '영어 능력 우수',
-      ],
-      requirements: [
-        '학업계획서 (800자)',
-        '자기소개서 (1,200자)',
-        '영어 성적 (TOEIC 850+ 권장)',
-        '전적대 성적증명서',
-      ],
-      recentTrends: '글로벌 마인드와 리더십을 중시하는 경향, 인턴 경험 가산점',
-      successRate: '82%',
-    },
-    {
-      id: '3',
-      name: '서강대학교',
-      major: '경영학과',
-      matchScore: 89,
-      admissionType: '일반편입',
-      competitionRate: '12:1',
-      tuition: '약 420만원/학기',
-      strengths: [
-        '학점 경쟁력 우수',
-        '소규모 정예 교육',
-        '실무 경험 보유',
-        '목표 명확성',
-      ],
-      requirements: [
-        '학업계획서 (1,000자)',
-        '자기소개서 (1,000자)',
-        '영어 성적 (선택)',
-        '전적대 성적증명서',
-      ],
-      recentTrends: '학업 열정과 전공 적합성을 가장 중시, 서류 평가 비중 높음',
-      successRate: '85%',
-    },
-    {
-      id: '4',
-      name: '성균관대학교',
-      major: '글로벌경영학과',
-      matchScore: 86,
-      admissionType: '일반편입',
-      competitionRate: '14:1',
-      tuition: '약 440만원/학기',
-      strengths: [
-        '글로벌 역량 보유',
-        '학점 우수',
-        '전공 다양성 확보',
-        '실무 경험 풍부',
-      ],
-      requirements: [
-        '학업계획서 (800자)',
-        '영어 에세이 (500단어)',
-        'TOEIC 900+ 또는 TOEFL 90+',
-        '전적대 성적증명서',
-      ],
-      recentTrends: '글로벌 경쟁력을 갖춘 인재 선호, 영어 능력 중요',
-      successRate: '79%',
-    },
-  ];
-
-  const otherMajors = [
-    { name: '경제학과', universities: ['연세대', '고려대', '서강대'], matchScore: 88 },
-    { name: '경영정보학과', universities: ['연세대', '성균관대'], matchScore: 85 },
-    { name: '글로벌리더학부', universities: '고려대', matchScore: 83 },
-    { name: '국제경영학과', universities: ['한양대', '중앙대'], matchScore: 81 },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       {/* Header */}
@@ -177,9 +69,9 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
             <div>
               <h1 className="text-2xl font-bold gradient-text flex items-center gap-2">
                 <Brain className="w-7 h-7 text-indigo-600" />
-                AI 맞춤 편입 추천
+                {config.pageTitle}
               </h1>
-              <p className="text-sm text-gray-600">나에게 맞는 대학과 전공을 AI가 분석합니다</p>
+              <p className="text-sm text-gray-600">{config.pageSubtitle}</p>
             </div>
           </div>
         </div>
@@ -202,11 +94,10 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                     <Sparkles className="w-8 h-8 text-indigo-600 flex-shrink-0 mt-1" />
                     <div>
                       <h2 className="text-xl font-bold text-gray-900 mb-2">
-                        AI가 당신의 편입 성공을 돕습니다
+                        {config.heroTitle}
                       </h2>
                       <p className="text-gray-700">
-                        입력하신 정보를 바탕으로 최적의 대학과 전공을 추천하고, 
-                        합격 가능성과 준비 전략을 제시합니다.
+                        {config.heroDescription}
                       </p>
                     </div>
                   </div>
@@ -221,11 +112,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            현재 대학
+                            {config.formLabels.field1}
                           </label>
                           <input
                             type="text"
-                            placeholder="예: 서울시립대학교"
+                            placeholder={config.formLabels.field1Placeholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
                             value={formData.currentUniversity}
                             onChange={(e) => setFormData({ ...formData, currentUniversity: e.target.value })}
@@ -233,11 +124,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            현재 전공
+                            {config.formLabels.field2}
                           </label>
                           <input
                             type="text"
-                            placeholder="예: 경영학과"
+                            placeholder={config.formLabels.field2Placeholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
                             value={formData.currentMajor}
                             onChange={(e) => setFormData({ ...formData, currentMajor: e.target.value })}
@@ -245,11 +136,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            평균 학점 (4.5 만점)
+                            {config.formLabels.field3}
                           </label>
                           <input
                             type="text"
-                            placeholder="예: 4.2"
+                            placeholder={config.formLabels.field3Placeholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
                             value={formData.gpa}
                             onChange={(e) => setFormData({ ...formData, gpa: e.target.value })}
@@ -257,11 +148,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            희망 분야
+                            {config.formLabels.field4}
                           </label>
                           <input
                             type="text"
-                            placeholder="예: 경영, 마케팅"
+                            placeholder={config.formLabels.field4Placeholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
                             value={formData.targetField}
                             onChange={(e) => setFormData({ ...formData, targetField: e.target.value })}
@@ -274,16 +165,16 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                     <div>
                       <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <Target className="w-5 h-5 text-purple-600" />
-                        자유 기술
+                        {config.formLabels.freeformTitle}
                       </h3>
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            주요 경험 및 활동
+                            {config.formLabels.experiences}
                           </label>
                           <textarea
                             rows={4}
-                            placeholder="동아리, 봉사활동, 인턴, 프로젝트 등 주요 경험을 자유롭게 작성해주세요"
+                            placeholder={config.formLabels.experiencesPlaceholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors resize-none"
                             value={formData.experiences}
                             onChange={(e) => setFormData({ ...formData, experiences: e.target.value })}
@@ -291,11 +182,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            나의 강점
+                            {config.formLabels.strengths}
                           </label>
                           <textarea
                             rows={3}
-                            placeholder="학업, 리더십, 언어, 특기 등 자신의 강점을 작성해주세요"
+                            placeholder={config.formLabels.strengthsPlaceholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors resize-none"
                             value={formData.strengths}
                             onChange={(e) => setFormData({ ...formData, strengths: e.target.value })}
@@ -303,11 +194,11 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            편입 목표 및 동기
+                            {config.formLabels.goals}
                           </label>
                           <textarea
                             rows={4}
-                            placeholder="왜 편입을 준비하시나요? 어떤 목표를 가지고 계신가요?"
+                            placeholder={config.formLabels.goalsPlaceholder}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors resize-none"
                             value={formData.goals}
                             onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
@@ -362,34 +253,16 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                     최적의 대학과 전공을 찾고 있습니다
                   </p>
                   <div className="space-y-2 text-sm text-gray-500">
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      ✓ 학업 역량 분석 완료
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1 }}
-                    >
-                      ✓ 경험 및 활동 평가 완료
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.5 }}
-                    >
-                      ✓ 대학별 매칭도 계산 중...
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 2 }}
-                    >
-                      ✓ 합격 전략 수립 중...
-                    </motion.div>
+                    {config.analyzingSteps.map((stepText, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 + index * 0.5 }}
+                      >
+                        {stepText}
+                      </motion.div>
+                    ))}
                   </div>
                 </Card>
               </motion.div>
@@ -416,7 +289,7 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                       <div className="flex-1">
                         <h2 className="text-3xl font-bold mb-3">AI 분석 완료!</h2>
                         <p className="text-indigo-100 text-lg mb-4">
-                          입력하신 정보를 바탕으로 {recommendations.length}개의 최적 대학을 추천합니다.
+                          입력하신 정보를 바탕으로 {recommendations.length}개의 {config.resultSummaryUnit}을 추천합니다.
                           각 대학의 상세 정보와 합격 전략을 확인해보세요.
                         </p>
                         <div className="flex gap-4 text-sm">
@@ -484,7 +357,7 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                                     )}
                                   </div>
                                   <div className="text-lg text-gray-700 font-medium mb-3">
-                                    {school.major} · {school.admissionType}
+                                    {school.detail} · {school.type}
                                   </div>
                                   <div className="flex flex-wrap gap-2 mb-3">
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">
@@ -494,7 +367,7 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                                       합격률: {school.successRate}
                                     </Badge>
                                     <Badge className="bg-purple-100 text-purple-700 border-purple-200">
-                                      {school.tuition}
+                                      {school.cost}
                                     </Badge>
                                   </div>
                                 </div>
@@ -630,14 +503,14 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                   })}
                 </div>
 
-                {/* Other Majors */}
+                {/* Other Majors / Alternatives */}
                 <Card className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <Target className="w-6 h-6 text-indigo-600" />
-                    다른 학과 후보
+                    {config.alternativeTitle}
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
-                    {otherMajors.map((major, index) => (
+                    {alternatives.map((alt, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -647,15 +520,15 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                         <Card className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-md transition-shadow cursor-pointer">
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h4 className="font-bold text-gray-900 mb-1">{major.name}</h4>
+                              <h4 className="font-bold text-gray-900 mb-1">{alt.name}</h4>
                               <p className="text-sm text-gray-600">
-                                {Array.isArray(major.universities) 
-                                  ? major.universities.join(', ')
-                                  : major.universities}
+                                {Array.isArray(alt.institutions)
+                                  ? alt.institutions.join(', ')
+                                  : alt.institutions}
                               </p>
                             </div>
                             <Badge className="bg-indigo-100 text-indigo-700 border-indigo-200">
-                              {major.matchScore}%
+                              {alt.matchScore}%
                             </Badge>
                           </div>
                           <Button variant="outline" size="sm" className="w-full">
@@ -674,39 +547,19 @@ export function AIRecommendation({ onBack, onComplete }: AIRecommendationProps) 
                     다음 단계
                   </h3>
                   <div className="space-y-3 mb-6">
-                    <div className="flex items-start gap-3 bg-white p-4 rounded-xl">
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
-                        1
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900 mb-1">경험 전달자 매칭</div>
-                        <div className="text-sm text-gray-600">
-                          추천 대학에 합격한 선배들과 연결되어 실제 경험을 들어보세요
+                    {config.nextSteps.map((nextStep, index) => (
+                      <div key={index} className="flex items-start gap-3 bg-white p-4 rounded-xl">
+                        <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900 mb-1">{nextStep.title}</div>
+                          <div className="text-sm text-gray-600">
+                            {nextStep.description}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-start gap-3 bg-white p-4 rounded-xl">
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
-                        2
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900 mb-1">AI 학계서 작성</div>
-                        <div className="text-sm text-gray-600">
-                          AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 bg-white p-4 rounded-xl">
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
-                        3
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900 mb-1">전략적 준비</div>
-                        <div className="text-sm text-gray-600">
-                          추천받은 정보를 바탕으로 체계적인 편입 준비를 시작하세요
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                   <Button
                     size="lg"

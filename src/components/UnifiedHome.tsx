@@ -29,6 +29,9 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
+import { CATEGORY_STATS } from '../lib/categoryStats';
 import { useMentors } from '../hooks/useMentors';
 
 interface UnifiedHomeProps {
@@ -37,15 +40,19 @@ interface UnifiedHomeProps {
   credits?: number;
   isMentorActive?: boolean;
   onRoleChange?: (role: 'mentee' | 'mentor') => void;
+  selectedCategory?: Category;
 }
 
-export function UnifiedHome({ 
-  onNavigate, 
-  onMentorSelect, 
-  credits = 3, 
+export function UnifiedHome({
+  onNavigate,
+  onMentorSelect,
+  credits = 3,
   isMentorActive: initialMentorActive = false,
-  onRoleChange 
+  onRoleChange,
+  selectedCategory = 'transfer'
 }: UnifiedHomeProps) {
+  const content = CATEGORY_CONTENT[selectedCategory];
+  const stats = CATEGORY_STATS[selectedCategory];
   const [activeTab, setActiveTab] = useState<'mentee' | 'mentor'>('mentee');
   const [searchQuery, setSearchQuery] = useState('');
   const [isMentorActive, setIsMentorActive] = useState(initialMentorActive);
@@ -110,7 +117,7 @@ export function UnifiedHome({
                 안녕하세요 👋
               </h1>
               <p className="text-gray-600">
-                {activeTab === 'mentee' ? '편입 준비 어떻게 진행되고 있나요?' : '멘토 활동을 시작하세요'}
+                {activeTab === 'mentee' ? content.greeting : '멘토 활동을 시작하세요'}
               </p>
             </div>
             <div className="flex gap-2">
@@ -153,7 +160,7 @@ export function UnifiedHome({
               <div className="relative max-w-2xl mb-6">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
-                  placeholder="어떤 학교 편입을 준비하시나요?"
+                  placeholder={content.searchPlaceholder}
                   className="pl-12 pr-4 py-6 text-lg bg-gray-50 border-gray-200 focus:bg-white focus:border-sky-400"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -180,15 +187,15 @@ export function UnifiedHome({
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-4">
                           <Award className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">AI 맞춤 편입 컨설팅 <span className="text-lg">(무료)</span></h2>
+                          <h2 className="text-2xl font-bold text-white">{content.aiConsultingTitle} <span className="text-lg">(무료)</span></h2>
                         </div>
                         <p className="text-white/90 text-lg mb-4">
-                          정형/비정형 정보를 분석하여 최적의 대학과 전공을 추천합니다
+                          {content.aiConsultingDescription}
                         </p>
                         <div className="flex flex-wrap gap-2 mb-6">
-                          <Badge className="bg-white/20 text-white border-0">학교/학과 추천</Badge>
-                          <Badge className="bg-white/20 text-white border-0">전형 분석</Badge>
-                          <Badge className="bg-white/20 text-white border-0">입시 정보 제공</Badge>
+                          {content.ctaBadges.map((badge) => (
+                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -223,15 +230,15 @@ export function UnifiedHome({
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-4">
                           <Sparkles className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">AI 학업계획서 생성</h2>
+                          <h2 className="text-2xl font-bold text-white">{content.aiToolTitle}</h2>
                         </div>
                         <p className="text-white/90 text-lg mb-4">
-                          내 경험을 입력하면 AI가 합격 학계서 초안을 만들어드립니다
+                          {content.aiToolDescription}
                         </p>
                         <div className="flex flex-wrap gap-2 mb-6">
-                          <Badge className="bg-white/20 text-white border-0">5분 소요</Badge>
-                          <Badge className="bg-white/20 text-white border-0">무료 1회</Badge>
-                          <Badge className="bg-white/20 text-white border-0">맞춤 스토리라인</Badge>
+                          {content.aiToolBadges.map((badge) => (
+                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -273,12 +280,12 @@ export function UnifiedHome({
                           <h2 className="text-2xl font-bold text-white">나에게 맞는 멘토 찾기</h2>
                         </div>
                         <p className="text-white/90 text-lg mb-4">
-                          AI가 분석한 나의 프로필에 최적화된 합격생 멘토를 추천합니다
+                          {content.mentorDescription}
                         </p>
                         <div className="flex flex-wrap gap-2 mb-6">
-                          <Badge className="bg-white/20 text-white border-0">AI 기반 추천</Badge>
-                          <Badge className="bg-white/20 text-white border-0">검증된 합격생</Badge>
-                          <Badge className="bg-white/20 text-white border-0">실시간 매칭</Badge>
+                          {content.mentorBadges.map((badge) => (
+                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -301,7 +308,7 @@ export function UnifiedHome({
                       <BookOpen className="w-7 h-7 text-purple-600" />
                     </div>
                     <div className="text-3xl font-bold text-gray-900 mb-1">2</div>
-                    <div className="text-sm text-gray-600">내 AI 학계서</div>
+                    <div className="text-sm text-gray-600">{content.docLabel}</div>
                   </Card>
                 </motion.div>
 
@@ -331,7 +338,7 @@ export function UnifiedHome({
                       <TrendingUp className="w-7 h-7 text-green-600" />
                     </div>
                     <div className="text-3xl font-bold text-gray-900 mb-1">87%</div>
-                    <div className="text-sm text-gray-600">평균 합격률</div>
+                    <div className="text-sm text-gray-600">{content.successLabel}</div>
                   </Card>
                 </motion.div>
               </div>
@@ -445,7 +452,7 @@ export function UnifiedHome({
                               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 border border-green-100">
                                 <div className="flex items-center gap-1 mb-1">
                                   <TrendingUp className="w-3 h-3 text-green-600" />
-                                  <span className="text-xs text-gray-600">합격률</span>
+                                  <span className="text-xs text-gray-600">{content.successLabel.replace('평균 ', '')}</span>
                                 </div>
                                 <div className="text-lg font-bold text-green-700">{mentor.successRate}%</div>
                               </div>
@@ -662,8 +669,8 @@ export function UnifiedHome({
                       <TrendingUp className="w-6 h-6" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold">릴레이 합격률 리포트</h2>
-                      <p className="text-white/80 text-sm">2025년 편입 시즌 기준</p>
+                      <h2 className="text-xl font-bold">{stats.reportTitle}</h2>
+                      <p className="text-white/80 text-sm">{content.seasonLabel}</p>
                     </div>
                   </div>
                   <Button
@@ -681,15 +688,15 @@ export function UnifiedHome({
                 {/* Overall Stats */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
-                    <div className="text-3xl font-bold text-green-600 mb-1">87%</div>
+                    <div className="text-3xl font-bold text-green-600 mb-1">{stats.overallRate}%</div>
                     <div className="text-xs text-gray-600">전체 합격률</div>
                   </div>
                   <div className="text-center p-4 bg-gradient-to-br from-sky-50 to-blue-50 rounded-xl border border-sky-100">
-                    <div className="text-3xl font-bold text-sky-600 mb-1">324</div>
+                    <div className="text-3xl font-bold text-sky-600 mb-1">{stats.totalMentees}</div>
                     <div className="text-xs text-gray-600">총 멘티 수</div>
                   </div>
                   <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
-                    <div className="text-3xl font-bold text-purple-600 mb-1">282</div>
+                    <div className="text-3xl font-bold text-purple-600 mb-1">{stats.successCount}</div>
                     <div className="text-xs text-gray-600">합격자 수</div>
                   </div>
                 </div>
@@ -698,17 +705,10 @@ export function UnifiedHome({
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <GraduationCap className="w-5 h-5 text-gray-700" />
-                    <h3 className="font-semibold text-gray-900">대학별 합격률</h3>
+                    <h3 className="font-semibold text-gray-900">{stats.institutionLabel}</h3>
                   </div>
                   <div className="space-y-3">
-                    {[
-                      { name: '연세대', rate: 91, count: 42, color: 'bg-blue-500' },
-                      { name: '고려대', rate: 89, count: 38, color: 'bg-red-500' },
-                      { name: '성균관대', rate: 88, count: 35, color: 'bg-green-600' },
-                      { name: '한양대', rate: 86, count: 31, color: 'bg-sky-500' },
-                      { name: '중앙대', rate: 85, count: 28, color: 'bg-indigo-500' },
-                      { name: '경희대', rate: 84, count: 25, color: 'bg-purple-500' },
-                    ].map((uni) => (
+                    {stats.institutions.map((uni) => (
                       <div key={uni.name} className="group">
                         <div className="flex items-center justify-between mb-1.5">
                           <div className="flex items-center gap-2">
@@ -734,21 +734,14 @@ export function UnifiedHome({
                 <div>
                   <div className="flex items-center gap-2 mb-4">
                     <Target className="w-5 h-5 text-gray-700" />
-                    <h3 className="font-semibold text-gray-900">인기 학과별 합격률</h3>
+                    <h3 className="font-semibold text-gray-900">{stats.fieldLabel}</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { major: '경영학과', rate: 90, icon: '📊' },
-                      { major: '경제학과', rate: 88, icon: '📈' },
-                      { major: '심리학과', rate: 87, icon: '🧠' },
-                      { major: '미디어학과', rate: 85, icon: '📱' },
-                      { major: '컴퓨터공학과', rate: 83, icon: '💻' },
-                      { major: '간호학과', rate: 82, icon: '🏥' },
-                    ].map((item) => (
-                      <div key={item.major} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    {stats.fields.map((item) => (
+                      <div key={item.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                         <span className="text-xl">{item.icon}</span>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-gray-800 text-sm truncate">{item.major}</div>
+                          <div className="font-medium text-gray-800 text-sm truncate">{item.name}</div>
                         </div>
                         <Badge className="bg-green-100 text-green-700 border-green-200 text-xs shrink-0">
                           {item.rate}%
@@ -765,14 +758,7 @@ export function UnifiedHome({
                     <h3 className="font-semibold text-gray-900">월별 합격률 추이</h3>
                   </div>
                   <div className="flex items-end gap-2 h-32 px-2">
-                    {[
-                      { month: '9월', rate: 78 },
-                      { month: '10월', rate: 81 },
-                      { month: '11월', rate: 83 },
-                      { month: '12월', rate: 85 },
-                      { month: '1월', rate: 87 },
-                      { month: '2월', rate: 87 },
-                    ].map((item, idx) => (
+                    {stats.monthlyTrend.map((item, idx) => (
                       <div key={item.month} className="flex-1 flex flex-col items-center gap-1">
                         <span className="text-xs font-semibold text-green-600">{item.rate}%</span>
                         <motion.div
@@ -794,12 +780,7 @@ export function UnifiedHome({
                     <h3 className="font-semibold text-gray-900">핵심 인사이트</h3>
                   </div>
                   <div className="space-y-2.5">
-                    {[
-                      '멘토와 3회 이상 세션 진행 시 합격률이 92%로 상승',
-                      'AI 학업계획서 + 멘토 첨삭 병행 시 합격률 2.1배 증가',
-                      '골드 멘토의 멘티 합격률이 평균 대비 8%p 높음',
-                      '학업계획서 3회 이상 수정 시 합격률 15%p 상승',
-                    ].map((insight, i) => (
+                    {content.insights.map((insight, i) => (
                       <div key={i} className="flex items-start gap-2">
                         <ChevronRight className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
                         <span className="text-sm text-gray-700">{insight}</span>
@@ -829,7 +810,7 @@ export function UnifiedHome({
                     }}
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
-                    AI 학계서 작성
+                    {content.docLabel} 작성
                   </Button>
                 </div>
               </div>
