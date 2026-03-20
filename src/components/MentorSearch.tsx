@@ -24,6 +24,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import type { Mentor, Screen } from '../App';
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
 import { getRunnerColor, getRunnerAvatar } from '../lib/runnerUtils';
 import { useMentors } from '../hooks/useMentors';
 
@@ -31,6 +33,7 @@ interface MentorSearchProps {
   onBack: () => void;
   onMentorSelect: (mentor: Mentor) => void;
   onNavigate?: (screen: Screen) => void;
+  selectedCategory?: Category;
 }
 
 const LOCAL_MENTORS: Mentor[] = [
@@ -436,7 +439,8 @@ const LOCAL_MENTORS: Mentor[] = [
   },
 ];
 
-export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearchProps) {
+export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCategory = 'transfer' }: MentorSearchProps) {
+  const catContent = CATEGORY_CONTENT[selectedCategory];
   const { mentors: apiMentors, loading: mentorsLoading } = useMentors();
   // Use API mentors when available (more than default 6), otherwise use large local set
   const allMentors = apiMentors.length > 6 ? apiMentors : LOCAL_MENTORS;
@@ -523,7 +527,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
           <div className="relative max-w-3xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
-              placeholder="학교, 전공, 경험으로 검색..."
+              placeholder={`${catContent.field1Label}, ${catContent.field2Label}, 경험으로 검색...`}
               className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -544,7 +548,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                 <div className="grid md:grid-cols-4 gap-6">
                   {/* University Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">학교</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-3 block">{catContent.field1Label}</label>
                     <div className="space-y-2">
                       {universities.map(uni => (
                         <button
@@ -634,7 +638,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                             : 'hover:bg-gray-100 text-gray-700'
                         }`}
                       >
-                        합격률 높은 순
+                        {catContent.successLabel.replace('평균 ', '')} 높은 순
                       </button>
                     </div>
                   </div>
@@ -735,7 +739,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearc
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 border border-green-100">
                       <div className="flex items-center gap-1 mb-1">
                         <Target className="w-4 h-4 text-green-600" />
-                        <span className="text-xs text-gray-600">합격률</span>
+                        <span className="text-xs text-gray-600">{catContent.successLabel.replace('평균 ', '')}</span>
                       </div>
                       <div className="text-xl font-bold text-green-700">{mentor.successRate}%</div>
                       {/* Progress bar */}
