@@ -654,3 +654,25 @@ export async function verifyMentor(mentorId: string, verified: boolean = true) {
 export async function getAdminStats() {
   return apiFetch('/admin/stats');
 }
+
+// ============ MENTOR REVENUE ============
+
+export async function getMentorRevenue() {
+  return apiFetch('/mentors/revenue');
+}
+
+export async function requestWithdraw() {
+  return apiFetch('/mentors/revenue/withdraw', { method: 'POST' });
+}
+
+// ============ RELAY CHAIN ============
+
+export async function getRelayChain() {
+  return apiFetch('/relay-chain');
+}
+
+// ============ MENTORS (with category filter) ============
+
+export async function getMentorsByCategory(category: string) {
+  return apiFetch(`/mentors?category=${encodeURIComponent(category)}`);
+}

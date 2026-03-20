@@ -65,6 +65,24 @@ function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+async function createNotification(
+  userId: string,
+  title: string,
+  message: string,
+  type: string = 'info',
+) {
+  const db = getServiceClient();
+  const notifId = genId();
+  await db.from('notifications').insert({
+    id: notifId,
+    user_id: userId,
+    title,
+    message,
+    type,
+    read: false,
+  });
+}
+
 const PREFIX = "/make-server-370ee075";
 
 // ============================
@@ -432,6 +450,16 @@ app.post(`${PREFIX}/sessions`, async (c) => {
     const { data, error: dbError } = await db.from('sessions').insert(session).select().single();
     if (dbError) return c.json({ error: `세션 예약 실패: ${dbError.message}` }, 500);
 
+    // Notify the mentor about the new session booking
+    if (body.mentorId) {
+      await createNotification(
+        body.mentorId,
+        '새 세션 예약',
+        `새 세션 예약: ${body.topic || '(주제 없음)'}`,
+        'session',
+      );
+    }
+
     return c.json({ success: true, session: data });
   } catch (e) {
     return c.json({ error: `세션 예약 실패: ${e}` }, 500);
@@ -506,6 +534,16 @@ app.post(`${PREFIX}/reviews`, async (c) => {
       }).eq('id', body.mentorId);
     }
 
+    // Notify the mentor about the new review
+    if (body.mentorId) {
+      await createNotification(
+        body.mentorId,
+        '새 리뷰',
+        '새 리뷰가 등록되었습니다',
+        'review',
+      );
+    }
+
     return c.json({ success: true, review: data });
   } catch (e) {
     return c.json({ error: `리뷰 작성 실패: ${e}` }, 500);
@@ -538,12 +576,30 @@ app.get(`${PREFIX}/reviews/:mentorId`, async (c) => {
 app.get(`${PREFIX}/mentors`, async (c) => {
   try {
     const db = getServiceClient();
-    const { data: mentors } = await db
+    const category = c.req.query('category');
+
+    let query = db
       .from('mentor_profiles')
       .select('*, profiles!inner(name, email, avatar)')
       .order('rating', { ascending: false });
 
-    const result = (mentors || []).map((m: any) => ({
+    if (category) {
+      query = query.eq('category', category);
+    }
+
+    const { data: mentors, error: dbError } = await query;
+
+    // If category column doesn't exist, fall back to unfiltered query
+    let finalMentors = mentors;
+    if (dbError && category) {
+      const { data: allMentors } = await db
+        .from('mentor_profiles')
+        .select('*, profiles!inner(name, email, avatar)')
+        .order('rating', { ascending: false });
+      finalMentors = allMentors;
+    }
+
+    const result = (finalMentors || []).map((m: any) => ({
       ...m,
       name: m.profiles?.name || '멘토',
       email: m.profiles?.email || '',
@@ -606,14 +662,24 @@ app.put(`${PREFIX}/mentors/:id/verify`, async (c) => {
     const { verified } = await c.req.json();
     const db = getServiceClient();
 
+    const isVerified = verified ?? true;
     const { data, error: dbError } = await db
       .from('mentor_profiles')
-      .update({ verified: verified ?? true })
+      .update({ verified: isVerified })
       .eq('id', mentorId)
       .select()
       .single();
 
     if (dbError) return c.json({ error: `멘토 인증 실패: ${dbError.message}` }, 500);
+
+    // Notify the mentor about verification result
+    await createNotification(
+      mentorId,
+      '멘토 인증 결과',
+      isVerified ? '멘토 인증이 완료되었습니다' : '멘토 인증이 거부되었습니다',
+      'verification',
+    );
+
     return c.json({ success: true, mentor: data });
   } catch (e) {
     return c.json({ error: `멘토 인증 실패: ${e}` }, 500);
@@ -859,6 +925,19 @@ app.post(`${PREFIX}/disputes`, async (c) => {
     const { data, error: dbError } = await db.from('disputes').insert(dispute).select().single();
     if (dbError) return c.json({ error: `분쟁 신고 실패: ${dbError.message}` }, 500);
 
+    // Notify all admins about the new dispute
+    const { data: admins } = await db.from('profiles').select('id').eq('role', 'admin');
+    if (admins && admins.length > 0) {
+      for (const admin of admins) {
+        await createNotification(
+          admin.id,
+          '새 분쟁 신고',
+          `새로운 분쟁이 접수되었습니다: ${body.reason}`,
+          'dispute',
+        );
+      }
+    }
+
     return c.json({ success: true, dispute: data });
   } catch (e) {
     return c.json({ error: `분쟁 신고 실패: ${e}` }, 500);
@@ -982,6 +1061,30 @@ app.get(`${PREFIX}/admin/stats`, async (c) => {
     const { count: totalReviews } = await db.from('reviews').select('*', { count: 'exact', head: true });
     const { count: pendingDisputes } = await db.from('disputes').select('*', { count: 'exact', head: true }).eq('status', 'pending');
 
+    // Monthly user growth (last 6 months)
+    const monthlyGrowth: Array<{ month: string; count: number }> = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+      const { count: monthCount } = await db
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', start.toISOString())
+        .lt('created_at', end.toISOString());
+      monthlyGrowth.push({
+        month: `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`,
+        count: monthCount || 0,
+      });
+    }
+
+    // Total revenue from credit_transactions where type='add'
+    const { data: addTransactions } = await db
+      .from('credit_transactions')
+      .select('amount')
+      .eq('type', 'add');
+    const totalRevenue = (addTransactions || []).reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+
     return c.json({
       totalUsers: totalUsers || 0,
       totalMentors: totalMentors || 0,
@@ -989,9 +1092,180 @@ app.get(`${PREFIX}/admin/stats`, async (c) => {
       totalSessions: totalSessions || 0,
       totalReviews: totalReviews || 0,
       pendingDisputes: pendingDisputes || 0,
+      monthlyGrowth,
+      totalRevenue,
     });
   } catch (e) {
     return c.json({ error: `통계 조회 실패: ${e}` }, 500);
+  }
+});
+
+// ============================
+// MENTORS: Revenue Summary
+// ============================
+app.get(`${PREFIX}/mentors/revenue`, async (c) => {
+  try {
+    const { user, error } = await requireAuth(c);
+    if (error) return error;
+
+    const db = getServiceClient();
+
+    // Total earned from completed sessions
+    const { data: completedSessions } = await db
+      .from('sessions')
+      .select('price, date, user_id')
+      .eq('mentor_id', user!.id)
+      .eq('status', 'completed');
+
+    const totalEarned = (completedSessions || []).reduce(
+      (sum: number, s: any) => sum + (s.price || 0), 0,
+    );
+
+    // Pending from upcoming sessions
+    const { data: upcomingSessions } = await db
+      .from('sessions')
+      .select('price')
+      .eq('mentor_id', user!.id)
+      .eq('status', 'upcoming');
+
+    const pending = (upcomingSessions || []).reduce(
+      (sum: number, s: any) => sum + (s.price || 0), 0,
+    );
+
+    // Recent 10 completed sessions with mentee name
+    const { data: recentSessions } = await db
+      .from('sessions')
+      .select('id, price, date, user_id')
+      .eq('mentor_id', user!.id)
+      .eq('status', 'completed')
+      .order('date', { ascending: false })
+      .limit(10);
+
+    const recentTransactions = [];
+    for (const s of recentSessions || []) {
+      const { data: menteeProfile } = await db
+        .from('profiles')
+        .select('name')
+        .eq('id', s.user_id)
+        .single();
+      recentTransactions.push({
+        session_id: s.id,
+        date: s.date,
+        mentee_name: menteeProfile?.name || '사용자',
+        amount: s.price || 0,
+      });
+    }
+
+    return c.json({
+      total_earned: totalEarned,
+      pending,
+      recent_transactions: recentTransactions,
+    });
+  } catch (e) {
+    return c.json({ error: `수익 조회 실패: ${e}` }, 500);
+  }
+});
+
+// ============================
+// MENTORS: Revenue Withdraw
+// ============================
+app.post(`${PREFIX}/mentors/revenue/withdraw`, async (c) => {
+  try {
+    const { user, error } = await requireAuth(c);
+    if (error) return error;
+
+    // For now, just return success as a placeholder
+    return c.json({
+      success: true,
+      message: '출금 요청이 접수되었습니다.',
+      requested_by: user!.id,
+      requested_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    return c.json({ error: `출금 요청 실패: ${e}` }, 500);
+  }
+});
+
+// ============================
+// RELAY CHAIN: Connection Graph
+// ============================
+app.get(`${PREFIX}/relay-chain`, async (c) => {
+  try {
+    const { user, error } = await requireAuth(c);
+    if (error) return error;
+
+    const db = getServiceClient();
+
+    // Get all sessions grouped by mentor
+    const { data: sessions } = await db
+      .from('sessions')
+      .select('mentor_id, user_id, status');
+
+    // Get all outcomes
+    const { data: outcomes } = await db
+      .from('outcomes')
+      .select('mentor_id, user_id, result');
+
+    // Build mentor nodes with unique mentee counts
+    const mentorMap: Record<string, {
+      mentor_id: string;
+      mentee_ids: Set<string>;
+      completed_sessions: number;
+      success_outcomes: number;
+    }> = {};
+
+    for (const s of sessions || []) {
+      if (!s.mentor_id) continue;
+      if (!mentorMap[s.mentor_id]) {
+        mentorMap[s.mentor_id] = {
+          mentor_id: s.mentor_id,
+          mentee_ids: new Set(),
+          completed_sessions: 0,
+          success_outcomes: 0,
+        };
+      }
+      mentorMap[s.mentor_id].mentee_ids.add(s.user_id);
+      if (s.status === 'completed') {
+        mentorMap[s.mentor_id].completed_sessions++;
+      }
+    }
+
+    // Count success outcomes per mentor
+    for (const o of outcomes || []) {
+      if (!o.mentor_id) continue;
+      if (!mentorMap[o.mentor_id]) {
+        mentorMap[o.mentor_id] = {
+          mentor_id: o.mentor_id,
+          mentee_ids: new Set(),
+          completed_sessions: 0,
+          success_outcomes: 0,
+        };
+      }
+      if (o.result === 'success' || o.result === 'accepted') {
+        mentorMap[o.mentor_id].success_outcomes++;
+      }
+    }
+
+    // Fetch mentor names and build final result
+    const nodes = [];
+    for (const [mentorId, info] of Object.entries(mentorMap)) {
+      const { data: profile } = await db
+        .from('profiles')
+        .select('name')
+        .eq('id', mentorId)
+        .single();
+      nodes.push({
+        mentor_id: mentorId,
+        mentor_name: profile?.name || '멘토',
+        mentee_count: info.mentee_ids.size,
+        completed_sessions: info.completed_sessions,
+        success_outcomes: info.success_outcomes,
+      });
+    }
+
+    return c.json({ nodes });
+  } catch (e) {
+    return c.json({ error: `릴레이 체인 조회 실패: ${e}` }, 500);
   }
 });
 
