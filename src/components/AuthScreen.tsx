@@ -114,14 +114,14 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               </motion.div>
 
               <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                편입 합격의 경험을<br />
+                성공의 경험을<br />
                 <span className="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
                   다음 세대로 이어갑니다
                 </span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                AI 학업계획서 첨삭부터 합격생 멘토링까지,<br />
-                릴레이에서 편입 성공의 바톤을 이어받으세요.
+                편입·취업·자격증·대학원까지, AI 첨삭과 선배 멘토링으로<br />
+                릴레이에서 당신의 성공 바톤을 이어받으세요.
               </p>
             </div>
 
