@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -17,6 +18,7 @@ import {
   BookOpen,
   Trophy
 } from 'lucide-react';
+import * as api from './api';
 
 interface MentorStatsProps {
   onBack: () => void;
@@ -135,13 +137,37 @@ const menteeData: MenteeSuccess[] = [
 ];
 
 export function MentorStats({ onBack }: MentorStatsProps) {
-  const successCount = menteeData.filter(m => m.status === 'success').length;
-  const totalCompleted = menteeData.filter(m => m.status !== 'in-progress').length;
-  const successRate = totalCompleted > 0 ? Math.round((successCount / totalCompleted) * 100) : 0;
-  const avgSessions = Math.round(menteeData.reduce((sum, m) => sum + m.sessions, 0) / menteeData.length);
-  const avgRating = (menteeData.reduce((sum, m) => sum + m.rating, 0) / menteeData.length).toFixed(1);
+  const [mentees, setMentees] = useState<MenteeSuccess[]>(menteeData);
 
-  const universities = [...new Set(menteeData.filter(m => m.status === 'success').map(m => m.university))];
+  useEffect(() => {
+    api.getSessions().then((res: any) => {
+      if (res.sessions?.length > 0) {
+        const mapped: MenteeSuccess[] = res.sessions.map((s: any, idx: number) => ({
+          id: s.id || `api-${idx}`,
+          name: s.mentee_name || '멘티',
+          avatar: s.mentee_avatar || '👤',
+          university: s.university || '',
+          major: s.major || '',
+          status: s.result === 'passed' ? 'success' : s.result === 'failed' ? 'failed' : 'in-progress',
+          sessions: s.session_count || 1,
+          period: s.period || '',
+          result: s.result_label || '준비중',
+          rating: s.rating || 0,
+        }));
+        if (mapped.length > 0) {
+          setMentees(mapped);
+        }
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
+
+  const successCount = mentees.filter(m => m.status === 'success').length;
+  const totalCompleted = mentees.filter(m => m.status !== 'in-progress').length;
+  const successRate = totalCompleted > 0 ? Math.round((successCount / totalCompleted) * 100) : 0;
+  const avgSessions = mentees.length > 0 ? Math.round(mentees.reduce((sum, m) => sum + m.sessions, 0) / mentees.length) : 0;
+  const avgRating = mentees.length > 0 ? (mentees.reduce((sum, m) => sum + m.rating, 0) / mentees.length).toFixed(1) : '0.0';
+
+  const universities = [...new Set(mentees.filter(m => m.status === 'success').map(m => m.university))];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
@@ -180,7 +206,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
                   <Users className="w-7 h-7 text-indigo-600" />
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-1">{menteeData.length}</div>
+                <div className="text-4xl font-bold text-gray-900 mb-1">{mentees.length}</div>
                 <div className="text-sm text-gray-600">총 멘티 수</div>
                 <div className="text-xs text-gray-500 mt-1">누적 멘토링</div>
               </Card>
@@ -246,7 +272,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
             </div>
 
             <div className="space-y-3">
-              {menteeData.map((mentee, index) => {
+              {mentees.map((mentee, index) => {
                 const statusConfig = {
                   success: {
                     color: 'from-green-400 to-emerald-500',

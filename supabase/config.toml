@@ -1,6 +1,3 @@
-[project]
-id = "zvazeearuwvotdmqveyf"
-
 [api]
 enabled = true
 port = 54321

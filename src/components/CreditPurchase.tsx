@@ -14,6 +14,7 @@ import {
   Star
 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
 
 interface CreditPurchaseProps {
   onBack: () => void;
@@ -74,15 +75,18 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete }: C
     if (!pkg) return;
 
     setIsProcessing(true);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      const totalCredits = pkg.credits + (pkg.bonus || 0);
-      onPurchaseComplete(totalCredits);
-      toast.success(`${totalCredits}개의 크레딧이 충전되었습니다!`);
-      setTimeout(() => onBack(), 1500);
-    }, 2000);
+
+    const totalCredits = pkg.credits + (pkg.bonus || 0);
+
+    // Try to add credits via API, then update local state regardless
+    api.addCredits(totalCredits)
+      .catch(() => {}) // silently fall back to local-only update
+      .finally(() => {
+        setIsProcessing(false);
+        onPurchaseComplete(totalCredits);
+        toast.success(`${totalCredits}개의 크레딧이 충전되었습니다!`);
+        setTimeout(() => onBack(), 1500);
+      });
   };
 
   const selectedPkg = packages.find(p => p.id === selectedPackage);

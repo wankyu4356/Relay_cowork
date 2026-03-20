@@ -19,6 +19,7 @@ import {
   Network
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
+import { useMentors } from '../hooks/useMentors';
 
 interface MenteeHomeProps {
   onNavigate: (screen: Screen) => void;
@@ -26,58 +27,8 @@ interface MenteeHomeProps {
   credits: number;
 }
 
-const mockMentors: Mentor[] = [
-  {
-    id: '1',
-    name: '김서연',
-    university: '연세대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.9,
-    reviews: 23,
-    sessions: 35,
-    successRate: 87,
-    responseTime: '2시간',
-    price: 80000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '2',
-    name: '이준호',
-    university: '고려대',
-    major: '경제학과',
-    year: '23학번',
-    rating: 4.8,
-    reviews: 18,
-    sessions: 22,
-    successRate: 82,
-    responseTime: '1시간',
-    price: 70000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-  {
-    id: '3',
-    name: '박지민',
-    university: '서강대',
-    major: '경영학과',
-    year: '23학번',
-    rating: 4.7,
-    reviews: 12,
-    sessions: 15,
-    successRate: 80,
-    responseTime: '3시간',
-    price: 60000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👩‍💼',
-  },
-];
-
 export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomeProps) {
+  const { mentors: mockMentors } = useMentors();
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
       case 'gold': return 'badge-gold';

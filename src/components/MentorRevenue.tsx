@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -6,6 +6,7 @@ import { Badge } from './ui/badge';
 import { ArrowLeft, DollarSign, TrendingUp, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
+import * as api from './api';
 
 interface MentorRevenueProps {
   onBack: () => void;
@@ -28,7 +29,18 @@ const recentTransactions = [
 ];
 
 export function MentorRevenue({ onBack }: MentorRevenueProps) {
-  const [availableBalance] = useState(640000);
+  const [revenueData, setRevenueData] = useState(monthlyData);
+  const [transactions, setTransactions] = useState(recentTransactions);
+  const [availableBalance, setAvailableBalance] = useState(640000);
+
+  useEffect(() => {
+    // Revenue API not yet available - ready for integration
+    api.getProfile().then((res: any) => {
+      if (res.profile?.revenue) {
+        setAvailableBalance(res.profile.revenue.available || 640000);
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
 
   const handleWithdraw = () => {
     if (availableBalance < 10000) {
@@ -114,7 +126,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
           <Card className="p-6">
             <h3 className="font-semibold text-lg mb-4">월별 수익 추이</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyData}>
+              <BarChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -143,7 +155,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
               </Button>
             </div>
             <div className="space-y-3">
-              {recentTransactions.map((tx, index) => (
+              {transactions.map((tx, index) => (
                 <motion.div
                   key={tx.id}
                   initial={{ opacity: 0, x: -20 }}

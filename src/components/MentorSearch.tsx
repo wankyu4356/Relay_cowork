@@ -5,9 +5,9 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  Search, 
-  SlidersHorizontal, 
+import {
+  Search,
+  SlidersHorizontal,
   Star,
   TrendingUp,
   Clock,
@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import type { Mentor, Screen } from '../App';
 import { getRunnerColor, getRunnerAvatar } from '../lib/runnerUtils';
+import { useMentors } from '../hooks/useMentors';
 
 interface MentorSearchProps {
   onBack: () => void;
@@ -32,7 +33,7 @@ interface MentorSearchProps {
   onNavigate?: (screen: Screen) => void;
 }
 
-const allMentors: Mentor[] = [
+const LOCAL_MENTORS: Mentor[] = [
   {
     id: '1',
     name: '러너 #2847',
@@ -436,6 +437,9 @@ const allMentors: Mentor[] = [
 ];
 
 export function MentorSearch({ onBack, onMentorSelect, onNavigate }: MentorSearchProps) {
+  const { mentors: apiMentors, loading: mentorsLoading } = useMentors();
+  // Use API mentors when available (more than default 6), otherwise use large local set
+  const allMentors = apiMentors.length > 6 ? apiMentors : LOCAL_MENTORS;
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<string>('all');

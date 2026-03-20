@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  ArrowLeft, 
-  CheckCircle, 
-  XCircle, 
+import {
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
   Eye,
   FileText,
   GraduationCap,
@@ -18,6 +18,7 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
 
 interface AdminMentorApprovalProps {
   onBack: () => void;
@@ -114,6 +115,29 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
   const [selectedApp, setSelectedApp] = useState<MentorApplication | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectModal, setShowRejectModal] = useState(false);
+
+  // Load pending mentors from API on mount with fallback to mock data
+  useEffect(() => {
+    api.getPendingMentors().then(res => {
+      if (res.mentors?.length > 0) {
+        const mapped: MentorApplication[] = res.mentors.map((m: any) => ({
+          id: m.id,
+          name: m.name || '이름 없음',
+          email: m.email || '',
+          university: m.university || '',
+          major: m.major || '',
+          studentId: m.studentId || '',
+          admissionYear: m.admissionYear || m.year || '',
+          previousUniversity: m.previousUniversity || '',
+          studentIdFile: m.studentIdFile || { name: '파일 없음', url: '#' },
+          admissionFile: m.admissionFile || { name: '파일 없음', url: '#' },
+          submittedAt: m.submittedAt || m.createdAt || '',
+          status: m.status || 'pending',
+        }));
+        setApplications(mapped);
+      }
+    }).catch(() => {}); // keep mock data
+  }, []);
 
   const pendingApps = applications.filter(a => a.status === 'pending');
   const approvedApps = applications.filter(a => a.status === 'approved');

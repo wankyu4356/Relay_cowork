@@ -6,10 +6,10 @@ import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
-import { 
-  Sparkles, 
-  Search, 
-  Calendar, 
+import {
+  Sparkles,
+  Search,
+  Calendar,
   MessageSquare,
   Star,
   TrendingUp,
@@ -29,6 +29,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
+import { useMentors } from '../hooks/useMentors';
 
 interface UnifiedHomeProps {
   onNavigate: (screen: Screen) => void;
@@ -37,41 +38,6 @@ interface UnifiedHomeProps {
   isMentorActive?: boolean;
   onRoleChange?: (role: 'mentee' | 'mentor') => void;
 }
-
-const mockMentors: Mentor[] = [
-  {
-    id: '1',
-    name: '김서연',
-    university: '연세대',
-    major: '경영학과',
-    year: '22학번',
-    rating: 4.9,
-    reviews: 23,
-    sessions: 35,
-    successRate: 87,
-    responseTime: '2시간',
-    price: 80000,
-    badge: 'gold',
-    verified: true,
-    avatar: '👩‍🎓',
-  },
-  {
-    id: '2',
-    name: '이준호',
-    university: '고려대',
-    major: '경제학과',
-    year: '23학번',
-    rating: 4.8,
-    reviews: 18,
-    sessions: 22,
-    successRate: 82,
-    responseTime: '1시간',
-    price: 70000,
-    badge: 'silver',
-    verified: true,
-    avatar: '👨‍🎓',
-  },
-];
 
 export function UnifiedHome({ 
   onNavigate, 
@@ -85,6 +51,7 @@ export function UnifiedHome({
   const [isMentorActive, setIsMentorActive] = useState(initialMentorActive);
   const [showMentorOnboarding, setShowMentorOnboarding] = useState(false);
   const [showSuccessRateModal, setShowSuccessRateModal] = useState(false);
+  const { mentors: recommendedMentors, loading: mentorsLoading } = useMentors();
 
   const handleTabChange = (tab: 'mentee' | 'mentor') => {
     if (tab === 'mentor' && !isMentorActive) {
@@ -382,7 +349,7 @@ export function UnifiedHome({
                   </Button>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {mockMentors.map((mentor, index) => {
+                  {recommendedMentors.slice(0, 4).map((mentor, index) => {
                     const getBadgeColor = (badge: string) => {
                       switch (badge) {
                         case 'gold': return 'from-amber-400 to-yellow-500';

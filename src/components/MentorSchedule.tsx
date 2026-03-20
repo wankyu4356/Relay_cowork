@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -17,6 +17,7 @@ import {
   Edit,
   Trash2
 } from 'lucide-react';
+import * as api from './api';
 
 interface MentorScheduleProps {
   onBack: () => void;
@@ -114,6 +115,25 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'week' | 'day'>('week');
   const [schedule, setSchedule] = useState<TimeSlot[]>(mockSchedule);
+
+  useEffect(() => {
+    api.getMentorSchedule('me').then((res: any) => {
+      if (res.schedules?.length > 0) {
+        setSchedule(res.schedules.map((s: any, idx: number) => ({
+          id: s.id || `api-${idx}`,
+          day: daysOfWeek[s.dayOfWeek] || s.day || '월',
+          startTime: s.startTime || s.start_time,
+          endTime: s.endTime || s.end_time,
+          isAvailable: s.available !== false,
+          session: s.session ? {
+            mentee: s.session.mentee,
+            avatar: s.session.avatar || '👤',
+            topic: s.session.topic || '',
+          } : undefined,
+        })));
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
 
   const getScheduleForDay = (day: string) => {
     return schedule.filter(slot => slot.day === day);

@@ -129,6 +129,27 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Load conversations from API on mount with fallback to mock data
+  useEffect(() => {
+    api.getConversations().then(res => {
+      if (res.conversations?.length > 0) {
+        const mapped: Conversation[] = res.conversations.map((c: any) => ({
+          id: c.id,
+          userId: c.userId || c.id,
+          userName: c.userName || c.name || '사용자',
+          userAvatar: c.userAvatar || c.avatar || '👤',
+          userRole: c.userRole || '멘토',
+          lastMessage: c.lastMessage || '',
+          lastMessageTime: c.lastMessageTime || '',
+          unreadCount: c.unreadCount || 0,
+          online: c.online || false,
+        }));
+        setConversations(mapped);
+        setSelectedConversation(mapped[0]);
+      }
+    }).catch(() => {}); // keep mock data
+  }, []);
+
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 

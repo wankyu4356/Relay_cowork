@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -26,6 +26,7 @@ import {
   Send
 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
 
 interface AdminDisputeManagementProps {
   onBack: () => void;
@@ -235,6 +236,33 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [adminResponse, setAdminResponse] = useState('');
+
+  // Load disputes from API on mount with fallback to mock data
+  useEffect(() => {
+    api.getDisputes().then(res => {
+      if (res.disputes?.length > 0) {
+        const mapped: Dispute[] = res.disputes.map((d: any) => ({
+          id: d.id,
+          type: d.type || 'report',
+          priority: d.priority || 'medium',
+          status: d.status || 'pending',
+          title: d.title || d.reason || '',
+          description: d.description || '',
+          reporter: d.reporter || { name: '신고자', role: '멘티' as const, avatar: '👤' },
+          reported: d.reported || { name: '피신고자', role: '멘토' as const, avatar: '👤' },
+          sessionId: d.sessionId,
+          sessionDate: d.sessionDate,
+          amount: d.amount,
+          submittedAt: d.submittedAt || d.createdAt || '',
+          updatedAt: d.updatedAt || d.createdAt || '',
+          adminNotes: d.adminNotes || d.resolution,
+          evidence: d.evidence || [],
+          timeline: d.timeline || [],
+        }));
+        setDisputes(mapped);
+      }
+    }).catch(() => {}); // keep mock data
+  }, []);
 
   const filteredDisputes = disputes.filter(d => {
     const matchesSearch =

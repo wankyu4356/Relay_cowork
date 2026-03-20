@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -5,6 +6,7 @@ import { Badge } from './ui/badge';
 import { Users, DollarSign, Calendar, TrendingUp, Sparkles, AlertCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { Screen } from '../App';
+import * as api from './api';
 
 interface AdminDashboardProps {
   onNavigate: (screen: Screen) => void;
@@ -18,6 +20,12 @@ const chartData = [
 ];
 
 export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
+  const [stats, setStats] = useState({ totalUsers: 0, totalMentors: 0, totalSessions: 0, totalReviews: 0, activeMentors: 0, pendingDisputes: 0 });
+
+  useEffect(() => {
+    api.getAdminStats().then(res => setStats(res)).catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
       <div className="bg-white border-b border-gray-200">

@@ -4,11 +4,11 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  ArrowLeft, 
-  Clock, 
-  Calendar, 
-  Video, 
+import {
+  ArrowLeft,
+  Clock,
+  Calendar,
+  Video,
   Star,
   MessageSquare,
   FileText,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Session } from '../App';
+import { useSessions } from '../hooks/useSessions';
 
 interface SessionListProps {
   onBack: () => void;
@@ -26,67 +27,9 @@ interface SessionListProps {
   onNavigate?: (screen: string) => void;
 }
 
-const mockSessions: Session[] = [
-  {
-    id: '1',
-    mentorId: '1',
-    mentorName: '이서연',
-    mentorAvatar: '👩‍🎓',
-    date: '2025.02.20',
-    time: '14:00',
-    duration: 60,
-    price: 80000,
-    status: 'upcoming',
-  },
-  {
-    id: '2',
-    mentorId: '1',
-    mentorName: '이서연',
-    mentorAvatar: '👩‍🎓',
-    date: '2025.02.25',
-    time: '16:00',
-    duration: 60,
-    price: 80000,
-    status: 'upcoming',
-  },
-  {
-    id: '3',
-    mentorId: '2',
-    mentorName: '김민준',
-    mentorAvatar: '👨‍🎓',
-    date: '2025.02.18',
-    time: '10:00',
-    duration: 90,
-    price: 120000,
-    status: 'ongoing',
-  },
-  {
-    id: '4',
-    mentorId: '3',
-    mentorName: '박지우',
-    mentorAvatar: '👨‍💼',
-    date: '2025.01.15',
-    time: '15:00',
-    duration: 60,
-    price: 70000,
-    status: 'completed',
-  },
-  {
-    id: '5',
-    mentorId: '4',
-    mentorName: '최예은',
-    mentorAvatar: '👩‍💼',
-    date: '2025.01.10',
-    time: '11:00',
-    duration: 60,
-    price: 75000,
-    status: 'completed',
-  },
-];
-
 export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate }: SessionListProps) {
+  const { sessions, loading: sessionsLoading, cancelSession } = useSessions();
   const [activeTab, setActiveTab] = useState('upcoming');
-  const [sessions, setSessions] = useState<Session[]>(mockSessions);
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
 
   const upcomingSessions = sessions.filter(s => s.status === 'upcoming');
@@ -94,9 +37,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
 
   const handleCancelSession = (sessionId: string) => {
     if (confirm('세션을 취소하시겠습니까? 취소 수수료가 발생할 수 있습니다.')) {
-      setSessions(prev => prev.map(s => 
-        s.id === sessionId ? { ...s, status: 'cancelled' as const } : s
-      ));
+      cancelSession(sessionId);
       toast.success('세션이 취소되었습니다');
       setSelectedSession(null);
     }

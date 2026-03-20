@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -16,6 +16,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import type { Screen } from '../App';
+import * as api from './api';
 
 interface MentorReviewsProps {
   onBack: () => void;
@@ -99,30 +100,50 @@ const mockReviews: Review[] = [
 ];
 
 export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
+  const [reviews, setReviews] = useState<Review[]>(mockReviews);
   const [filterRating, setFilterRating] = useState<number | 'all'>('all');
   const [filterSuccess, setFilterSuccess] = useState<'all' | 'passed' | 'pending'>('all');
 
-  const filteredReviews = mockReviews.filter(review => {
+  useEffect(() => {
+    api.getMentorReviews('me').then((res: any) => {
+      if (res.reviews?.length > 0) {
+        setReviews(res.reviews.map((r: any) => ({
+          id: r.id,
+          menteeName: r.mentee_name || '멘티',
+          menteeAvatar: r.mentee_avatar || '👤',
+          rating: r.rating,
+          date: r.date || r.created_at,
+          content: r.content,
+          tags: r.tags || [],
+          university: r.university || '',
+          successStatus: r.success_status,
+          helpful: r.helpful || 0,
+        })));
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
+
+  const filteredReviews = reviews.filter(review => {
     const matchesRating = filterRating === 'all' || review.rating >= filterRating;
     const matchesSuccess = filterSuccess === 'all' || review.successStatus === filterSuccess;
     return matchesRating && matchesSuccess;
   });
 
   // Calculate stats
-  const totalReviews = mockReviews.length;
-  const averageRating = (mockReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1);
+  const totalReviews = reviews.length;
+  const averageRating = totalReviews > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1) : '0.0';
   const ratingDistribution = {
-    5: mockReviews.filter(r => r.rating === 5).length,
-    4: mockReviews.filter(r => r.rating >= 4 && r.rating < 5).length,
-    3: mockReviews.filter(r => r.rating >= 3 && r.rating < 4).length,
-    2: mockReviews.filter(r => r.rating >= 2 && r.rating < 3).length,
-    1: mockReviews.filter(r => r.rating >= 1 && r.rating < 2).length,
+    5: reviews.filter(r => r.rating === 5).length,
+    4: reviews.filter(r => r.rating >= 4 && r.rating < 5).length,
+    3: reviews.filter(r => r.rating >= 3 && r.rating < 4).length,
+    2: reviews.filter(r => r.rating >= 2 && r.rating < 3).length,
+    1: reviews.filter(r => r.rating >= 1 && r.rating < 2).length,
   };
-  const passedReviews = mockReviews.filter(r => r.successStatus === 'passed').length;
-  const totalHelpful = mockReviews.reduce((sum, r) => sum + r.helpful, 0);
+  const passedReviews = reviews.filter(r => r.successStatus === 'passed').length;
+  const totalHelpful = reviews.reduce((sum, r) => sum + r.helpful, 0);
 
   // Most common tags
-  const allTags = mockReviews.flatMap(r => r.tags);
+  const allTags = reviews.flatMap(r => r.tags);
   const tagCounts = allTags.reduce((acc, tag) => {
     acc[tag] = (acc[tag] || 0) + 1;
     return acc;
@@ -262,7 +283,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
             onClick={() => setFilterSuccess('all')}
             className={filterSuccess === 'all' ? 'btn-primary' : 'btn-secondary'}
           >
-            전체 ({mockReviews.length})
+            전체 ({reviews.length})
           </Button>
           <Button
             variant={filterSuccess === 'passed' ? 'default' : 'outline'}
@@ -276,7 +297,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
             onClick={() => setFilterSuccess('pending')}
             className={filterSuccess === 'pending' ? 'btn-primary' : 'btn-secondary'}
           >
-            준비중 ({mockReviews.length - passedReviews})
+            준비중 ({reviews.length - passedReviews})
           </Button>
           <div className="h-8 w-px bg-gray-300 mx-2" />
           <Button

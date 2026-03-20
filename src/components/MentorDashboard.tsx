@@ -1,12 +1,13 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { RelayChainVisualization } from './RelayChainVisualization';
-import { 
-  Calendar, 
-  DollarSign, 
-  Users, 
+import {
+  Calendar,
+  DollarSign,
+  Users,
   Star,
   TrendingUp,
   Clock,
@@ -19,6 +20,7 @@ import {
   Network
 } from 'lucide-react';
 import type { Screen } from '../App';
+import * as api from './api';
 
 interface MentorDashboardProps {
   onNavigate: (screen: Screen) => void;
@@ -53,6 +55,23 @@ const upcomingSessions = [
 ];
 
 export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardProps) {
+  const [dashboardSessions, setDashboardSessions] = useState(upcomingSessions);
+
+  useEffect(() => {
+    api.getSessions().then((res: any) => {
+      if (res.sessions?.length > 0) {
+        setDashboardSessions(res.sessions.filter((s: any) => s.status === 'upcoming').map((s: any) => ({
+          id: s.id,
+          mentee: s.mentor_name || '멘티',
+          date: s.date,
+          time: s.time,
+          duration: s.duration || 60,
+          status: s.status === 'upcoming' ? 'confirmed' : s.status,
+        })));
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
+
   const stats = {
     totalRevenue: 450000,
     monthlySessions: 12,
@@ -216,7 +235,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 </div>
 
                 <div className="space-y-3">
-                  {upcomingSessions.map((session, index) => (
+                  {dashboardSessions.map((session, index) => (
                     <motion.div
                       key={session.id}
                       initial={{ opacity: 0, x: -20 }}
@@ -259,7 +278,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                     </motion.div>
                   ))}
 
-                  {upcomingSessions.length === 0 && (
+                  {dashboardSessions.length === 0 && (
                     <div className="text-center py-12 text-gray-500">
                       <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>예정된 세션이 없습니다</p>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -21,6 +21,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import type { Screen } from '../App';
+import * as api from './api';
 
 interface MentorMenteeListProps {
   onBack: () => void;
@@ -132,11 +133,44 @@ const mockMentees: Mentee[] = [
 ];
 
 export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) {
+  const [mentees, setMentees] = useState<Mentee[]>(mockMentees);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed'>('all');
 
-  const filteredMentees = mockMentees.filter(mentee => {
-    const matchesSearch = mentee.name.includes(searchQuery) || 
+  useEffect(() => {
+    api.getSessions().then((res: any) => {
+      if (res.sessions?.length > 0) {
+        const menteeMap = new Map<string, Mentee>();
+        res.sessions.forEach((s: any) => {
+          if (s.mentee_id && !menteeMap.has(s.mentee_id)) {
+            menteeMap.set(s.mentee_id, {
+              id: s.mentee_id,
+              name: s.mentee_name || '멘티',
+              avatar: s.mentee_avatar || '👤',
+              university: s.university || '',
+              major: s.major || '',
+              status: s.status === 'completed' ? 'completed' : 'active',
+              sessions: 1,
+              lastSession: s.date,
+              totalPaid: s.price || 0,
+              joinedDate: s.created_at || s.date,
+              goal: s.topic || '',
+            });
+          } else if (s.mentee_id) {
+            const existing = menteeMap.get(s.mentee_id)!;
+            existing.sessions += 1;
+            existing.totalPaid += (s.price || 0);
+          }
+        });
+        if (menteeMap.size > 0) {
+          setMentees(Array.from(menteeMap.values()));
+        }
+      }
+    }).catch(() => {}); // keep mock data on failure
+  }, []);
+
+  const filteredMentees = mentees.filter(mentee => {
+    const matchesSearch = mentee.name.includes(searchQuery) ||
                          mentee.university.includes(searchQuery) ||
                          mentee.major.includes(searchQuery);
     const matchesTab = activeTab === 'all' || mentee.status === activeTab;
@@ -144,11 +178,11 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
   });
 
   const stats = {
-    total: mockMentees.length,
-    active: mockMentees.filter(m => m.status === 'active').length,
-    completed: mockMentees.filter(m => m.status === 'completed').length,
-    totalRevenue: mockMentees.reduce((sum, m) => sum + m.totalPaid, 0),
-    avgSessions: Math.round(mockMentees.reduce((sum, m) => sum + m.sessions, 0) / mockMentees.length),
+    total: mentees.length,
+    active: mentees.filter(m => m.status === 'active').length,
+    completed: mentees.filter(m => m.status === 'completed').length,
+    totalRevenue: mentees.reduce((sum, m) => sum + m.totalPaid, 0),
+    avgSessions: mentees.length > 0 ? Math.round(mentees.reduce((sum, m) => sum + m.sessions, 0) / mentees.length) : 0,
   };
 
   const getStatusBadge = (status: string) => {
