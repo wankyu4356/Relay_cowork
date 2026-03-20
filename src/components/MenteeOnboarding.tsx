@@ -9,12 +9,74 @@ import { Progress } from './ui/progress';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
 
 interface MenteeOnboardingProps {
   onComplete: () => void;
+  selectedCategory?: Category;
 }
 
-export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
+const STEP1_CONFIG: Record<Category, { title: string; description: string; field1Label: string; field1Placeholder: string; field2Label: string; field2Placeholder: string }> = {
+  transfer: {
+    title: '현재 재학 정보',
+    description: '현재 다니고 계신 학교와 전공을 알려주세요',
+    field1Label: '전적대학 *',
+    field1Placeholder: '예: 건국대학교',
+    field2Label: '전공 *',
+    field2Placeholder: '예: 정치외교학과',
+  },
+  admission: {
+    title: '현재 재학 정보',
+    description: '현재 다니고 계신 학교 정보를 알려주세요',
+    field1Label: '고등학교 *',
+    field1Placeholder: '예: 서울고등학교',
+    field2Label: '전공 *',
+    field2Placeholder: '예: 자연계열',
+  },
+  career: {
+    title: '학력 정보',
+    description: '출신 학교와 전공을 알려주세요',
+    field1Label: '출신 대학 *',
+    field1Placeholder: '예: 서울대학교',
+    field2Label: '전공 *',
+    field2Placeholder: '예: 컴퓨터공학과',
+  },
+  certification: {
+    title: '학력/경력 정보',
+    description: '학력 또는 경력 정보를 알려주세요',
+    field1Label: '학력 *',
+    field1Placeholder: '예: 서울대학교',
+    field2Label: '전공/분야 *',
+    field2Placeholder: '예: 회계학과',
+  },
+  other: {
+    title: '기본 정보',
+    description: '학력 또는 경력 정보를 알려주세요',
+    field1Label: '학력 *',
+    field1Placeholder: '예: 서울대학교',
+    field2Label: '전공/분야 *',
+    field2Placeholder: '예: 경영학과',
+  },
+};
+
+const STEP1_SUMMARY_LABEL: Record<Category, string> = {
+  transfer: '전적대',
+  admission: '고등학교',
+  career: '출신 대학',
+  certification: '학력',
+  other: '학력',
+};
+
+const STEP2_DESCRIPTION: Record<Category, string> = {
+  transfer: '편입하고 싶은 학교와 학과를 알려주세요',
+  admission: '입학하고 싶은 학교와 학과를 알려주세요',
+  career: '취업하고 싶은 회사와 직무를 알려주세요',
+  certification: '취득하고 싶은 자격증과 분야를 알려주세요',
+  other: '목표와 분야를 알려주세요',
+};
+
+export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: MenteeOnboardingProps) {
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -26,15 +88,18 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
     gpaMax: '4.5',
   });
 
+  const content = CATEGORY_CONTENT[selectedCategory ?? 'transfer'];
+  const step1 = STEP1_CONFIG[selectedCategory ?? 'transfer'];
+
   const handleNext = async () => {
     if (step === 1) {
       if (!formData.currentUniversity || !formData.currentMajor) {
-        toast.error('현재 재학 정보를 입력해주세요');
+        toast.error(`${step1.title} 정보를 입력해주세요`);
         return;
       }
     } else if (step === 2) {
       if (!formData.targetUniversity || !formData.targetMajor) {
-        toast.error('지원 대학 정보를 입력해주세요');
+        toast.error(`${content.field1Label} 정보를 입력해주세요`);
         return;
       }
     }
@@ -103,15 +168,15 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
               >
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">🎓</div>
-                  <h2 className="text-2xl font-bold mb-2">현재 재학 정보</h2>
-                  <p className="text-gray-600">현재 다니고 계신 학교와 전공을 알려주세요</p>
+                  <h2 className="text-2xl font-bold mb-2">{step1.title}</h2>
+                  <p className="text-gray-600">{step1.description}</p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <Label>전적대학 *</Label>
+                    <Label>{step1.field1Label}</Label>
                     <Input
-                      placeholder="예: 건국대학교"
+                      placeholder={step1.field1Placeholder}
                       value={formData.currentUniversity}
                       onChange={(e) => setFormData(prev => ({ ...prev, currentUniversity: e.target.value }))}
                       className="mt-2"
@@ -119,9 +184,9 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
                   </div>
 
                   <div>
-                    <Label>전공 *</Label>
+                    <Label>{step1.field2Label}</Label>
                     <Input
-                      placeholder="예: 정치외교학과"
+                      placeholder={step1.field2Placeholder}
                       value={formData.currentMajor}
                       onChange={(e) => setFormData(prev => ({ ...prev, currentMajor: e.target.value }))}
                       className="mt-2"
@@ -140,7 +205,7 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
                     </div>
                     <div>
                       <Label>만점 기준</Label>
-                      <Select 
+                      <Select
                         value={formData.gpaMax}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, gpaMax: value }))}
                       >
@@ -168,15 +233,15 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
               >
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">🎯</div>
-                  <h2 className="text-2xl font-bold mb-2">지원 대학 정보</h2>
-                  <p className="text-gray-600">편입하고 싶은 학교와 학과를 알려주세요</p>
+                  <h2 className="text-2xl font-bold mb-2">{content.field1Label} 정보</h2>
+                  <p className="text-gray-600">{STEP2_DESCRIPTION[selectedCategory ?? 'transfer']}</p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <Label>지원 대학 *</Label>
+                    <Label>{content.field1Label} *</Label>
                     <Input
-                      placeholder="예: 연세대학교"
+                      placeholder={content.field1Placeholder}
                       value={formData.targetUniversity}
                       onChange={(e) => setFormData(prev => ({ ...prev, targetUniversity: e.target.value }))}
                       className="mt-2"
@@ -184,9 +249,9 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
                   </div>
 
                   <div>
-                    <Label>지원 학과 *</Label>
+                    <Label>{content.field2Label} *</Label>
                     <Input
-                      placeholder="예: 경영학과"
+                      placeholder={content.field2Placeholder}
                       value={formData.targetMajor}
                       onChange={(e) => setFormData(prev => ({ ...prev, targetMajor: e.target.value }))}
                       className="mt-2"
@@ -212,13 +277,13 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
                 </motion.div>
                 <h2 className="text-3xl font-bold mb-4">준비 완료!</h2>
                 <p className="text-xl text-gray-600 mb-8">
-                  {formData.targetUniversity} {formData.targetMajor} 편입을 위한<br />
+                  {formData.targetUniversity} {formData.targetMajor} {content.label}을 위한<br />
                   맞춤 멘토를 추천해드릴게요
                 </p>
                 <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200 max-w-md mx-auto">
                   <div className="space-y-3 text-left">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">전적대</span>
+                      <span className="text-gray-600">{STEP1_SUMMARY_LABEL[selectedCategory ?? 'transfer']}</span>
                       <span className="font-medium">{formData.currentUniversity}</span>
                     </div>
                     <div className="flex justify-between">
@@ -231,7 +296,7 @@ export function MenteeOnboarding({ onComplete }: MenteeOnboardingProps) {
                     </div>
                     <div className="border-t border-sky-200 pt-3 mt-3">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">목표</span>
+                        <span className="text-gray-600">{content.label} 목표</span>
                         <span className="font-medium text-sky-600">
                           {formData.targetUniversity} {formData.targetMajor}
                         </span>

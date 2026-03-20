@@ -550,8 +550,9 @@ function App() {
         )}
         
         {currentScreen === 'mentee-onboarding' && (
-          <MenteeOnboarding 
+          <MenteeOnboarding
             onComplete={handleOnboardingComplete}
+            selectedCategory={selectedCategory}
           />
         )}
         
@@ -615,9 +616,10 @@ function App() {
         )}
         
         {currentScreen === 'ai-recommendation' && (
-          <AIRecommendation 
+          <AIRecommendation
             onBack={() => navigateTo('unified-home')}
             onComplete={() => navigateTo('mentor-search')}
+            selectedCategory={selectedCategory}
           />
         )}
         
@@ -680,7 +682,7 @@ function App() {
               totalSessions: 156,
               isVerified: true,
               responseTime: '2시간 이내',
-              expertise: ['학업계획서', '자기소개서', '면접 준비']
+              expertise: [CATEGORY_CONTENT[selectedCategory].docLabel.replace('내 AI ', ''), '자기소개서', '면접 준비']
             }}
           />
         )}
@@ -816,7 +818,7 @@ function App() {
         )}
         
         {currentScreen === 'credit-purchase' && (
-          <CreditPurchase 
+          <CreditPurchase
             onBack={() => {
               if (userRole === 'mentee') navigateTo('unified-home');
               else if (userRole === 'mentor') navigateTo('mentor-dashboard');
@@ -824,6 +826,7 @@ function App() {
             }}
             currentCredits={credits}
             onPurchaseComplete={handleCreditPurchase}
+            selectedCategory={selectedCategory}
           />
         )}
         

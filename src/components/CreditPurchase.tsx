@@ -16,10 +16,14 @@ import {
 import { toast } from 'sonner';
 import * as api from './api';
 
+import type { Category } from './GlobalNav';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
+
 interface CreditPurchaseProps {
   onBack: () => void;
   currentCredits: number;
   onPurchaseComplete: (credits: number) => void;
+  selectedCategory?: Category;
 }
 
 interface CreditPackage {
@@ -65,7 +69,8 @@ const packages: CreditPackage[] = [
   },
 ];
 
-export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete }: CreditPurchaseProps) {
+export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, selectedCategory = 'transfer' }: CreditPurchaseProps) {
+  const catContent = CATEGORY_CONTENT[selectedCategory];
   const [selectedPackage, setSelectedPackage] = useState<string>('popular');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'kakao' | 'toss'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -106,7 +111,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete }: C
               <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 크레딧 충전
               </h1>
-              <p className="text-gray-600 mt-1">AI 학업계획서 생성 크레딧을 구매하세요</p>
+              <p className="text-gray-600 mt-1">{catContent.aiToolTitle} 크레딧을 구매하세요</p>
             </div>
             <Badge className="bg-gradient-to-r from-sky-500 to-blue-600 text-white border-0 px-4 py-2">
               <Wallet className="w-4 h-4 mr-2" />
@@ -124,13 +129,13 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete }: C
             animate={{ opacity: 1, y: 0 }}
           >
             <Card className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 border-0 text-white">
-              <h2 className="text-xl font-bold mb-4">AI 학계서 크레딧으로 할 수 있어요</h2>
+              <h2 className="text-xl font-bold mb-4">{catContent.docLabel} 크레딧으로 할 수 있어요</h2>
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="flex items-start gap-3">
                   <Sparkles className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="font-semibold mb-1">AI 초안 생성</div>
-                    <div className="text-sm text-white/80">5분 만에 맞춤형 학계서</div>
+                    <div className="text-sm text-white/80">5분 만에 맞춤형 문서</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
