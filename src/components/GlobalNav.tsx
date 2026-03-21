@@ -137,6 +137,8 @@ export function GlobalNav({
         animate={{ width: collapsed ? 80 : 288 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className="hidden md:block fixed left-0 top-0 bottom-0 bg-white border-r border-gray-200 z-20 overflow-hidden"
+        role="navigation"
+        aria-label="사이드바 네비게이션"
       >
         <div className="flex flex-col h-full">
           {/* Logo & Category & Toggle Button */}
@@ -172,6 +174,8 @@ export function GlobalNav({
               size="sm"
               onClick={onToggleCollapse}
               className={`w-full hover:bg-gray-100 rounded-lg p-2 flex items-center ${collapsed ? 'justify-center' : 'justify-end'}`}
+              aria-label={collapsed ? '사이드바 펼치기' : '사이드바 접기'}
+              aria-expanded={!collapsed}
             >
               {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
             </Button>
@@ -184,6 +188,8 @@ export function GlobalNav({
                     variant="outline"
                     className="w-full justify-between rounded-xl border-2 hover:border-sky-300 hover:bg-sky-50 transition-all"
                     onClick={() => setShowCategoryMenu(!showCategoryMenu)}
+                    aria-expanded={showCategoryMenu}
+                    aria-label="카테고리 선택"
                   >
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 ${currentCategory?.bgColor} rounded-lg flex items-center justify-center`}>
@@ -334,7 +340,7 @@ export function GlobalNav({
       </motion.nav>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 safe-area-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 safe-area-bottom" role="navigation" aria-label="메인 네비게이션">
         <div className="grid grid-cols-5 h-16">
           <MobileNavItem
             icon={Home}
@@ -370,7 +376,7 @@ export function GlobalNav({
             badge={unreadNotifications}
           />
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -405,6 +411,7 @@ export function GlobalNav({
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label="메뉴 닫기"
                   >
                     <X className="w-5 h-5" />
                   </Button>
@@ -533,6 +540,8 @@ function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavIt
             : 'text-gray-700 hover:bg-gray-50'
         }`}
         title={label}
+        aria-current={active ? 'page' : undefined}
+        aria-label={label}
       >
         <div className="relative">
           <Icon className="w-5 h-5" />
@@ -554,6 +563,7 @@ function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavIt
           ? 'bg-gradient-to-r from-sky-50 to-cyan-50 text-sky-700 font-semibold shadow-sm'
           : 'text-gray-700 hover:bg-gray-50'
       }`}
+      aria-current={active ? 'page' : undefined}
     >
       <div className="relative">
         <Icon className="w-5 h-5" />
@@ -576,6 +586,8 @@ function MobileNavItem({ icon: Icon, label, active, onClick, badge }: NavItemPro
       className={`flex flex-col items-center justify-center gap-1 transition-all ${
         active ? 'text-sky-600' : 'text-gray-600'
       }`}
+      aria-current={active ? 'page' : undefined}
+      aria-label={label}
     >
       <div className="relative">
         <Icon className="w-6 h-6" />

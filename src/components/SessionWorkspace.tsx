@@ -90,11 +90,12 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
         <div className="container-web py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={onBack}
                 className="text-white hover:bg-gray-700"
+                aria-label="뒤로 가기"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
@@ -109,9 +110,10 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
               </div>
             </div>
             
-            <Button 
+            <Button
               onClick={handleEndSession}
               className="bg-red-600 hover:bg-red-700 text-white"
+              aria-label="세션 종료"
             >
               세션 종료
             </Button>
@@ -171,6 +173,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   size="lg"
                   className="rounded-full w-14 h-14"
                   onClick={() => setIsMicOn(!isMicOn)}
+                  aria-label={isMicOn ? '마이크 끄기' : '마이크 켜기'}
+                  aria-pressed={isMicOn}
                 >
                   {isMicOn ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
                 </Button>
@@ -179,6 +183,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   size="lg"
                   className="rounded-full w-14 h-14"
                   onClick={() => setIsCameraOn(!isCameraOn)}
+                  aria-label={isCameraOn ? '카메라 끄기' : '카메라 켜기'}
+                  aria-pressed={isCameraOn}
                 >
                   {isCameraOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
                 </Button>
@@ -190,6 +196,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                     setIsScreenSharing(!isScreenSharing);
                     toast.info(isScreenSharing ? '화면 공유 종료' : '화면 공유 시작');
                   }}
+                  aria-label={isScreenSharing ? '화면 공유 종료' : '화면 공유 시작'}
+                  aria-pressed={isScreenSharing}
                 >
                   <Monitor className="w-6 h-6" />
                 </Button>
@@ -198,6 +206,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   size="lg"
                   className="rounded-full w-14 h-14"
                   onClick={() => setShowDocument(!showDocument)}
+                  aria-label={showDocument ? '문서 숨기기' : '문서 보기'}
+                  aria-pressed={showDocument}
                 >
                   <FileText className="w-6 h-6" />
                 </Button>
@@ -206,6 +216,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   size="lg"
                   className="rounded-full w-14 h-14"
                   onClick={() => setShowChat(!showChat)}
+                  aria-label={showChat ? '채팅 숨기기' : '채팅 보기'}
+                  aria-pressed={showChat}
                 >
                   <MessageSquare className="w-6 h-6" />
                 </Button>
@@ -264,7 +276,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                 </Button>
               </div>
 
-              <div className="flex-1 overflow-auto p-4 space-y-3">
+              <div className="flex-1 overflow-auto p-4 space-y-3" role="log" aria-label="채팅 메시지">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -293,10 +305,12 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                       }
                     }}
                     className="min-h-[60px] bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                    aria-label="채팅 메시지 입력"
                   />
-                  <Button 
+                  <Button
                     onClick={handleSendMessage}
                     className="bg-sky-600 hover:bg-sky-700"
+                    aria-label="메시지 보내기"
                   >
                     <Send className="w-5 h-5" />
                   </Button>

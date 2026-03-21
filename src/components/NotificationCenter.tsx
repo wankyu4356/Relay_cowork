@@ -109,7 +109,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
         <div className="container-web py-6">
           <div className="flex items-center gap-4 mb-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="ghost" size="icon" onClick={onBack}>
+              <Button variant="ghost" size="icon" onClick={onBack} aria-label="뒤로 가기">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </motion.div>
@@ -122,11 +122,13 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
               </p>
             </div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
+              <Button
                 variant={showFilters ? 'default' : 'outline'}
                 size="icon"
                 onClick={() => setShowFilters(!showFilters)}
                 className={showFilters ? 'bg-sky-500 hover:bg-sky-600' : ''}
+                aria-label="필터"
+                aria-expanded={showFilters}
               >
                 <Filter className="w-5 h-5" />
               </Button>
@@ -219,7 +221,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
               </Card>
             </motion.div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3" aria-live="polite" aria-label="알림 목록">
               {filteredNotifications.map((notification, index) => {
                 const Icon = getIcon(notification.type);
                 const iconColor = getIconColor(notification.type);
@@ -283,7 +285,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                               </Button>
                             )}
 
-                            <Button 
+                            <Button
                               size="sm"
                               variant="ghost"
                               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -291,6 +293,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                                 handleDelete(notification.id);
                               }}
                               className="text-red-600 hover:bg-red-50 ml-auto"
+                              aria-label="알림 삭제"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>

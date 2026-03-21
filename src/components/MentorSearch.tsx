@@ -114,10 +114,12 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 <Network className="w-4 h-4" />
                 릴레이 네트워크
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className={`gap-2 rounded-xl transition-all ${showFilters ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'btn-secondary'}`}
+                aria-expanded={showFilters}
+                aria-label="필터"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 필터
@@ -134,6 +136,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="멘토 검색"
             />
           </div>
         </div>
@@ -265,13 +268,14 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         </div>
 
         {/* Mentor Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6" role="list" aria-label="멘토 목록">
           {filteredMentors.map((mentor, index) => (
             <motion.div
               key={mentor.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
+              role="listitem"
             >
               <Card 
                 className="relative overflow-hidden card-modern hover-lift cursor-pointer group"

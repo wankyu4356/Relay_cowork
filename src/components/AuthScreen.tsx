@@ -168,10 +168,12 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               </div>
 
               {/* Tab switcher */}
-              <div className="flex bg-gray-100 rounded-2xl p-1 mb-8">
+              <div className="flex bg-gray-100 rounded-2xl p-1 mb-8" role="tablist" aria-label="인증 방식 선택">
                 {(['login', 'signup'] as const).map((tab) => (
                   <button
                     key={tab}
+                    role="tab"
+                    aria-selected={mode === tab}
                     onClick={() => setMode(tab)}
                     className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                       mode === tab
@@ -193,6 +195,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   transition={{ duration: 0.2 }}
                   onSubmit={handleSubmit}
                   className="space-y-5"
+                  role="form"
+                  aria-label={mode === 'login' ? '로그인 양식' : '회원가입 양식'}
                 >
                   {mode === 'signup' && (
                     <div className="space-y-2">
@@ -204,6 +208,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                           value={form.name}
                           onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                           className="pl-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                          aria-label="이름"
                         />
                       </div>
                     </div>
@@ -219,6 +224,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                         value={form.email}
                         onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
                         className="pl-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                        aria-label="이메일"
                       />
                     </div>
                   </div>
@@ -233,11 +239,13 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                         value={form.password}
                         onChange={(e) => setForm(prev => ({ ...prev, password: e.target.value }))}
                         className="pl-10 pr-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                        aria-label="비밀번호"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -261,6 +269,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                                 ? 'border-sky-400 bg-sky-50'
                                 : 'border-gray-200 bg-white hover:border-gray-300'
                             }`}
+                            aria-pressed={form.role === option.value}
+                            aria-label={`${option.label} (${option.desc})`}
                           >
                             <option.icon className={`w-5 h-5 mb-2 ${
                               form.role === option.value ? 'text-sky-600' : 'text-gray-400'
@@ -281,6 +291,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     type="submit"
                     disabled={loading}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold text-base shadow-lg shadow-sky-200/50"
+                    aria-label={mode === 'login' ? '로그인' : '회원가입'}
                   >
                     {loading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
