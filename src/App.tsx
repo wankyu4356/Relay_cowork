@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { logger } from './utils/logger';
 import { GlobalNav } from './components/GlobalNav';
 import type { Category } from './components/GlobalNav';
 import { AuthScreen } from './components/AuthScreen';
@@ -229,14 +230,14 @@ function App() {
           } catch (profileErr) {
             // Session exists but profile fetch failed (expired JWT, etc.)
             // Clear stale session and show auth screen
-            console.log('Session expired or invalid, clearing:', profileErr);
+            logger.log('Session expired or invalid, clearing:', profileErr);
             await api.signOut();
             setAuthSession(null);
             setCurrentScreen('auth');
           }
         }
       } catch (e) {
-        console.log('No existing session:', e);
+        logger.log('No existing session:', e);
       } finally {
         setAuthChecked(true);
       }
@@ -307,7 +308,7 @@ function App() {
       setCurrentScreen('auth');
       toast.success('로그아웃 되었습니다.');
     } catch (e) {
-      console.error('Logout error:', e);
+      logger.error('Logout error:', e);
     }
   };
 
@@ -319,7 +320,7 @@ function App() {
       try {
         await api.updateProfile({ role });
       } catch (e) {
-        console.error('Failed to save role:', e);
+        logger.error('Failed to save role:', e);
       }
     }
 
@@ -338,7 +339,7 @@ function App() {
       try {
         await api.updateProfile({ onboardingCompleted: true });
       } catch (e) {
-        console.error('Failed to save onboarding status:', e);
+        logger.error('Failed to save onboarding status:', e);
       }
     }
     navigateTo('unified-home');
@@ -353,7 +354,7 @@ function App() {
         const result = await api.useCredit(1);
         setCredits(result.balance);
       } catch (e: any) {
-        console.error('Credit use error:', e);
+        logger.error('Credit use error:', e);
         if (e.message?.includes('부족')) {
           toast.error('크레딧이 부족합니다. 충전해주세요.');
           navigateTo('credit-purchase');
@@ -396,7 +397,7 @@ function App() {
         });
         toast.success('세션이 예약되었습니다!');
       } catch (e) {
-        console.error('Session booking error:', e);
+        logger.error('Session booking error:', e);
       }
     }
     navigateTo('session-workspace');
@@ -435,7 +436,7 @@ function App() {
     }
     
     if (!session) {
-      console.error('No session or mentor available');
+      logger.error('No session or mentor available');
       navigateTo('session-list');
       return;
     }
@@ -466,7 +467,7 @@ function App() {
         const result = await api.addCredits(newCredits);
         setCredits(result.balance);
       } catch (e) {
-        console.error('Credit purchase error:', e);
+        logger.error('Credit purchase error:', e);
         setCredits(prev => prev + newCredits);
       }
     } else {
@@ -487,7 +488,7 @@ function App() {
         });
         toast.success('초안이 저장되었습니다!');
       } catch (e) {
-        console.error('Draft save error:', e);
+        logger.error('Draft save error:', e);
         toast.error('초안 저장에 실패했습니다.');
       }
     }
@@ -517,6 +518,19 @@ function App() {
         <Toaster />
       </>
     );
+  }
+
+  // Route protection: redirect unauthorized users
+  const isAdminScreen = currentScreen.startsWith('admin');
+  const isMentorScreen = currentScreen.startsWith('mentor-') && currentScreen !== 'mentor-search' && currentScreen !== 'mentor-profile' && currentScreen !== 'mentor-network' && currentScreen !== 'mentor-verification';
+
+  if (isAdminScreen && userRole !== 'admin') {
+    navigateTo('unified-home');
+    return null;
+  }
+  if (isMentorScreen && userRole !== 'mentor') {
+    navigateTo('unified-home');
+    return null;
   }
 
   const isAuthScreen = currentScreen === 'onboarding' || currentScreen === 'mentee-onboarding';
@@ -717,7 +731,7 @@ function App() {
           <OutcomeReport 
             onBack={() => navigateTo('unified-home')}
             onSubmit={(outcome, detail) => {
-              console.log('Outcome:', outcome, detail);
+              logger.log('Outcome:', outcome, detail);
               navigateTo('unified-home');
             }}
             mentor={selectedMentor}
