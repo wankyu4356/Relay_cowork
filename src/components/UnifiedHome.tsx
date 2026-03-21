@@ -331,7 +331,7 @@ export function UnifiedHome({
                     </Button>
                     <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
                       <Sparkles className="w-4 h-4" />
-                      <span>남은 크레딧: {creditBalance}회</span>
+                      <span>남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
                     </div>
                   </div>
                 </Card>
@@ -387,7 +387,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <BookOpen className="w-7 h-7 text-purple-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{draftCount}</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : draftCount}</div>
                     <div className="text-sm text-gray-600">{content.docLabel}</div>
                   </Card>
                 </motion.div>
@@ -397,7 +397,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-sky-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Calendar className="w-7 h-7 text-sky-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{upcomingSessionCount}</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : upcomingSessionCount}</div>
                     <div className="text-sm text-gray-600">예정된 세션</div>
                   </Card>
                 </motion.div>
@@ -407,7 +407,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Users className="w-7 h-7 text-indigo-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{mentorNetworkCount}</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : mentorNetworkCount}</div>
                     <div className="text-sm text-gray-600">내 인맥 멘토</div>
                   </Card>
                 </motion.div>

@@ -268,6 +268,23 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         </div>
 
         {/* Mentor Cards */}
+        {mentorsLoading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="p-6 animate-pulse">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 bg-gray-200 rounded-full" />
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
+                    <div className="h-3 bg-gray-200 rounded w-32" />
+                  </div>
+                </div>
+                <div className="h-3 bg-gray-200 rounded w-full mb-2" />
+                <div className="h-3 bg-gray-200 rounded w-3/4" />
+              </Card>
+            ))}
+          </div>
+        ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6" role="list" aria-label="멘토 목록">
           {filteredMentors.map((mentor, index) => (
             <motion.div
@@ -412,6 +429,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
             </motion.div>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
         {filteredMentors.length === 0 && (

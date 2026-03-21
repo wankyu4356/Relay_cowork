@@ -126,6 +126,32 @@ export type Screen =
 
 export type UserRole = 'mentee' | 'mentor' | 'admin';
 
+export interface AuthSession {
+  access_token: string;
+  refresh_token?: string;
+  user: {
+    id: string;
+    email?: string;
+    user_metadata?: Record<string, unknown>;
+  };
+}
+
+export interface UserProfile {
+  id: string;
+  email?: string;
+  name: string;
+  role: UserRole;
+  createdAt?: string;
+  onboardingCompleted?: boolean;
+  profile?: Record<string, unknown>;
+  avatar?: string;
+}
+
+export interface ProfileData {
+  profile: UserProfile | null;
+  credits?: number;
+}
+
 export interface AIData {
   university: string;
   major: string;
@@ -196,8 +222,8 @@ function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Auth state
-  const [authSession, setAuthSession] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [authSession, setAuthSession] = useState<AuthSession | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
@@ -266,7 +292,7 @@ function App() {
     }
   }, [navigate]);
 
-  const handleAuthSuccess = useCallback(async (session: any, profileData: any) => {
+  const handleAuthSuccess = useCallback(async (session: AuthSession | null, profileData: ProfileData) => {
     if (!session) {
       // Guest mode
       setIsGuest(true);

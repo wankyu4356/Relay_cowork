@@ -8,9 +8,10 @@ import { Badge } from './ui/badge';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import type { AuthSession, ProfileData } from '../App';
 
 interface AuthScreenProps {
-  onAuthSuccess: (session: any, profile: any) => void;
+  onAuthSuccess: (session: AuthSession | null, profile: ProfileData) => void;
 }
 
 export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
