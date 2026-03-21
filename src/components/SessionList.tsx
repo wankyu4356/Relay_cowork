@@ -14,7 +14,8 @@ import {
   FileText,
   MoreVertical,
   X,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Session } from '../App';
@@ -35,11 +36,16 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
   const upcomingSessions = sessions.filter(s => s.status === 'upcoming');
   const completedSessions = sessions.filter(s => s.status === 'completed');
 
-  const handleCancelSession = (sessionId: string) => {
+  const handleCancelSession = async (sessionId: string) => {
     if (confirm('세션을 취소하시겠습니까? 취소 수수료가 발생할 수 있습니다.')) {
-      cancelSession(sessionId);
-      toast.success('세션이 취소되었습니다');
-      setSelectedSession(null);
+      try {
+        await cancelSession(sessionId);
+        toast.success('세션이 취소되었습니다');
+      } catch {
+        toast.error('세션 취소에 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setSelectedSession(null);
+      }
     }
   };
 
@@ -249,6 +255,14 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
 
       <div className="container-web py-8 pb-24">
         <div className="max-w-4xl mx-auto">
+          {/* Loading State */}
+          {sessionsLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-sky-500" />
+              <span className="ml-3 text-gray-600">세션을 불러오는 중...</span>
+            </div>
+          )}
+
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>

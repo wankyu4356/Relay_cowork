@@ -65,6 +65,8 @@ export function UnifiedHome({
   const [draftCount, setDraftCount] = useState(2);
   const [upcomingSessionCount, setUpcomingSessionCount] = useState(3);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [creditBalance, setCreditBalance] = useState(credits);
+  const [mentorNetworkCount, setMentorNetworkCount] = useState(12);
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
   useEffect(() => {
@@ -74,10 +76,12 @@ export function UnifiedHome({
       setDashboardLoading(true);
 
       // Fetch all data in parallel, each with its own try/catch
-      const [draftsResult, sessionsResult, notificationsResult] = await Promise.allSettled([
+      const [draftsResult, sessionsResult, notificationsResult, creditsResult, mentorsResult] = await Promise.allSettled([
         api.getDrafts(),
         api.getSessions(),
         api.getNotifications(),
+        api.getCredits(),
+        api.getMentors(),
       ]);
 
       if (cancelled) return;
@@ -105,6 +109,24 @@ export function UnifiedHome({
         if (Array.isArray(notifications)) {
           const unread = notifications.filter((n: any) => !n.read);
           setNotificationCount(unread.length);
+        }
+      }
+
+      // Credit balance
+      if (creditsResult.status === 'fulfilled') {
+        const creditsData = creditsResult.value;
+        if (typeof creditsData?.balance === 'number') {
+          setCreditBalance(creditsData.balance);
+        } else if (typeof creditsData?.credits === 'number') {
+          setCreditBalance(creditsData.credits);
+        }
+      }
+
+      // Mentor network count
+      if (mentorsResult.status === 'fulfilled') {
+        const mentors = mentorsResult.value?.mentors;
+        if (Array.isArray(mentors)) {
+          setMentorNetworkCount(mentors.length);
         }
       }
 
@@ -309,7 +331,7 @@ export function UnifiedHome({
                     </Button>
                     <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
                       <Sparkles className="w-4 h-4" />
-                      <span>남은 크레딧: {credits}회</span>
+                      <span>남은 크레딧: {creditBalance}회</span>
                     </div>
                   </div>
                 </Card>
@@ -385,7 +407,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Users className="w-7 h-7 text-indigo-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">12</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{mentorNetworkCount}</div>
                     <div className="text-sm text-gray-600">내 인맥 멘토</div>
                   </Card>
                 </motion.div>
