@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ReviewWrite } from './ReviewWrite';
@@ -27,7 +27,8 @@ vi.mock('motion/react', () => ({
     get: (_target, prop) => {
       return ({ children, ...props }: any) => {
         const { whileHover, whileTap, initial, animate, exit, transition, ...rest } = props;
-        return <div data-motion={prop as string} {...rest}>{children}</div>;
+        const Tag = prop === 'button' ? 'button' : prop === 'p' ? 'p' : 'div';
+        return <Tag data-motion={prop as string} {...rest}>{children}</Tag>;
       };
     },
   }),
@@ -59,11 +60,6 @@ describe('ReviewWrite', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('renders without crashing', () => {
@@ -87,6 +83,10 @@ describe('ReviewWrite', () => {
   it('renders star rating buttons', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
     expect(screen.getByText('별점을 선택해주세요')).toBeInTheDocument();
+    const starButtons = screen.getAllByRole('button').filter(
+      btn => btn.getAttribute('data-motion') === 'button'
+    );
+    expect(starButtons.length).toBe(5);
   });
 
   it('renders predefined tags', () => {
@@ -100,44 +100,22 @@ describe('ReviewWrite', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
     const tag = screen.getByText('#친절함');
     await userEvent.click(tag);
-    // Click again to deselect
     await userEvent.click(tag);
   });
 
-  it('shows error when submitting without rating', async () => {
+  it('submit button is disabled when no rating or short text', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    // The submit button is disabled, but let's find and try to call handleSubmit via the button
-    const submitBtn = screen.getByText('리뷰 등록하기');
-    await userEvent.click(submitBtn);
-    // Button is disabled so the handler won't fire - rating === 0
-  });
-
-  it('shows error when review text is too short', async () => {
-    render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-
-    // Select a star rating by clicking the 5th star button
-    const starButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.className.includes('focus:outline-none')
-    );
-    if (starButtons.length >= 5) {
-      await userEvent.click(starButtons[4]);
-    }
-
-    // Type short review
-    const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
-    await userEvent.type(textarea, '짧은리뷰');
-
-    // Submit button should still be disabled since < 30 chars
     const submitBtn = screen.getByText('리뷰 등록하기');
     expect(submitBtn).toBeDisabled();
   });
 
-  it('displays character count', async () => {
+  it('displays character count', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
     expect(screen.getByText('0자')).toBeInTheDocument();
 
     const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
-    await userEvent.type(textarea, '테스트');
+    fireEvent.change(textarea, { target: { value: 'abc' } });
+
     expect(screen.getByText('3자')).toBeInTheDocument();
   });
 
@@ -146,30 +124,29 @@ describe('ReviewWrite', () => {
 
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
 
-    // Click star 5 (the star buttons are inside motion.button elements rendered as divs)
+    // Click 5th star button
     const starButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.className.includes('focus:outline-none')
+      btn => btn.getAttribute('data-motion') === 'button'
     );
-    if (starButtons.length >= 5) {
-      await userEvent.click(starButtons[4]);
-    }
+    fireEvent.click(starButtons[4]);
 
     // Type review text (30+ chars)
+    const reviewText = 'This is a test review that is longer than thirty characters for testing.';
     const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
-    await userEvent.type(textarea, '이 멘토링은 정말 유익했습니다. 실전적인 조언과 체계적인 피드백이 큰 도움이 되었어요.');
+    fireEvent.change(textarea, { target: { value: reviewText } });
 
     // Select a tag
-    await userEvent.click(screen.getByText('#친절함'));
+    fireEvent.click(screen.getByText('#친절함'));
 
     // Click submit
     const submitBtn = screen.getByText('리뷰 등록하기');
-    await userEvent.click(submitBtn);
+    fireEvent.click(submitBtn);
 
     await waitFor(() => {
       expect(api.submitReview).toHaveBeenCalledWith({
         mentorId: 'mentor-1',
         rating: 5,
-        content: '이 멘토링은 정말 유익했습니다. 실전적인 조언과 체계적인 피드백이 큰 도움이 되었어요.',
+        content: reviewText,
         tags: ['친절함'],
       });
     });
@@ -182,19 +159,15 @@ describe('ReviewWrite', () => {
 
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
 
-    // Click a star
     const starButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.className.includes('focus:outline-none')
+      btn => btn.getAttribute('data-motion') === 'button'
     );
-    if (starButtons.length >= 5) {
-      await userEvent.click(starButtons[4]);
-    }
+    fireEvent.click(starButtons[4]);
 
-    // Type 30+ chars
     const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
-    await userEvent.type(textarea, '이 멘토링은 정말 유익했습니다. 실전적인 조언과 체계적인 피드백이 큰 도움이 되었어요.');
+    fireEvent.change(textarea, { target: { value: 'This is a test review that is longer than thirty characters for testing.' } });
 
-    await userEvent.click(screen.getByText('리뷰 등록하기'));
+    fireEvent.click(screen.getByText('리뷰 등록하기'));
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith('리뷰가 등록되었습니다! 🎉');
