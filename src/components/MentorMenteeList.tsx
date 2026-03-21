@@ -285,7 +285,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
             </div>
 
             {/* Tabs */}
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full md:w-auto">
+            <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)} className="w-full md:w-auto">
               <TabsList className="grid grid-cols-3 h-12 bg-gray-100/80">
                 <TabsTrigger value="all" className="data-[state=active]:bg-white">
                   전체 ({stats.total})
@@ -373,7 +373,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                     <Button
                       variant="outline"
                       className="btn-secondary rounded-xl flex-1 md:flex-none"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onNavigate('chat');
                       }}
@@ -383,7 +383,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                     </Button>
                     <Button
                       className="btn-primary rounded-xl flex-1 md:flex-none"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onNavigate('session-detail');
                       }}

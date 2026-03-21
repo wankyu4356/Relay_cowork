@@ -492,7 +492,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                     </div>
                     <Switch
                       checked={generalSettings.autoRefundOnFailure}
-                      onCheckedChange={(checked) => {
+                      onCheckedChange={(checked: boolean) => {
                         setGeneralSettings(prev => ({ ...prev, autoRefundOnFailure: checked }));
                         setHasUnsavedChanges(true);
                       }}
@@ -505,7 +505,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                     </div>
                     <Switch
                       checked={generalSettings.maintenanceMode}
-                      onCheckedChange={(checked) => {
+                      onCheckedChange={(checked: boolean) => {
                         setGeneralSettings(prev => ({ ...prev, maintenanceMode: checked }));
                         setHasUnsavedChanges(true);
                       }}
@@ -592,7 +592,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                           <div className="flex items-center gap-3 md:w-32 justify-end">
                             <Switch
                               checked={pkg.active}
-                              onCheckedChange={(checked) => handlePackageChange(pkg.id, 'active', checked)}
+                              onCheckedChange={(checked: boolean) => handlePackageChange(pkg.id, 'active', checked)}
                             />
                             <span className="text-xs text-gray-500 w-8">
                               {pkg.active ? '활성' : '비활성'}

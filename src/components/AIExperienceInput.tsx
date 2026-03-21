@@ -367,7 +367,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                   <Label className="text-base">글자 수</Label>
                   <Select 
                     value={formData.wordCount?.toString()}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, wordCount: parseInt(value) }))}
+                    onValueChange={(value: string) => setFormData(prev => ({ ...prev, wordCount: parseInt(value) }))}
                   >
                     <SelectTrigger className="mt-3 h-12">
                       <SelectValue />

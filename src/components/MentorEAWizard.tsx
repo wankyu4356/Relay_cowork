@@ -154,7 +154,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                   <Label>합격 연도 *</Label>
                   <Select 
                     value={formData.admissionYear}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, admissionYear: value }))}
+                    onValueChange={(value: string) => setFormData(prev => ({ ...prev, admissionYear: value }))}
                   >
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="선택" />
@@ -170,7 +170,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                   <Label>학기 *</Label>
                   <Select 
                     value={formData.admissionSemester}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, admissionSemester: value }))}
+                    onValueChange={(value: string) => setFormData(prev => ({ ...prev, admissionSemester: value }))}
                   >
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="선택" />
@@ -212,7 +212,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                   <Label>만점 기준 *</Label>
                   <Select 
                     value={formData.gpaMax}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, gpaMax: value }))}
+                    onValueChange={(value: string) => setFormData(prev => ({ ...prev, gpaMax: value }))}
                   >
                     <SelectTrigger className="mt-2">
                       <SelectValue />
@@ -265,7 +265,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                 <Label>준비 기간 *</Label>
                 <Select 
                   value={formData.prepDuration}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, prepDuration: value }))}
+                  onValueChange={(value: string) => setFormData(prev => ({ ...prev, prepDuration: value }))}
                 >
                   <SelectTrigger className="mt-2">
                     <SelectValue placeholder="선택" />
@@ -338,7 +338,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                   </div>
                   <Switch
                     checked={formData.hasEssay}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, hasEssay: checked }))}
+                    onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, hasEssay: checked }))}
                   />
                 </div>
               </Card>
@@ -392,7 +392,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                     </div>
                     <Switch
                       checked={formData.publicEssay}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, publicEssay: checked }))}
+                      onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, publicEssay: checked }))}
                     />
                   </div>
                 </Card>
@@ -405,7 +405,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                     </div>
                     <Switch
                       checked={formData.publicInterview}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, publicInterview: checked }))}
+                      onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, publicInterview: checked }))}
                     />
                   </div>
                 </Card>
@@ -418,7 +418,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                     </div>
                     <Switch
                       checked={formData.publicStudyMethod}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, publicStudyMethod: checked }))}
+                      onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, publicStudyMethod: checked }))}
                     />
                   </div>
                 </Card>
@@ -431,7 +431,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
                     </div>
                     <Switch
                       checked={formData.publicTools}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, publicTools: checked }))}
+                      onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, publicTools: checked }))}
                     />
                   </div>
                 </Card>

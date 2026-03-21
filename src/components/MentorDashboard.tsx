@@ -299,7 +299,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                             <Button
                               size="sm"
                               className="btn-primary"
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
                                 onNavigate('session-detail');
                               }}

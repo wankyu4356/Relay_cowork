@@ -164,7 +164,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
             </Card>
 
             {/* Tabs */}
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+            <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)}>
               <TabsList className="grid grid-cols-3 h-12 bg-white/50 backdrop-blur-sm">
                 <TabsTrigger value="details" className="data-[state=active]:bg-white">
                   <Calendar className="w-4 h-4 mr-2" />

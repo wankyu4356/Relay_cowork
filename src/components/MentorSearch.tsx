@@ -381,7 +381,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   <div className="flex gap-3">
                     <Button 
                       className="flex-1 btn-primary rounded-xl h-12 font-semibold group-hover:shadow-2xl transition-all"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
                       }}
@@ -389,10 +389,10 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                       <Calendar className="w-4 h-4 mr-2" />
                       예약하기
                     </Button>
-                    <Button 
+                    <Button
                       variant="outline"
                       className="btn-secondary rounded-xl h-12 px-6"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
                       }}

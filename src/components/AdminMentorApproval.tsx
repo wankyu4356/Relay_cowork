@@ -303,7 +303,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
           </div>
 
           {/* Tabs */}
-          <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="w-full">
+          <Tabs value={tab} onValueChange={(v: string) => setTab(v as any)} className="w-full">
             <TabsList className="w-full grid grid-cols-3 h-12 bg-gray-100/80 backdrop-blur-sm p-1 mb-6">
               <TabsTrigger value="pending" className="data-[state=active]:bg-white data-[state=active]:shadow-md">
                 대기 ({pendingApps.length})

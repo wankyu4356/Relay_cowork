@@ -272,7 +272,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                               <Button 
                                 size="sm"
                                 variant="ghost"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                   e.stopPropagation();
                                   handleMarkAsRead(notification.id);
                                 }}
@@ -286,7 +286,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                             <Button 
                               size="sm"
                               variant="ghost"
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
                                 handleDelete(notification.id);
                               }}

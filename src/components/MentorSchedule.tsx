@@ -469,7 +469,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       variant="ghost"
                                       size="icon"
                                       className="h-6 w-6"
-                                      onClick={(e) => {
+                                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                         e.stopPropagation();
                                       }}
                                     >
@@ -479,7 +479,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       variant="ghost"
                                       size="icon"
                                       className="h-6 w-6"
-                                      onClick={(e) => {
+                                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                         e.stopPropagation();
                                       }}
                                     >

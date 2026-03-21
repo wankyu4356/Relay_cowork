@@ -207,7 +207,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       <Label>만점 기준</Label>
                       <Select
                         value={formData.gpaMax}
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, gpaMax: value }))}
+                        onValueChange={(value: string) => setFormData(prev => ({ ...prev, gpaMax: value }))}
                       >
                         <SelectTrigger className="mt-2">
                           <SelectValue />

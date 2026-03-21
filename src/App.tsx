@@ -257,8 +257,8 @@ function App() {
     return () => subscription?.unsubscribe();
   }, []);
 
-  const navigateTo = useCallback((screen: Screen) => {
-    setCurrentScreen(screen);
+  const navigateTo = useCallback((screen: Screen | string) => {
+    setCurrentScreen(screen as Screen);
     const path = screenToPath[screen];
     if (path) {
       navigate(path, { replace: false });
@@ -527,7 +527,7 @@ function App() {
         currentScreen={currentScreen}
         onNavigate={navigateTo}
         onRoleChange={(role) => setUserRole(role)}
-        currentRole={userRole}
+        currentRole={userRole === 'admin' ? undefined : userRole}
         unreadMessages={2}
         unreadNotifications={3}
         collapsed={sidebarCollapsed}
@@ -670,19 +670,21 @@ function App() {
           <SessionWorkspace 
             onBack={() => navigateTo('session-detail')}
             onComplete={() => handleReviewWrite()}
-            mentor={{
+            mentor={selectedMentor ?? {
               id: '1',
               name: '러너 A',
               avatar: '👨‍🎓',
               university: '연세대',
               major: '경영학과',
-              year: 2023,
+              year: '22학번',
               rating: 4.9,
-              reviewCount: 45,
-              totalSessions: 156,
-              isVerified: true,
+              reviews: 45,
+              sessions: 156,
+              successRate: 87,
               responseTime: '2시간 이내',
-              expertise: [CATEGORY_CONTENT[selectedCategory].docLabel.replace('내 AI ', ''), '자기소개서', '면접 준비']
+              price: 30000,
+              badge: 'gold' as const,
+              verified: true,
             }}
           />
         )}

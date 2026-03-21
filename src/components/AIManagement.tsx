@@ -417,7 +417,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={(e) => {
+                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                 e.stopPropagation();
                                 onEdit({
                                   university: draft.university,
@@ -436,7 +436,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                             {!draft.hasSession && (
                               <Button
                                 size="sm"
-                                onClick={(e) => {
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                   e.stopPropagation();
                                   onMentorConnect();
                                 }}

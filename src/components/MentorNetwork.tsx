@@ -190,7 +190,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)} className="space-y-6">
           <TabsList className="grid grid-cols-2 h-14 bg-white/50 backdrop-blur-sm shadow-sm">
             <TabsTrigger value="chain" className="data-[state=active]:bg-white text-base font-semibold">
               <Zap className="w-4 h-4 mr-2" />

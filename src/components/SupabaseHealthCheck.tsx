@@ -55,7 +55,7 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
 
   return (
     <AnimatePresence>
-      {status !== 'healthy' && (
+      {(status === 'checking' || status === 'error') && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -140,7 +140,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   className="rounded-lg border"
-                  disabled={(date) => date < new Date()}
+                  disabled={(date: Date) => date < new Date()}
                 />
               </div>
             </Card>
@@ -243,7 +243,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   <Checkbox 
                     id="share"
                     checked={shareDocument}
-                    onCheckedChange={(checked) => setShareDocument(checked as boolean)}
+                    onCheckedChange={(checked: boolean) => setShareDocument(checked as boolean)}
                   />
                   <label htmlFor="share" className="cursor-pointer flex-1 text-sm">
                     <div className="font-semibold mb-1">AI 학업계획서 공유하기</div>
@@ -297,7 +297,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 <Checkbox 
                   id="terms"
                   checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                  onCheckedChange={(checked: boolean) => setAgreedToTerms(checked as boolean)}
                 />
                 <label htmlFor="terms" className="cursor-pointer flex-1 text-sm">
                   <div className="font-semibold mb-2">환불 정책 동의 (필수)</div>
