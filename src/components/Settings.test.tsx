@@ -62,7 +62,7 @@ describe('Settings', () => {
 
   it('renders without crashing', () => {
     render(<Settings onBack={mockOnBack} />);
-    expect(screen.getByText('설정')).toBeInTheDocument();
+    expect(screen.getByText('릴레이 설정')).toBeInTheDocument();
   });
 
   it('displays profile information', () => {

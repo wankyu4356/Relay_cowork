@@ -88,7 +88,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-slate-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -99,8 +99,8 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               </Button>
             </motion.div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                설정
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
+                릴레이 설정
               </h1>
               <p className="text-gray-600 mt-1">계정 및 앱 설정을 관리하세요</p>
             </div>
@@ -115,11 +115,11 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
             <Card className="p-6">
               <div className="flex items-start gap-4">
                 <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center text-3xl">
+                  <div className="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center text-3xl">
                     👨‍🎓
                   </div>
-                  <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg border-2 border-sky-200 flex items-center justify-center hover:bg-sky-50 transition-colors">
-                    <Camera className="w-4 h-4 text-sky-600" />
+                  <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                    <Camera className="w-4 h-4 text-gray-600" />
                   </button>
                 </div>
                 <div className="flex-1">
@@ -134,7 +134,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                   </div>
                   <p className="text-gray-600 mb-3">{profileBio}</p>
                   <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1 text-sky-600">
+                    <div className="flex items-center gap-1 text-gray-600">
                       <Wallet className="w-4 h-4" />
                       <span className="font-semibold">{credits} 크레딧</span>
                     </div>
@@ -149,25 +149,25 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
           {/* Account Section */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-sky-600" />
+              <User className="w-5 h-5 text-gray-600" />
               계정 정보
             </h2>
             <Card className="divide-y">
               <div 
-                className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group"
+                className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group"
                 onClick={() => setActiveSection(activeSection === 'profile' ? null : 'profile')}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
-                      <Edit2 className="w-5 h-5 text-sky-600" />
+                    <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                      <Edit2 className="w-5 h-5 text-gray-600" />
                     </div>
                     <div>
                       <div className="font-medium">프로필 수정</div>
                       <div className="text-sm text-gray-600">사진, 닉네임, 소개 변경</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
 
                 {activeSection === 'profile' && (
@@ -204,7 +204,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                     </div>
                     <Button 
                       onClick={handleSaveProfile}
-                      className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700"
+                      className="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-700 hover:to-gray-600"
                     >
                       <Check className="w-4 h-4 mr-2" />
                       저장하기
@@ -213,7 +213,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 )}
               </div>
 
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
@@ -228,7 +228,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 </div>
               </div>
 
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
@@ -251,14 +251,14 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
           {/* Notifications */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-sky-600" />
+              <Bell className="w-5 h-5 text-gray-600" />
               알림 설정
             </h2>
             <Card className="divide-y">
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
-                    <Bell className="w-5 h-5 text-sky-600" />
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Bell className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
                     <div className="font-medium">세션 리마인더</div>
@@ -306,7 +306,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               <div className="p-4">
                 <Button 
                   onClick={handleSaveNotifications}
-                  className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700"
+                  className="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-700 hover:to-gray-600"
                 >
                   알림 설정 저장
                 </Button>
@@ -317,11 +317,11 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
           {/* Payment & Credits */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Wallet className="w-5 h-5 text-sky-600" />
+              <Wallet className="w-5 h-5 text-gray-600" />
               결제 및 크레딧
             </h2>
             <Card className="divide-y">
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
@@ -333,12 +333,12 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-sky-600">{credits}회</div>
+                    <div className="font-bold text-gray-600">{credits}회</div>
                     <div className="text-xs text-gray-500">보유</div>
                   </div>
                 </div>
               </div>
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
@@ -349,10 +349,10 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">카드 및 결제 정보 관리</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
@@ -363,7 +363,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">구매 및 환불 내역</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>
@@ -372,11 +372,11 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
           {/* Security */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-sky-600" />
+              <Lock className="w-5 h-5 text-gray-600" />
               보안 및 개인정보
             </h2>
             <Card className="divide-y">
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center group-hover:bg-red-200 transition-colors">
@@ -387,10 +387,10 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">계정 비밀번호 수정</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
@@ -401,7 +401,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">개인정보 보호 정책</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>
@@ -410,25 +410,25 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
           {/* Support */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-sky-600" />
+              <HelpCircle className="w-5 h-5 text-gray-600" />
               고객 지원
             </h2>
             <Card className="divide-y">
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
-                      <HelpCircle className="w-5 h-5 text-sky-600" />
+                    <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                      <HelpCircle className="w-5 h-5 text-gray-600" />
                     </div>
                     <div>
                       <div className="font-medium">FAQ</div>
                       <div className="text-sm text-gray-600">자주 묻는 질문</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
@@ -439,10 +439,10 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">support@relay.com</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-sky-50/50 cursor-pointer transition-all group">
+              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
@@ -453,7 +453,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       <div className="text-sm text-gray-600">약관 및 정책</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-sky-600 transition-colors">→</span>
+                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>

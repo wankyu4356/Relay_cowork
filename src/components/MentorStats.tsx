@@ -156,7 +156,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
       if (res.sessions?.length && res.sessions.length > 0) {
         const mapped: MenteeSuccess[] = res.sessions.map((s, idx: number) => ({
           id: s.id || `api-${idx}`,
-          name: s.mentee_name || '멘티',
+          name: s.mentee_name || '러너',
           avatar: s.mentee_avatar || '👤',
           university: s.university || '',
           major: s.major || '',
@@ -191,8 +191,8 @@ export function MentorStats({ onBack }: MentorStatsProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold gradient-text">멘토링 성과 분석</h1>
-              <p className="text-sm text-gray-600">전체 멘티들의 합격 현황과 통계</p>
+              <h1 className="text-2xl font-bold gradient-text">릴레이 성과 분석</h1>
+              <p className="text-sm text-gray-600">전체 러너들의 합격 현황과 통계</p>
             </div>
           </div>
         </div>
@@ -219,19 +219,19 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                   <Users className="w-7 h-7 text-indigo-600" />
                 </div>
                 <div className="text-4xl font-bold text-gray-900 mb-1">{mentees.length}</div>
-                <div className="text-sm text-gray-600">총 멘티 수</div>
-                <div className="text-xs text-gray-500 mt-1">누적 멘토링</div>
+                <div className="text-sm text-gray-600">총 러너 수</div>
+                <div className="text-xs text-gray-500 mt-1">누적 릴레이</div>
               </Card>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
                   <Calendar className="w-7 h-7 text-blue-600" />
                 </div>
                 <div className="text-4xl font-bold text-gray-900 mb-1">{avgSessions}</div>
                 <div className="text-sm text-gray-600">평균 세션 수</div>
-                <div className="text-xs text-gray-500 mt-1">멘티당</div>
+                <div className="text-xs text-gray-500 mt-1">러너당</div>
               </Card>
             </motion.div>
 
@@ -257,7 +257,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">합격 대학 현황</h3>
                   <p className="text-indigo-100 mb-4">
-                    멘티들이 합격한 {universities.length}개 대학
+                    러너들이 합격한 {universities.length}개 대학
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {universities.map((uni, i) => (
@@ -278,8 +278,8 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">멘티별 성과 현황</h2>
-                <p className="text-sm text-gray-600">전체 멘토링 결과 한눈에 보기</p>
+                <h2 className="text-xl font-bold">러너별 성과 현황</h2>
+                <p className="text-sm text-gray-600">전체 릴레이 결과 한눈에 보기</p>
               </div>
             </div>
 
@@ -295,8 +295,8 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                     text: '합격',
                   },
                   'in-progress': {
-                    color: 'from-blue-400 to-cyan-500',
-                    bgColor: 'from-blue-50 to-cyan-50',
+                    color: 'from-blue-400 to-green-500',
+                    bgColor: 'from-blue-50 to-green-50',
                     borderColor: 'border-blue-200',
                     icon: Clock,
                     badge: 'bg-blue-500 text-white',
@@ -395,7 +395,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                     <p>
-                      <strong>높은 합격률:</strong> 전체 멘티의 {successRate}%가 목표 대학에 합격했습니다.
+                      <strong>높은 합격률:</strong> 전체 러너의 {successRate}%가 목표 대학에 합격했습니다.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
@@ -407,7 +407,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                   <div className="flex items-start gap-2">
                     <Star className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                     <p>
-                      <strong>만족도:</strong> 멘티들의 평균 평점은 {avgRating}점으로 매우 높은 만족도를 보입니다.
+                      <strong>만족도:</strong> 러너들의 평균 평점은 {avgRating}점으로 매우 높은 만족도를 보입니다.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">

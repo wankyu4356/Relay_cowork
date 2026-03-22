@@ -84,7 +84,7 @@ describe('MentorSearch', () => {
 
   it('renders search input and mentor cards', () => {
     render(<MentorSearch onBack={mockOnBack} onMentorSelect={mockOnMentorSelect} />);
-    expect(screen.getByLabelText('멘토 검색')).toBeInTheDocument();
+    expect(screen.getByLabelText('러너 검색')).toBeInTheDocument();
     expect(screen.getByText('러너 #2847')).toBeInTheDocument();
     expect(screen.getByText('러너 #1923')).toBeInTheDocument();
     expect(screen.getByText('러너 #5621')).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe('MentorSearch', () => {
   it('filters mentors by search query', () => {
     render(<MentorSearch onBack={mockOnBack} onMentorSelect={mockOnMentorSelect} />);
 
-    const searchInput = screen.getByLabelText('멘토 검색');
+    const searchInput = screen.getByLabelText('러너 검색');
     fireEvent.change(searchInput, { target: { value: '연세대' } });
 
     expect(screen.getByText('러너 #2847')).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe('MentorSearch', () => {
   it('shows empty state when no mentors match filter', () => {
     render(<MentorSearch onBack={mockOnBack} onMentorSelect={mockOnMentorSelect} />);
 
-    const searchInput = screen.getByLabelText('멘토 검색');
+    const searchInput = screen.getByLabelText('러너 검색');
     fireEvent.change(searchInput, { target: { value: '존재하지않는멘토' } });
 
     expect(screen.getByText('검색 결과가 없습니다')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('MentorSearch', () => {
     // The onBack prop is passed but the component itself relies on parent navigation.
     // We verify the prop is accepted and the component renders correctly.
     const { unmount } = render(<MentorSearch onBack={mockOnBack} onMentorSelect={mockOnMentorSelect} />);
-    expect(screen.getByText('경험 전달자 찾기')).toBeInTheDocument();
+    expect(screen.getByText('러너 찾기')).toBeInTheDocument();
     unmount();
   });
 });

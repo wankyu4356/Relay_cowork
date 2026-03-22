@@ -203,7 +203,7 @@ describe('AuthScreen', () => {
   it('guest mode button calls onAuthSuccess with null session', () => {
     render(<AuthScreen onAuthSuccess={mockOnAuthSuccess} />);
 
-    fireEvent.click(screen.getByText('로그인 없이 둘러보기'));
+    fireEvent.click(screen.getByText('릴레이 체험하기'));
 
     expect(mockOnAuthSuccess).toHaveBeenCalledWith(null, {
       profile: { role: 'mentee', name: '게스트', onboardingCompleted: false },

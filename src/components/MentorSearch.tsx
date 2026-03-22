@@ -91,9 +91,9 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
   const getBadgeName = (badge: string) => {
     switch (badge) {
-      case 'gold': return '골드 멘토';
-      case 'silver': return '실버 멘토';
-      case 'bronze': return '브론즈 멘토';
+      case 'gold': return '골드 러너';
+      case 'silver': return '실버 러너';
+      case 'bronze': return '브론즈 러너';
       default: return '';
     }
   };
@@ -104,7 +104,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold gradient-text">경험 전달자 찾기</h1>
+            <h1 className="text-4xl font-bold gradient-text">러너 찾기</h1>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -136,7 +136,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="멘토 검색"
+              aria-label="러너 검색"
             />
           </div>
         </div>
@@ -257,7 +257,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         {/* Results Count */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-gray-600">
-            <span className="text-2xl font-bold text-gray-900">{filteredMentors.length}</span>명의 멘토
+            <span className="text-2xl font-bold text-gray-900">{filteredMentors.length}</span>명의 러너
           </div>
           <div className="flex gap-2">
             <Badge className="badge-primary text-sm px-3 py-1">
@@ -285,7 +285,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
             ))}
           </div>
         ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6" role="list" aria-label="멘토 목록">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6" role="list" aria-label="러너 목록">
           {filteredMentors.map((mentor, index) => (
             <motion.div
               key={mentor.id}
@@ -389,7 +389,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   {/* Quick Info */}
                   <div className="flex items-center gap-4 mb-6 text-sm">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Clock className="w-4 h-4 text-cyan-600" />
+                      <Clock className="w-4 h-4 text-green-600" />
                       <span>응답 {mentor.responseTime}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">

@@ -118,7 +118,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="container-web py-6">
@@ -130,7 +130,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               <h1 className="text-2xl font-bold">✨ {catContent.aiToolTitle}</h1>
               <p className="text-gray-600 mt-1">Step {step}/3</p>
             </div>
-            <Badge className="bg-gradient-to-r from-sky-500 to-blue-600 text-white border-0 px-4 py-2">
+            <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 px-4 py-2">
               <Sparkles className="w-4 h-4 mr-2" />
               크레딧 {credits}회
             </Badge>
@@ -148,9 +148,9 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               animate={{ opacity: 1, x: 0 }}
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
                 <div className="flex gap-3">
-                  <Sparkles className="w-6 h-6 text-sky-600 flex-shrink-0 mt-1" />
+                  <Sparkles className="w-6 h-6 text-violet-600 flex-shrink-0 mt-1" />
                   <div>
                     <h2 className="font-semibold text-lg mb-1">📌 Step 1: 내 배경 정보</h2>
                     <p className="text-gray-600">
@@ -201,7 +201,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               animate={{ opacity: 1, x: 0 }}
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
                 <h2 className="font-semibold text-lg mb-1">📌 Step 2: 경험 & 소재</h2>
                 <p className="text-gray-600">
                   구체적인 경험을 입력할수록 더 좋은 초안을 받을 수 있어요
@@ -220,7 +220,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                     onChange={(e) => setFormData(prev => ({ ...prev, motivation: e.target.value }))}
                     className="min-h-40"
                   />
-                  <div className={`text-right text-sm mt-2 ${(formData.motivation?.length || 0) >= 200 ? 'text-sky-600 font-medium' : 'text-gray-500'}`}>
+                  <div className={`text-right text-sm mt-2 ${(formData.motivation?.length || 0) >= 200 ? 'text-violet-600 font-medium' : 'text-gray-500'}`}>
                     {formData.motivation?.length || 0} / 200자
                   </div>
                 </div>
@@ -251,7 +251,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                     />
                     <Button 
                       onClick={handleAddActivity}
-                      className="w-full bg-sky-500 hover:bg-sky-600 text-white"
+                      className="w-full bg-violet-500 hover:bg-violet-600 text-white"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       활동 추가
@@ -294,7 +294,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       onChange={(e) => setKeywordInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddKeyword())}
                     />
-                    <Button onClick={handleAddKeyword} className="bg-sky-500 hover:bg-sky-600 text-white">
+                    <Button onClick={handleAddKeyword} className="bg-violet-500 hover:bg-violet-600 text-white">
                       추가
                     </Button>
                   </div>
@@ -303,7 +303,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       {formData.keywords.map((keyword) => (
                         <Badge 
                           key={keyword}
-                          className="bg-sky-100 text-sky-700 hover:bg-sky-200 gap-2"
+                          className="bg-violet-100 text-violet-700 hover:bg-violet-200 gap-2"
                         >
                           {keyword}
                           <button onClick={() => setFormData(prev => ({ ...prev, keywords: prev.keywords?.filter(k => k !== keyword) }))}>
@@ -325,7 +325,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               animate={{ opacity: 1, x: 0 }}
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
                 <h2 className="font-semibold text-lg mb-1">📌 Step 3: 선호 설정</h2>
                 <p className="text-gray-600">{catContent.styleDescription}</p>
               </Card>
@@ -346,9 +346,9 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       <Card 
                         key={option.value}
                         className={`p-4 cursor-pointer transition-all ${
-                          formData.tone === option.value 
-                            ? 'border-2 border-sky-500 bg-sky-50' 
-                            : 'border-2 border-transparent hover:border-sky-200'
+                          formData.tone === option.value
+                            ? 'border-2 border-violet-500 bg-violet-50'
+                            : 'border-2 border-transparent hover:border-violet-200'
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -414,7 +414,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleNext}
               disabled={!canProceed()}
               size="lg"
-              className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
             >
               다음
             </Button>
@@ -423,7 +423,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleSubmit}
               disabled={!canProceed() || credits <= 0}
               size="lg"
-              className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               스토리라인 생성하기

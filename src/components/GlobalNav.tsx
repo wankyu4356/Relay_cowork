@@ -5,9 +5,9 @@ import { Badge } from './ui/badge';
 import {
   Home,
   Sparkles,
-  Users,
+  Route,
   Calendar,
-  MessageSquare,
+  MessageCircle,
   Settings,
   Bell,
   Menu,
@@ -18,7 +18,7 @@ import {
   Award,
   Star,
   GraduationCap,
-  TrendingUp,
+  Repeat,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -150,11 +150,11 @@ export function GlobalNav({
                   className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <TrendingUp className="w-6 h-6 text-white" />
+                    <Repeat className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h1 className="text-xl font-bold gradient-text">릴레이</h1>
-                    <p className="text-xs text-gray-500">경험 이전 플랫폼</p>
+                    <p className="text-xs text-gray-500">경험 릴레이 플랫폼</p>
                   </div>
                 </button>
               )}
@@ -163,7 +163,7 @@ export function GlobalNav({
                   onClick={() => onNavigate('unified-home')}
                   className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg mx-auto hover:opacity-80 transition-opacity"
                 >
-                  <TrendingUp className="w-6 h-6 text-white" />
+                  <Repeat className="w-6 h-6 text-white" />
                 </button>
               )}
             </div>
@@ -258,39 +258,54 @@ export function GlobalNav({
                 active={currentScreen === 'unified-home' || currentScreen === 'mentor-dashboard'}
                 onClick={() => currentRole === 'mentee' ? onNavigate('unified-home') : onNavigate('mentor-dashboard')}
                 collapsed={collapsed}
+                activeColor="text-sky-700"
+                activeBg="from-sky-50 to-sky-50"
+                hoverBg="hover:bg-sky-50"
               />
               {currentRole === 'mentee' && (
                 <NavItem
                   icon={Sparkles}
-                  label="AI 학계서"
+                  label="AI 바통"
                   active={currentScreen === 'ai-experience' || currentScreen === 'ai-management'}
                   onClick={() => onNavigate('ai-management')}
                   badge={2}
                   collapsed={collapsed}
+                  activeColor="text-violet-600"
+                  activeBg="from-violet-50 to-violet-50"
+                  hoverBg="hover:bg-violet-50"
                 />
               )}
               <NavItem
-                icon={Users}
-                label={currentRole === 'mentee' ? '경험 전달자' : '내 멘티'}
+                icon={Route}
+                label={currentRole === 'mentee' ? '릴레이 러너' : '내 러너'}
                 active={currentScreen === 'mentor-search' || currentScreen === 'mentor-network' || currentScreen === 'mentor-mentee-list'}
                 onClick={() => currentRole === 'mentee' ? onNavigate('mentor-search') : onNavigate('mentor-mentee-list')}
                 collapsed={collapsed}
+                activeColor="text-emerald-600"
+                activeBg="from-emerald-50 to-emerald-50"
+                hoverBg="hover:bg-emerald-50"
               />
               <NavItem
                 icon={Calendar}
-                label="세션"
+                label={currentRole === 'mentee' ? '릴레이 세션' : '릴레이 관리'}
                 active={currentScreen === 'session-list' || currentScreen === 'session-detail'}
                 onClick={() => currentRole === 'mentee' ? onNavigate('session-list') : onNavigate('session-detail')}
                 badge={3}
                 collapsed={collapsed}
+                activeColor="text-indigo-600"
+                activeBg="from-indigo-50 to-indigo-50"
+                hoverBg="hover:bg-indigo-50"
               />
               <NavItem
-                icon={MessageSquare}
-                label="메시지"
+                icon={MessageCircle}
+                label="릴레이 톡"
                 active={currentScreen === 'message-center' || currentScreen === 'chat'}
                 onClick={() => onNavigate('message-center')}
                 badge={unreadMessages}
                 collapsed={collapsed}
+                activeColor="text-teal-600"
+                activeBg="from-teal-50 to-teal-50"
+                hoverBg="hover:bg-teal-50"
               />
             </div>
 
@@ -307,7 +322,7 @@ export function GlobalNav({
                   </div>
                   <div className="flex-1 text-left">
                     <div className="text-sm font-semibold">
-                      {currentRole === 'mentee' ? '경험 전달하기' : '경험 받기'}
+                      {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
                     </div>
                     <div className="text-xs text-gray-500">
                       {currentRole === 'mentee' ? '멘토로 전환' : '멘티로 전환'}
@@ -347,26 +362,30 @@ export function GlobalNav({
             label="홈"
             active={currentScreen === 'unified-home'}
             onClick={() => onNavigate('unified-home')}
+            activeColor="text-sky-600"
           />
           <MobileNavItem
             icon={Sparkles}
-            label="AI"
+            label="AI 바통"
             active={currentScreen === 'ai-experience' || currentScreen === 'ai-management'}
             onClick={() => onNavigate('ai-management')}
             badge={2}
+            activeColor="text-violet-600"
           />
           <MobileNavItem
-            icon={Users}
-            label="멘토"
+            icon={Route}
+            label="러너"
             active={currentScreen === 'mentor-search' || currentScreen === 'mentor-network'}
             onClick={() => onNavigate('mentor-search')}
+            activeColor="text-emerald-600"
           />
           <MobileNavItem
             icon={Calendar}
-            label="세션"
+            label="릴레이"
             active={currentScreen === 'session-list'}
             onClick={() => onNavigate('session-list')}
             badge={3}
+            activeColor="text-indigo-600"
           />
           <MobileNavItem
             icon={Menu}
@@ -400,11 +419,11 @@ export function GlobalNav({
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <TrendingUp className="w-6 h-6 text-white" />
+                      <Repeat className="w-6 h-6 text-white" />
                     </div>
                     <div>
                       <h2 className="font-bold gradient-text">릴레이</h2>
-                      <p className="text-xs text-gray-500">경험 이전 플랫폼</p>
+                      <p className="text-xs text-gray-500">경험 릴레이 플랫폼</p>
                     </div>
                   </div>
                   <Button
@@ -454,14 +473,17 @@ export function GlobalNav({
                 {/* Mobile Menu Items */}
                 <div className="space-y-1">
                   <NavItem
-                    icon={MessageSquare}
-                    label="메시지"
+                    icon={MessageCircle}
+                    label="릴레이 톡"
                     active={currentScreen === 'message-center' || currentScreen === 'chat'}
                     onClick={() => {
                       onNavigate('message-center');
                       setIsMobileMenuOpen(false);
                     }}
                     badge={unreadMessages}
+                    activeColor="text-teal-600"
+                    activeBg="from-teal-50 to-teal-50"
+                    hoverBg="hover:bg-teal-50"
                   />
                   <NavItem
                     icon={Bell}
@@ -499,7 +521,7 @@ export function GlobalNav({
                     </div>
                     <div className="flex-1 text-left">
                       <div className="text-sm font-semibold">
-                        {currentRole === 'mentee' ? '경험 전달하기' : '경험 받기'}
+                        {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
                       </div>
                       <div className="text-xs text-gray-500">
                         {currentRole === 'mentee' ? '멘토로 전환' : '멘티로 전환'}
@@ -527,17 +549,20 @@ interface NavItemProps {
   onClick: () => void;
   badge?: number;
   collapsed?: boolean;
+  activeColor?: string;
+  activeBg?: string;
+  hoverBg?: string;
 }
 
-function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavItemProps) {
+function NavItem({ icon: Icon, label, active, onClick, badge, collapsed, activeColor = 'text-sky-700', activeBg = 'from-sky-50 to-sky-50', hoverBg = 'hover:bg-sky-50' }: NavItemProps) {
   if (collapsed) {
     return (
       <button
         onClick={onClick}
         className={`w-full flex items-center justify-center p-3 rounded-xl transition-all ${
           active
-            ? 'bg-gradient-to-r from-sky-50 to-cyan-50 text-sky-700 font-semibold shadow-sm'
-            : 'text-gray-700 hover:bg-gray-50'
+            ? `bg-gradient-to-r ${activeBg} ${activeColor} font-semibold shadow-sm`
+            : `text-gray-700 hover:bg-gray-50`
         }`}
         title={label}
         aria-current={active ? 'page' : undefined}
@@ -560,8 +585,8 @@ function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavIt
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
         active
-          ? 'bg-gradient-to-r from-sky-50 to-cyan-50 text-sky-700 font-semibold shadow-sm'
-          : 'text-gray-700 hover:bg-gray-50'
+          ? `bg-gradient-to-r ${activeBg} ${activeColor} font-semibold shadow-sm`
+          : `text-gray-700 ${hoverBg}`
       }`}
       aria-current={active ? 'page' : undefined}
     >
@@ -579,12 +604,12 @@ function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavIt
 }
 
 // Mobile Nav Item
-function MobileNavItem({ icon: Icon, label, active, onClick, badge }: NavItemProps) {
+function MobileNavItem({ icon: Icon, label, active, onClick, badge, activeColor = 'text-sky-600' }: NavItemProps) {
   return (
     <button
       onClick={onClick}
       className={`flex flex-col items-center justify-center gap-1 transition-all ${
-        active ? 'text-sky-600' : 'text-gray-600'
+        active ? activeColor : 'text-gray-600'
       }`}
       aria-current={active ? 'page' : undefined}
       aria-label={label}

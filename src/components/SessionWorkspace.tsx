@@ -77,8 +77,8 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
   };
 
   const handleEndSession = () => {
-    if (confirm('세션을 종료하시겠습니까? 세션 기록이 자동 저장됩니다.')) {
-      toast.success('세션이 종료되었습니다');
+    if (confirm('릴레이를 종료하시겠습니까? 세션 기록이 자동 저장됩니다.')) {
+      toast.success('릴레이가 종료되었습니다');
       setTimeout(() => onComplete(), 1000);
     }
   };
@@ -101,11 +101,11 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
               </Button>
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-white font-semibold">세션 진행 중</h1>
+                  <h1 className="text-white font-semibold">릴레이 진행 중</h1>
                   <Badge className="bg-red-500 text-white animate-pulse">● LIVE</Badge>
                 </div>
                 <p className="text-gray-400 text-sm mt-1">
-                  {mentor.name} 멘토 · 경과 시간 {sessionTime}
+                  {mentor.name} 러너 · 경과 시간 {sessionTime}
                 </p>
               </div>
             </div>
@@ -113,9 +113,9 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
             <Button
               onClick={handleEndSession}
               className="bg-red-600 hover:bg-red-700 text-white"
-              aria-label="세션 종료"
+              aria-label="릴레이 종료"
             >
-              세션 종료
+              릴레이 종료
             </Button>
           </div>
         </div>
@@ -129,12 +129,12 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
             <div className="grid grid-cols-2 gap-4">
               {/* Mentor Video */}
               <Card className="bg-gray-800 border-gray-700 overflow-hidden relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-900 to-blue-900 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-blue-900 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-sky-400 to-blue-500 rounded-full flex items-center justify-center text-6xl mb-4 mx-auto">
+                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full flex items-center justify-center text-6xl mb-4 mx-auto">
                       {mentor.avatar}
                     </div>
-                    <div className="text-white font-semibold text-lg">{mentor.name} 멘토</div>
+                    <div className="text-white font-semibold text-lg">{mentor.name} 러너</div>
                     <Badge className="bg-green-500 text-white mt-2">
                       <Mic className="w-3 h-3 mr-1" />
                       말하는 중
@@ -229,7 +229,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
               <Card className="bg-white flex-1 overflow-hidden flex flex-col">
                 <div className="p-4 border-b flex items-center justify-between bg-gray-50">
                   <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-sky-600" />
+                    <FileText className="w-5 h-5 text-indigo-600" />
                     <h3 className="font-semibold">학업계획서 (공동 편집)</h3>
                     <Badge className="bg-green-100 text-green-700">실시간 동기화</Badge>
                   </div>
@@ -284,7 +284,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                     animate={{ opacity: 1, y: 0 }}
                     className={`flex ${message.sender === 'mentee' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[80%] ${message.sender === 'mentee' ? 'bg-sky-600' : 'bg-gray-700'} text-white rounded-lg p-3`}>
+                    <div className={`max-w-[80%] ${message.sender === 'mentee' ? 'bg-indigo-600' : 'bg-gray-700'} text-white rounded-lg p-3`}>
                       <div className="text-sm">{message.text}</div>
                       <div className="text-xs opacity-70 mt-1">{message.time}</div>
                     </div>
@@ -309,7 +309,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   />
                   <Button
                     onClick={handleSendMessage}
-                    className="bg-sky-600 hover:bg-sky-700"
+                    className="bg-indigo-600 hover:bg-indigo-700"
                     aria-label="메시지 보내기"
                   >
                     <Send className="w-5 h-5" />

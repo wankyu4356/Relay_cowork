@@ -129,8 +129,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
 
             <div className="space-y-4">
               {[
-                { icon: Sparkles, title: 'AI 학업계획서', desc: 'GPT 기반 맞춤형 초안 자동 생성' },
-                { icon: Users, title: '1:1 멘토 매칭', desc: '검증된 합격생과 익명 기반 연결' },
+                { icon: Sparkles, title: 'AI 바통 작성', desc: 'AI 기반 맞춤형 초안 자동 생성' },
+                { icon: Users, title: '1:1 러너 매칭', desc: '검증된 합격생과 익명 기반 연결' },
                 { icon: Shield, title: '프라이버시 보호', desc: '러너 #XXXX 익명 시스템 적용' },
               ].map((item, i) => (
                 <motion.div
@@ -350,7 +350,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   }}
                   className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2"
                 >
-                  로그인 없이 둘러보기
+                  릴레이 체험하기
                 </button>
               </div>
             </Card>

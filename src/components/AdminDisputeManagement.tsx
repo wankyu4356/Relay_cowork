@@ -45,12 +45,12 @@ interface Dispute {
   description: string;
   reporter: {
     name: string;
-    role: '멘티' | '멘토';
+    role: '멘티' | '러너';
     avatar: string;
   };
   reported: {
     name: string;
-    role: '멘티' | '멘토';
+    role: '멘티' | '러너';
     avatar: string;
   };
   sessionId?: string;
@@ -74,9 +74,9 @@ const mockDisputes: Dispute[] = [
     priority: 'high',
     status: 'pending',
     title: '세션 노쇼에 대한 환불 요청',
-    description: '예약된 세션 시간에 멘토가 접속하지 않아 세션이 진행되지 못했습니다. 결제한 80,000원의 전액 환불을 요청합니다. 세션 시작 시간 전후 30분간 대기했으나 멘토의 접속이 없었고, 사전 연락도 받지 못했습니다.',
+    description: '예약된 세션 시간에 러너가 접속하지 않아 세션이 진행되지 못했습니다. 결제한 80,000원의 전액 환불을 요청합니다. 세션 시작 시간 전후 30분간 대기했으나 러너의 접속이 없었고, 사전 연락도 받지 못했습니다.',
     reporter: { name: '박지훈', role: '멘티', avatar: '👨‍🎓' },
-    reported: { name: '김서연', role: '멘토', avatar: '👩‍🎓' },
+    reported: { name: '김서연', role: '러너', avatar: '👩‍🎓' },
     sessionId: 'S-20250205-001',
     sessionDate: '2026.02.05 14:00',
     amount: 80000,
@@ -93,20 +93,20 @@ const mockDisputes: Dispute[] = [
     priority: 'high',
     status: 'investigating',
     title: '부적절한 언행 신고',
-    description: '세션 중 멘토가 반복적으로 비하 발언을 하고, 학업계획서 피드백 대신 개인적인 질문만 계속했습니다. 전문적이지 않은 태도로 세션 시간의 대부분을 낭비했습니다.',
+    description: '세션 중 러너가 반복적으로 비하 발언을 하고, 학업계획서 피드백 대신 개인적인 질문만 계속했습니다. 전문적이지 않은 태도로 세션 시간의 대부분을 낭비했습니다.',
     reporter: { name: '이수민', role: '멘티', avatar: '👩‍💼' },
-    reported: { name: '최동현', role: '멘토', avatar: '👨‍💼' },
+    reported: { name: '최동현', role: '러너', avatar: '👨‍💼' },
     sessionId: 'S-20250203-005',
     sessionDate: '2026.02.03 16:00',
     amount: 60000,
     submittedAt: '2026.02.03 17:45',
     updatedAt: '2026.02.06 09:30',
-    adminNotes: '세션 로그 확인 중. 멘토 측 소명서 요청 완료.',
+    adminNotes: '세션 로그 확인 중. 러너 측 소명서 요청 완료.',
     evidence: ['세션 녹화 파일', '채팅 기록 캡처 3장'],
     timeline: [
       { date: '2026.02.03 17:45', action: '분쟁 접수', by: '시스템' },
       { date: '2026.02.04 10:00', action: '담당자 배정', by: '관리자' },
-      { date: '2026.02.05 14:00', action: '멘토 소명서 요청', by: '관리자' },
+      { date: '2026.02.05 14:00', action: '러너 소명서 요청', by: '관리자' },
       { date: '2026.02.06 09:30', action: '세션 로그 분석 중', by: '관리자' },
     ],
   },
@@ -116,9 +116,9 @@ const mockDisputes: Dispute[] = [
     priority: 'high',
     status: 'pending',
     title: '허위 프로필 의심 신고',
-    description: '멘토 프로필에 연세대 경영학과 편입 합격이라고 되어 있으나, 세션 중 대화 내용에서 해당 학교에 대한 기본적인 지식이 전혀 없는 것으로 확인되었습니다. 학과 커리큘럼이나 교수님 이름도 모르는 상태였습니다.',
+    description: '러너 프로필에 연세대 경영학과 편입 합격이라고 되어 있으나, 세션 중 대화 내용에서 해당 학교에 대한 기본적인 지식이 전혀 없는 것으로 확인되었습니다. 학과 커리큘럼이나 교수님 이름도 모르는 상태였습니다.',
     reporter: { name: '정하은', role: '멘티', avatar: '👩‍🎓' },
-    reported: { name: '한민수', role: '멘토', avatar: '👨‍🎓' },
+    reported: { name: '한민수', role: '러너', avatar: '👨‍🎓' },
     sessionId: 'S-20250206-003',
     sessionDate: '2026.02.06 11:00',
     amount: 70000,
@@ -135,9 +135,9 @@ const mockDisputes: Dispute[] = [
     priority: 'medium',
     status: 'pending',
     title: '세션 품질 불만 신고',
-    description: '60분 세션을 예약했으나 멘토가 30분만에 세션을 종료했습니다. 학업계획서에 대한 피드백도 매우 피상적이었으며, 준비되지 않은 상태로 세션에 참여한 것으로 보입니다.',
+    description: '60분 세션을 예약했으나 러너가 30분만에 세션을 종료했습니다. 바통 피드백도 매우 피상적이었으며, 준비되지 않은 상태로 세션에 참여한 것으로 보입니다.',
     reporter: { name: '강유진', role: '멘티', avatar: '👩‍💼' },
-    reported: { name: '윤태영', role: '멘토', avatar: '👨‍💼' },
+    reported: { name: '윤태영', role: '러너', avatar: '👨‍💼' },
     sessionId: 'S-20250204-007',
     sessionDate: '2026.02.04 10:00',
     amount: 80000,
@@ -156,7 +156,7 @@ const mockDisputes: Dispute[] = [
     title: '일정 변경 불가에 따른 환불 요청',
     description: '개인 사정으로 세션 일정을 변경하고 싶었으나 24시간 이내 변경 불가 정책으로 인해 변경이 되지 않았습니다. 부분 환불이라도 요청드립니다.',
     reporter: { name: '송민재', role: '멘티', avatar: '👨‍🎓' },
-    reported: { name: '이지은', role: '멘토', avatar: '👩‍🎓' },
+    reported: { name: '이지은', role: '러너', avatar: '👩‍🎓' },
     sessionId: 'S-20250201-002',
     sessionDate: '2026.02.01 15:00',
     amount: 60000,
@@ -178,7 +178,7 @@ const mockDisputes: Dispute[] = [
     status: 'dismissed',
     title: '멘티의 반복적 지각',
     description: '동일 멘티가 3회 연속 세션에 15분 이상 지각하여 세션 운영에 차질이 발생합니다. 멘티에게 경고 조치를 요청합니다.',
-    reporter: { name: '박소영', role: '멘토', avatar: '👩‍🎓' },
+    reporter: { name: '박소영', role: '러너', avatar: '👩‍🎓' },
     reported: { name: '김태현', role: '멘티', avatar: '👨‍🎓' },
     submittedAt: '2026.01.28 18:00',
     updatedAt: '2026.02.01 11:00',
@@ -251,7 +251,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
           title: d.title || d.reason || '',
           description: d.description || '',
           reporter: d.reporter || { name: '신고자', role: '멘티' as const, avatar: '👤' },
-          reported: d.reported || { name: '피신고자', role: '멘토' as const, avatar: '👤' },
+          reported: d.reported || { name: '피신고자', role: '러너' as const, avatar: '👤' },
           sessionId: d.sessionId,
           sessionDate: d.sessionDate,
           amount: d.amount,
@@ -376,7 +376,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -672,7 +672,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                       {selectedDispute.amount && (
                         <div>
                           <div className="text-xs text-gray-500">관련 금액</div>
-                          <div className="text-sm font-medium text-sky-600">
+                          <div className="text-sm font-medium text-slate-600">
                             {selectedDispute.amount.toLocaleString()}원
                           </div>
                         </div>
@@ -693,7 +693,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                         <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                           <FileText className="w-4 h-4 text-gray-400" />
                           <span className="text-sm flex-1">{ev}</span>
-                          <Button variant="ghost" size="sm" className="text-sky-600">
+                          <Button variant="ghost" size="sm" className="text-slate-600">
                             <Eye className="w-4 h-4 mr-1" /> 확인
                           </Button>
                         </div>
@@ -714,7 +714,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                         <div className="flex flex-col items-center">
                           <div className={`w-3 h-3 rounded-full border-2 ${
                             idx === selectedDispute.timeline.length - 1
-                              ? 'bg-sky-500 border-sky-500'
+                              ? 'bg-slate-500 border-slate-500'
                               : 'bg-white border-gray-300'
                           }`} />
                           {idx < selectedDispute.timeline.length - 1 && (
@@ -805,7 +805,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                         </Button>
                       )}
                       {selectedDispute.amount && (
-                        <Button variant="outline" className="border-sky-300 text-sky-600 hover:bg-sky-50">
+                        <Button variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-50">
                           <RefreshCw className="w-4 h-4 mr-1" />
                           환불 처리
                         </Button>

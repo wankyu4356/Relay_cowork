@@ -64,7 +64,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
@@ -73,7 +73,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">결과 보고</h1>
+              <h1 className="text-2xl font-bold">릴레이 성과 보고</h1>
               <p className="text-gray-600 mt-1">멘토링 결과를 알려주세요</p>
             </div>
           </div>
@@ -89,7 +89,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           >
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-3xl">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-3xl">
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
@@ -194,8 +194,8 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           )}
 
           {/* Benefits */}
-          <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
-            <h4 className="font-semibold mb-3">📌 결과 보고 시 혜택</h4>
+          <Card className="p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200">
+            <h4 className="font-semibold mb-3">📌 릴레이 성과 보고 시 혜택</h4>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
@@ -230,7 +230,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
             </Button>
             <Button
               onClick={handleSubmit}
-              className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white"
               size="lg"
               disabled={!outcome || detail.length < 10 || submitting}
             >

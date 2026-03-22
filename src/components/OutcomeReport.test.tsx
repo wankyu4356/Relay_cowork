@@ -72,7 +72,7 @@ describe('OutcomeReport', () => {
 
   it('renders without crashing', () => {
     render(<OutcomeReport {...defaultProps} />);
-    expect(screen.getByText('결과 보고')).toBeInTheDocument();
+    expect(screen.getByText('릴레이 성과 보고')).toBeInTheDocument();
   });
 
   it('displays mentor information and purpose', () => {
@@ -206,7 +206,7 @@ describe('OutcomeReport', () => {
 
   it('displays benefits section', () => {
     render(<OutcomeReport {...defaultProps} />);
-    expect(screen.getByText(/결과 보고 시 혜택/)).toBeInTheDocument();
+    expect(screen.getByText(/릴레이 성과 보고 시 혜택/)).toBeInTheDocument();
   });
 
   it('shows character count after selecting outcome', async () => {

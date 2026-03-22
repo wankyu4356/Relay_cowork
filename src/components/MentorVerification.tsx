@@ -165,7 +165,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
   const currentStepIndex = steps.findIndex(s => s.id === currentStep);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -176,10 +176,10 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                멘토 인증
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+                러너 인증
               </h1>
-              <p className="text-gray-600 mt-1">편입 합격을 인증하고 멘토로 활동하세요</p>
+              <p className="text-gray-600 mt-1">편입 합격을 인증하고 러너로 활동하세요</p>
             </div>
           </div>
 
@@ -198,7 +198,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                         isCompleted
                           ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                           : isActive
-                          ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg'
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg'
                           : 'bg-gray-200 text-gray-500'
                       }`}
                       animate={isActive ? { scale: [1, 1.1, 1] } : {}}
@@ -210,7 +210,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                         <Icon className="w-6 h-6" />
                       )}
                     </motion.div>
-                    <span className={`text-xs font-medium text-center ${isActive ? 'text-sky-600' : 'text-gray-600'}`}>
+                    <span className={`text-xs font-medium text-center ${isActive ? 'text-emerald-600' : 'text-gray-600'}`}>
                       {step.label}
                     </span>
                   </div>
@@ -238,12 +238,12 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <Card className="p-6 bg-sky-50/50 border-sky-200">
+                <Card className="p-6 bg-emerald-50/50 border-emerald-200">
                   <div className="flex gap-3">
-                    <Info className="w-5 h-5 text-sky-600 flex-shrink-0 mt-0.5" />
+                    <Info className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-sky-900 mb-1">학생 인증이란?</h3>
-                      <p className="text-sm text-sky-700">
+                      <h3 className="font-semibold text-emerald-900 mb-1">학생 인증이란?</h3>
+                      <p className="text-sm text-emerald-700">
                         현재 재학 중인 대학의 학생증 또는 재학증명서를 통해 신원을 확인합니다.
                       </p>
                     </div>
@@ -252,7 +252,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
 
                 <Card className="p-6">
                   <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-sky-600" />
+                    <GraduationCap className="w-5 h-5 text-emerald-600" />
                     학생 정보
                   </h2>
 
@@ -307,15 +307,15 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                             className="hidden"
                             disabled={uploadStatus === 'uploading'}
                           />
-                          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-sky-400 hover:bg-sky-50/50 transition-all group">
+                          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all group">
                             {uploadStatus === 'uploading' ? (
                               <div className="flex flex-col items-center gap-3">
-                                <Loader2 className="w-12 h-12 text-sky-500 animate-spin" />
+                                <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
                                 <p className="text-sm text-gray-600">업로드 중...</p>
                               </div>
                             ) : (
                               <>
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3 group-hover:text-sky-500 transition-colors" />
+                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3 group-hover:text-emerald-500 transition-colors" />
                                 <p className="font-medium text-gray-700 mb-1">파일을 선택하거나 드래그하세요</p>
                                 <p className="text-sm text-gray-500">JPG, PNG, PDF (최대 5MB)</p>
                               </>
@@ -336,8 +336,8 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                                 className="w-20 h-20 rounded-xl object-cover"
                               />
                             ) : (
-                              <div className="w-20 h-20 bg-sky-100 rounded-xl flex items-center justify-center">
-                                <FileText className="w-10 h-10 text-sky-600" />
+                              <div className="w-20 h-20 bg-emerald-100 rounded-xl flex items-center justify-center">
+                                <FileText className="w-10 h-10 text-emerald-600" />
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
@@ -377,7 +377,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
                     disabled={!studentIdFile || !studentId || !university || !major}
                   >
                     다음
@@ -563,7 +563,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     {/* Student Info */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <GraduationCap className="w-5 h-5 text-sky-600" />
+                        <GraduationCap className="w-5 h-5 text-emerald-600" />
                         <h3 className="font-semibold">학생 정보</h3>
                       </div>
                       <div className="bg-gray-50 rounded-xl p-4 space-y-2">

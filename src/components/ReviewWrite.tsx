@@ -17,7 +17,7 @@ interface ReviewWriteProps {
 }
 
 const predefinedTags = [
-  '친절함', '전문적', '상세한피드백', '실전적', '격려', 
+  '친절함', '전문적', '상세한피드백', '실전적', '격려',
   '경험기반', '체계적', '빠른응답', '열정적'
 ];
 
@@ -28,8 +28,8 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const handleTagToggle = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
+    setSelectedTags(prev =>
+      prev.includes(tag)
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     );
@@ -41,7 +41,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
       return;
     }
     if (reviewText.length < 30) {
-      toast.error('리뷰를 30자 이상 작성해주세요');
+      toast.error('후기를 30자 이상 작성해주세요');
       return;
     }
 
@@ -57,12 +57,12 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
       logger.log('Review save to server failed:', e);
     }
 
-    toast.success('리뷰가 등록되었습니다! 🎉');
+    toast.success('릴레이 후기가 등록되었습니다! 🎉');
     setTimeout(() => onSubmit(), 1000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
@@ -71,7 +71,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">리뷰 작성</h1>
+              <h1 className="text-2xl font-bold">릴레이 후기 작성</h1>
               <p className="text-gray-600 mt-1">멘토링 경험을 공유해주세요</p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
           >
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-3xl">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-3xl">
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
@@ -114,7 +114,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
               <p className="text-gray-600 text-center mb-6">
                 별점을 선택해주세요
               </p>
-              
+
               <div className="flex justify-center gap-3 mb-4">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <motion.button
@@ -126,7 +126,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Star 
+                    <Star
                       className={`w-12 h-12 transition-colors ${
                         star <= (hoverRating || rating)
                           ? 'fill-yellow-400 text-yellow-400'
@@ -141,7 +141,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center text-xl font-semibold text-sky-600"
+                  className="text-center text-xl font-semibold text-amber-600"
                 >
                   {rating === 5 && '정말 훌륭했어요! ⭐'}
                   {rating === 4 && '만족스러웠어요! 😊'}
@@ -160,7 +160,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
             transition={{ delay: 0.2 }}
           >
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">상세 리뷰</h3>
+              <h3 className="text-lg font-semibold mb-4">상세 후기</h3>
               <Textarea
                 placeholder="멘토링에서 좋았던 점, 개선이 필요한 점 등을 자유롭게 작성해주세요 (최소 30자)"
                 value={reviewText}
@@ -169,7 +169,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
               />
               <div className="flex justify-between text-sm text-gray-600">
                 <span>최소 30자 이상</span>
-                <span className={reviewText.length >= 30 ? 'text-sky-600 font-medium' : ''}>
+                <span className={reviewText.length >= 30 ? 'text-amber-600 font-medium' : ''}>
                   {reviewText.length}자
                 </span>
               </div>
@@ -193,8 +193,8 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
                     variant={selectedTags.includes(tag) ? 'default' : 'outline'}
                     className={`cursor-pointer transition-all ${
                       selectedTags.includes(tag)
-                        ? 'bg-sky-500 text-white hover:bg-sky-600'
-                        : 'hover:border-sky-400 hover:text-sky-600'
+                        ? 'bg-amber-500 text-white hover:bg-amber-600'
+                        : 'hover:border-amber-400 hover:text-amber-600'
                     }`}
                     onClick={() => handleTagToggle(tag)}
                   >
@@ -210,9 +210,9 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
             <div className="flex gap-2 text-sm text-gray-700">
               <span className="text-amber-600">💡</span>
               <div>
-                <strong>리뷰 공개 안내</strong>
+                <strong>후기 공개 안내</strong>
                 <p className="mt-1">
-                  리뷰는 5개 이상 모이면 일괄 공개됩니다. 
+                  후기는 5개 이상 모이면 일괄 공개됩니다.
                   작성 후 수정이 불가하니 신중하게 작성해주세요.
                 </p>
               </div>
@@ -231,11 +231,11 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
             </Button>
             <Button
               onClick={handleSubmit}
-              className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white"
               size="lg"
               disabled={rating === 0 || reviewText.length < 30}
             >
-              리뷰 등록하기
+              후기 등록하기
             </Button>
           </div>
         </div>

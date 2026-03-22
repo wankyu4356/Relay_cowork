@@ -195,7 +195,7 @@ export function UnifiedHome({
                 안녕하세요 👋
               </h1>
               <p className="text-gray-600">
-                {activeTab === 'mentee' ? content.greeting : '멘토 활동을 시작하세요'}
+                {activeTab === 'mentee' ? content.greeting : '러너 활동을 시작하세요'}
               </p>
             </div>
             <div className="flex gap-2">
@@ -357,7 +357,7 @@ export function UnifiedHome({
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-4">
                           <Users className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">나에게 맞는 멘토 찾기</h2>
+                          <h2 className="text-2xl font-bold text-white">나에게 맞는 러너 찾기</h2>
                         </div>
                         <p className="text-white/90 text-lg mb-4">
                           {content.mentorDescription}
@@ -373,7 +373,7 @@ export function UnifiedHome({
                       size="lg"
                       className="bg-white text-emerald-600 hover:bg-emerald-50 w-full md:w-auto"
                     >
-                      멘토 찾아보기
+                      러너 찾아보기
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </div>

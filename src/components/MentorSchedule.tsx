@@ -229,7 +229,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
               </Button>
               <div>
                 <h1 className="text-2xl font-bold gradient-text">일정 관리</h1>
-                <p className="text-sm text-gray-600">멘토링 가능 시간을 설정하세요</p>
+                <p className="text-sm text-gray-600">릴레이 가능 시간을 설정하세요</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -257,7 +257,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
       <div className="container-web py-8">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* This Week's Sessions Summary */}
-          <Card className="p-6 bg-gradient-to-br from-sky-50 via-white to-cyan-50 border-2 border-sky-200">
+          <Card className="p-6 bg-gradient-to-br from-emerald-50 via-white to-green-50 border-2 border-emerald-200">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold gradient-text mb-1">이번 주 세션</h2>
@@ -355,13 +355,13 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-sky-50 rounded-xl p-4 border border-blue-200">
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-200">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                     <Video className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-700">3</div>
+                    <div className="text-2xl font-bold text-emerald-700">3</div>
                     <div className="text-xs text-gray-600">예약 세션</div>
                   </div>
                 </div>

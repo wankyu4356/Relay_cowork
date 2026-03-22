@@ -125,7 +125,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
         toast.success('프로필이 저장되었습니다! 🎉');
       } catch (e) {
         logger.log('Profile save during onboarding failed (guest mode?):', e);
-        toast.success('환영합니다! 🎉');
+        toast.success('릴레이에 오신 것을 환영합니다! 🎉');
       } finally {
         setSaving(false);
       }
@@ -134,7 +134,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 py-12">
       <div className="container-web max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -142,8 +142,8 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
         >
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-4">
-              프로필 설정
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-4">
+              릴레이 시작하기
             </h1>
             <p className="text-xl text-gray-600">
               맞춤 멘토 추천을 위한 정보를 입력해주세요
@@ -155,7 +155,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
             <div className="mb-8">
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">Step {step} / 3</span>
-                <span className="text-sm font-medium text-sky-600">{Math.round((step / 3) * 100)}%</span>
+                <span className="text-sm font-medium text-pink-600">{Math.round((step / 3) * 100)}%</span>
               </div>
               <Progress value={(step / 3) * 100} className="h-2" />
             </div>
@@ -276,12 +276,12 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 >
                   🎉
                 </motion.div>
-                <h2 className="text-3xl font-bold mb-4">준비 완료!</h2>
+                <h2 className="text-3xl font-bold mb-4">릴레이 준비 완료!</h2>
                 <p className="text-xl text-gray-600 mb-8">
                   {formData.targetUniversity} {formData.targetMajor} {content.label}을 위한<br />
                   맞춤 멘토를 추천해드릴게요
                 </p>
-                <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200 max-w-md mx-auto">
+                <Card className="p-6 bg-gradient-to-br from-pink-50 to-rose-50 border-pink-200 max-w-md mx-auto">
                   <div className="space-y-3 text-left">
                     <div className="flex justify-between">
                       <span className="text-gray-600">{STEP1_SUMMARY_LABEL[selectedCategory ?? 'transfer']}</span>
@@ -295,10 +295,10 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       <span className="text-gray-600">학점</span>
                       <span className="font-medium">{formData.gpa} / {formData.gpaMax}</span>
                     </div>
-                    <div className="border-t border-sky-200 pt-3 mt-3">
+                    <div className="border-t border-pink-200 pt-3 mt-3">
                       <div className="flex justify-between">
                         <span className="text-gray-600">{content.label} 목표</span>
-                        <span className="font-medium text-sky-600">
+                        <span className="font-medium text-pink-600">
                           {formData.targetUniversity} {formData.targetMajor}
                         </span>
                       </div>
@@ -324,12 +324,12 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               <Button
                 onClick={handleNext}
                 disabled={saving}
-                className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white"
                 size="lg"
               >
                 {saving ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
-                ) : step === 3 ? '시작하기' : '다음'}
+                ) : step === 3 ? '릴레이 시작하기' : '다음'}
                 {step < 3 && !saving && <ArrowRight className="w-4 h-4 ml-2" />}
               </Button>
             </div>

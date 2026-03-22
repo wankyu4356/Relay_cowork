@@ -64,7 +64,7 @@ describe('ReviewWrite', () => {
 
   it('renders without crashing', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    expect(screen.getByText('리뷰 작성')).toBeInTheDocument();
+    expect(screen.getByText('릴레이 후기 작성')).toBeInTheDocument();
   });
 
   it('displays mentor information', () => {
@@ -105,7 +105,7 @@ describe('ReviewWrite', () => {
 
   it('submit button is disabled when no rating or short text', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    const submitBtn = screen.getByText('리뷰 등록하기');
+    const submitBtn = screen.getByText('후기 등록하기');
     expect(submitBtn).toBeDisabled();
   });
 
@@ -139,7 +139,7 @@ describe('ReviewWrite', () => {
     fireEvent.click(screen.getByText('#친절함'));
 
     // Click submit
-    const submitBtn = screen.getByText('리뷰 등록하기');
+    const submitBtn = screen.getByText('후기 등록하기');
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
@@ -151,7 +151,7 @@ describe('ReviewWrite', () => {
       });
     });
 
-    expect(toast.success).toHaveBeenCalledWith('리뷰가 등록되었습니다! 🎉');
+    expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다! 🎉');
   });
 
   it('still shows success toast when API call fails', async () => {
@@ -167,10 +167,10 @@ describe('ReviewWrite', () => {
     const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
     fireEvent.change(textarea, { target: { value: 'This is a test review that is longer than thirty characters for testing.' } });
 
-    fireEvent.click(screen.getByText('리뷰 등록하기'));
+    fireEvent.click(screen.getByText('후기 등록하기'));
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('리뷰가 등록되었습니다! 🎉');
+      expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다! 🎉');
     });
   });
 
@@ -182,6 +182,6 @@ describe('ReviewWrite', () => {
 
   it('shows review notice', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    expect(screen.getByText('리뷰 공개 안내')).toBeInTheDocument();
+    expect(screen.getByText('후기 공개 안내')).toBeInTheDocument();
   });
 });

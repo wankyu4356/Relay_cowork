@@ -156,7 +156,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
 
     try {
       await api.verifyMentor(app.id, true);
-      toast.success(`${app.name} 멘토를 승인했습니다`);
+      toast.success(`${app.name} 러너를 승인했습니다`);
     } catch {
       // Revert on failure
       setApplications(prev => prev.map(a =>
@@ -177,7 +177,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
 
     try {
       await api.verifyMentor(app.id, false);
-      toast.error(`${app.name} 멘토를 반려했습니다`);
+      toast.error(`${app.name} 러너를 반려했습니다`);
     } catch {
       // Revert on failure
       setApplications(prev => prev.map(a =>
@@ -195,7 +195,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
     >
       <Card className="p-6 card-hover cursor-pointer" onClick={() => setSelectedApp(app)}>
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
             👤
           </div>
 
@@ -240,7 +240,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               <Button 
                 size="sm"
                 variant="outline"
-                className="text-sky-600 hover:bg-sky-50"
+                className="text-slate-600 hover:bg-slate-50"
               >
                 <Eye className="w-4 h-4 mr-1" />
                 검토하기
@@ -253,7 +253,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -264,10 +264,10 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                멘토 승인 관리
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-slate-800 bg-clip-text text-transparent">
+                러너 승인 관리
               </h1>
-              <p className="text-gray-600 mt-1">신규 멘토 신청을 검토하고 승인하세요</p>
+              <p className="text-gray-600 mt-1">신규 러너 신청을 검토하고 승인하세요</p>
             </div>
             {pendingApps.length > 0 && (
               <Badge className="bg-orange-500 text-white border-0 px-4 py-2">
@@ -282,8 +282,8 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
         <div className="max-w-5xl mx-auto">
           {loading && (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600" />
-              <span className="ml-3 text-gray-500">멘토 신청 목록을 불러오는 중...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600" />
+              <span className="ml-3 text-gray-500">러너 신청 목록을 불러오는 중...</span>
             </div>
           )}
           {/* Stats */}
@@ -324,7 +324,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                       <CheckCircle className="w-10 h-10 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-semibold mb-2">승인 대기중인 신청이 없습니다</h3>
-                    <p className="text-gray-600">새로운 멘토 신청이 들어오면 여기에 표시됩니다</p>
+                    <p className="text-gray-600">새로운 러너 신청이 들어오면 여기에 표시됩니다</p>
                   </Card>
                 ) : (
                   pendingApps.map((app, index) => <ApplicationCard key={app.id} app={app} index={index} />)
@@ -339,7 +339,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                     <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle className="w-10 h-10 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">승인된 멘토가 없습니다</h3>
+                    <h3 className="text-xl font-semibold mb-2">승인된 러너가 없습니다</h3>
                   </Card>
                 ) : (
                   approvedApps.map((app, index) => (
@@ -415,7 +415,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-3xl bg-white rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
             >
               {/* Modal Header */}
-              <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-sky-50 to-blue-50">
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-gray-50">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">{selectedApp.name}</h2>
                   <p className="text-gray-600">{selectedApp.email}</p>
@@ -430,7 +430,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                 {/* Student Info */}
                 <div>
                   <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-sky-600" />
+                    <GraduationCap className="w-5 h-5 text-slate-600" />
                     학생 정보
                   </h3>
                   <Card className="p-4 bg-gray-50">
@@ -485,8 +485,8 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                     <Card className="p-4 bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
-                            <GraduationCap className="w-6 h-6 text-sky-600" />
+                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <GraduationCap className="w-6 h-6 text-slate-600" />
                           </div>
                           <div>
                             <div className="font-semibold">학생증/재학증명서</div>
@@ -580,7 +580,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 placeholder="반려 사유를 입력해주세요..."
-                className="w-full h-32 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full h-32 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-slate-500"
               />
               <div className="flex gap-3 mt-4">
                 <Button

@@ -51,12 +51,12 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-              관리자 대시보드
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-600 to-slate-800 bg-clip-text text-transparent">
+              릴레이 관리 센터
             </h1>
             <p className="text-gray-600 mt-2">릴레이 플랫폼 운영 현황을 모니터링하세요</p>
           </div>
@@ -66,7 +66,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
       <div className="container-web py-8">
         {loading && (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600" />
             <span className="ml-3 text-gray-500">통계를 불러오는 중...</span>
           </div>
         )}
@@ -76,8 +76,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <Card className="p-6 card-hover">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-sky-600" />
+                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-slate-600" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">총 가입자</div>
@@ -99,12 +99,12 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                     <Users className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-600">활성 멘토</div>
+                    <div className="text-sm text-gray-600">활성 러너</div>
                     <div className="text-2xl font-bold">{stats.activeMentors.toLocaleString()}</div>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => onNavigate('admin-mentor-approval')}>
-                  멘토 승인 관리
+                  러너 승인 관리
                 </Button>
               </Card>
             </motion.div>
@@ -153,7 +153,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">✨ AI 학계서 서비스</h3>
-                  <p className="text-sm text-gray-600">멘토 전환 퍼널 성과</p>
+                  <p className="text-sm text-gray-600">러너 전환 퍼널 성과</p>
                 </div>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <div className="text-2xl font-bold text-purple-600">847건</div>
               </div>
               <div className="bg-white rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">멘토 프로필 클릭</div>
+                <div className="text-sm text-gray-600 mb-1">러너 프로필 클릭</div>
                 <div className="text-2xl font-bold">312건</div>
                 <div className="text-xs text-gray-500">전환율 36.8%</div>
               </div>
@@ -174,7 +174,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
               </div>
               <div className="bg-white rounded-lg p-4">
                 <div className="text-sm text-gray-600 mb-1">결제 완료</div>
-                <div className="text-2xl font-bold text-sky-600">158건</div>
+                <div className="text-2xl font-bold text-slate-600">158건</div>
                 <div className="text-xs text-green-600 font-medium">전체 전환율 18.7%</div>
               </div>
             </div>
@@ -190,7 +190,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <YAxis />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }} />
                 <Line type="monotone" dataKey="mentees" stroke="#0EA5E9" strokeWidth={2} name="멘티" />
-                <Line type="monotone" dataKey="mentors" stroke="#38BDF8" strokeWidth={2} name="멘토" />
+                <Line type="monotone" dataKey="mentors" stroke="#38BDF8" strokeWidth={2} name="러너" />
                 <Line type="monotone" dataKey="sessions" stroke="#10B981" strokeWidth={2} name="세션" />
                 <Line type="monotone" dataKey="aiUsage" stroke="#8B5CF6" strokeWidth={2} name="AI 이용" />
               </LineChart>
@@ -206,8 +206,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 </div>
                 <Badge className="bg-orange-500 text-white">승인 대기</Badge>
               </div>
-              <h4 className="font-semibold mb-1">멘토 승인 관리</h4>
-              <p className="text-sm text-gray-600">신규 멘토 신청 검토 및 승인</p>
+              <h4 className="font-semibold mb-1">러너 승인 관리</h4>
+              <p className="text-sm text-gray-600">신규 러너 신청 검토 및 승인</p>
             </Card>
 
             <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('admin-dispute-management')}>
@@ -223,8 +223,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
 
             <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('admin-ai-service-management')}>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-sky-600" />
+                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-slate-600" />
                 </div>
               </div>
               <h4 className="font-semibold mb-1">AI 서비스 관리</h4>

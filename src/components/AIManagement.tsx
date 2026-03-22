@@ -110,9 +110,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   }, []);
 
   const handleDelete = async (draftId: string) => {
-    if (confirm('정말로 이 학업계획서를 삭제하시겠습니까?')) {
+    if (confirm('정말로 이 바통 초안을 삭제하시겠습니까?')) {
       setDrafts(prev => prev.filter(d => d.id !== draftId));
-      toast.success('학업계획서가 삭제되었습니다');
+      toast.success('바통 초안이 삭제되었습니다');
       // Also delete from server
       try {
         await apiClient.deleteDraft(draftId);
@@ -123,7 +123,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   };
 
   const handleDownloadPDF = (draft: Draft) => {
-    toast.success(`${draft.university} ${draft.major} 학업계획서 PDF 다운로드 시작`);
+    toast.success(`${draft.university} ${draft.major} 바통 초안 PDF 다운로드 시작`);
     // In real app, this would trigger PDF generation and download
   };
 
@@ -137,7 +137,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
       hasSession: false,
     };
     setDrafts(prev => [newDraft, ...prev]);
-    toast.success('학업계획서가 복제되었습니다');
+    toast.success('바통 초안이 복제되었습니다');
   };
 
   const handleShare = (draft: Draft) => {
@@ -156,7 +156,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
       case 'completed':
         return <Badge className="bg-green-500 text-white border-0">✓ 완료</Badge>;
       case 'with-mentor':
-        return <Badge className="bg-sky-500 text-white border-0">👤 멘토 첨삭 중</Badge>;
+        return <Badge className="bg-violet-500 text-white border-0">👤 멘토 첨삭 중</Badge>;
       case 'draft':
         return <Badge variant="outline" className="text-gray-600">✏️ 편집 중</Badge>;
       default:
@@ -165,7 +165,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -176,12 +176,12 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                내 학업계획서
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                내 바통 초안
               </h1>
-              <p className="text-gray-600 mt-1">AI로 생성한 학업계획서를 관리하세요</p>
+              <p className="text-gray-600 mt-1">AI로 생성한 바통 초안을 관리하세요</p>
             </div>
-            <Badge className="bg-gradient-to-r from-sky-500 to-blue-600 text-white border-0 px-4 py-2 shadow-lg">
+            <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 px-4 py-2 shadow-lg">
               <Sparkles className="w-4 h-4 mr-2" />
               {credits}회
             </Badge>
@@ -200,7 +200,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
             onClick={() => onNavigate?.('ai-experience')}
           >
             <Card className="relative overflow-hidden border-0 shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500 to-blue-600"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-600"></div>
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
               </div>
@@ -208,10 +208,10 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Sparkles className="w-8 h-8 text-white" />
-                    <h2 className="text-2xl font-bold text-white">새 학업계획서 만들기</h2>
+                    <h2 className="text-2xl font-bold text-white">새 바통 초안 만들기</h2>
                   </div>
                   <p className="text-white/90 mb-4">
-                    AI가 5분 만에 합격 학계서 초안을 만들어드립니다
+                    AI가 5분 만에 바통 초안을 만들어드립니다
                   </p>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
@@ -262,8 +262,8 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           {/* Drafts List */}
           <div>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-sky-600" />
-              내 학업계획서 ({drafts.length})
+              <FileText className="w-5 h-5 text-violet-600" />
+              내 바통 초안 ({drafts.length})
             </h2>
 
             {drafts.length === 0 ? (
@@ -271,16 +271,16 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText className="w-10 h-10 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">아직 학업계획서가 없어요</h3>
+                <h3 className="text-xl font-semibold mb-2">아직 바통 초안이 없어요</h3>
                 <p className="text-gray-600 mb-6">
-                  AI가 맞춤형 학업계획서를 만들어드립니다
+                  AI가 맞춤형 바통 초안을 만들어드립니다
                 </p>
                 <Button 
                   onClick={() => onNavigate?.('ai-experience')}
-                  className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                  className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  첫 학업계획서 만들기
+                  첫 바통 초안 만들기
                 </Button>
               </Card>
             ) : (
@@ -386,7 +386,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                         <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
                           <div className="text-center">
                             <div className="text-sm text-gray-600 mb-1">글자수</div>
-                            <div className="font-semibold text-sky-600">{draft.wordCount}</div>
+                            <div className="font-semibold text-violet-600">{draft.wordCount}</div>
                           </div>
                           <div className="text-center">
                             <div className="text-sm text-gray-600 mb-1">버전</div>
@@ -400,8 +400,8 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
 
                         {/* Mentor Info */}
                         {draft.hasSession && draft.mentorName && (
-                          <div className="mb-4 p-3 bg-sky-50 rounded-xl flex items-center gap-2">
-                            <Users className="w-4 h-4 text-sky-600" />
+                          <div className="mb-4 p-3 bg-violet-50 rounded-xl flex items-center gap-2">
+                            <Users className="w-4 h-4 text-violet-600" />
                             <span className="text-sm text-gray-700">
                               <span className="font-semibold">{draft.mentorName}</span> 멘토와 첨삭 중
                             </span>
@@ -441,7 +441,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                                   e.stopPropagation();
                                   onMentorConnect();
                                 }}
-                                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                                className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
                               >
                                 <Users className="w-4 h-4 mr-1" />
                                 멘토 찾기
@@ -461,16 +461,16 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           <Card className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200">
             <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-600" />
-              💡 학업계획서 작성 팁
+              💡 바통 작성 팁
             </h3>
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>AI 초안을 받은 후 멘토와 함께 첨삭하면 합격률이 2배 높아집니다</span>
+                <span>AI 바통 초안을 받은 후 멘토와 함께 첨삭하면 합격률이 2배 높아집니다</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>여러 학교의 학계서를 작성하고 비교해보세요</span>
+                <span>여러 학교의 바통 초안을 작성하고 비교해보세요</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>

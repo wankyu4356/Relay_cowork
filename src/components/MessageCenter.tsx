@@ -4,8 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
-import { 
-  ArrowLeft, 
+import {
+  ArrowLeft,
   Send,
   Paperclip,
   Image as ImageIcon,
@@ -256,7 +256,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -267,8 +267,8 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                메시지
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                릴레이 톡
               </h1>
               <p className="text-gray-600 mt-1">멘토와 실시간으로 소통하세요</p>
             </div>
@@ -303,22 +303,22 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
               <div className="flex-1 overflow-y-auto">
                 {loadingConversations && (
                   <div className="flex items-center justify-center py-8">
-                    <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
                     <span className="ml-2 text-sm text-gray-500">대화 불러오는 중...</span>
                   </div>
                 )}
                 {filteredConversations.map((conv) => (
                   <motion.div
                     key={conv.id}
-                    whileHover={{ backgroundColor: 'rgba(14, 165, 233, 0.05)' }}
+                    whileHover={{ backgroundColor: 'rgba(20, 184, 166, 0.05)' }}
                     onClick={() => setSelectedConversation(conv)}
                     className={`p-4 cursor-pointer border-b border-gray-100 transition-colors ${
-                      selectedConversation?.id === conv.id ? 'bg-sky-50' : ''
+                      selectedConversation?.id === conv.id ? 'bg-teal-50' : ''
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-2xl">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-2xl">
                           {conv.userAvatar}
                         </div>
                         {conv.online && (
@@ -359,7 +359,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-xl">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xl">
                           {selectedConversation.userAvatar}
                         </div>
                         {selectedConversation.online && (
@@ -388,7 +388,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {loadingMessages && (
                     <div className="flex items-center justify-center py-8">
-                      <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
                       <span className="ml-2 text-sm text-gray-500">메시지 불러오는 중...</span>
                     </div>
                   )}
@@ -406,7 +406,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                             <div
                               className={`rounded-2xl px-4 py-2 ${
                                 isMe
-                                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white'
+                                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white'
                                   : 'bg-gray-100 text-gray-900'
                               }`}
                             >
@@ -416,7 +416,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                               <span className="text-xs text-gray-500">{message.timestamp}</span>
                               {isMe && (
                                 message.read ? (
-                                  <CheckCheck className="w-3 h-3 text-sky-500" />
+                                  <CheckCheck className="w-3 h-3 text-teal-500" />
                                 ) : (
                                   <Check className="w-3 h-3 text-gray-400" />
                                 )
@@ -443,7 +443,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        placeholder="메시지를 입력하세요..."
+                        placeholder="릴레이 톡 메시지를 입력하세요..."
                         className="min-h-[44px]"
                       />
                     </div>
@@ -453,7 +453,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                     <Button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim() || sendingMessage}
-                      className="flex-shrink-0 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                      className="flex-shrink-0 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white"
                     >
                       <Send className="w-5 h-5" />
                     </Button>
