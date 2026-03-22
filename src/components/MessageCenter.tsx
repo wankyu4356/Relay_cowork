@@ -137,12 +137,25 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
     setLoadingConversations(true);
     api.getConversations().then(res => {
       if (res.conversations?.length > 0) {
-        const mapped: Conversation[] = res.conversations.map((c: any) => ({
+        interface ApiConversation {
+          id: string;
+          userId?: string;
+          name?: string;
+          userName?: string;
+          userAvatar?: string;
+          avatar?: string;
+          userRole?: string;
+          lastMessage?: string;
+          lastMessageTime?: string;
+          unreadCount?: number;
+          online?: boolean;
+        }
+        const mapped: Conversation[] = (res.conversations as ApiConversation[]).map((c) => ({
           id: c.id,
           userId: c.userId || c.id,
           userName: c.userName || c.name || '사용자',
           userAvatar: c.userAvatar || c.avatar || '👤',
-          userRole: c.userRole || '멘토',
+          userRole: (c.userRole === '멘토' || c.userRole === '멘티' ? c.userRole : '멘토') as '멘토' | '멘티',
           lastMessage: c.lastMessage || '',
           lastMessageTime: c.lastMessageTime || '',
           unreadCount: c.unreadCount || 0,
@@ -165,7 +178,16 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
     setLoadingMessages(true);
     api.getMessages(selectedConversation.id).then(res => {
       if (res.messages?.length > 0) {
-        const mapped: Message[] = res.messages.map((m: any) => ({
+        interface ApiMessage {
+          id: string;
+          senderId?: string;
+          sender_id?: string;
+          content?: string;
+          timestamp?: string;
+          read?: boolean;
+          type?: 'text' | 'image' | 'file';
+        }
+        const mapped: Message[] = (res.messages as ApiMessage[]).map((m) => ({
           id: m.id,
           senderId: m.senderId || m.sender_id || 'unknown',
           content: m.content || '',

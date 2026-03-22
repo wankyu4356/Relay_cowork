@@ -35,7 +35,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
 
   useEffect(() => {
     // Revenue API not yet available - ready for integration
-    api.getProfile().then((res: any) => {
+    api.getProfile().then((res: { profile?: { revenue?: { available?: number } } }) => {
       if (res.profile?.revenue) {
         setAvailableBalance(res.profile.revenue.available || 640000);
       }

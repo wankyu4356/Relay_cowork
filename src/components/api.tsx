@@ -456,8 +456,8 @@ export async function createDraft(data: {
   university: string;
   major: string;
   content: string;
-  storyline?: any;
-  aiData?: any;
+  storyline?: import('../App').Storyline;
+  aiData?: import('../App').AIData;
 }) {
   return apiFetch('/drafts', {
     method: 'POST',

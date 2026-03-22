@@ -124,11 +124,26 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
       try {
         const res = await api.getMentorSchedule('me');
         if (res.schedules?.length > 0) {
-          setSchedule(res.schedules.map((s: any, idx: number) => ({
+          interface ApiScheduleSlot {
+            id?: string;
+            dayOfWeek?: number;
+            day?: string;
+            startTime?: string;
+            start_time?: string;
+            endTime?: string;
+            end_time?: string;
+            available?: boolean;
+            session?: {
+              mentee: string;
+              avatar?: string;
+              topic?: string;
+            };
+          }
+          setSchedule((res.schedules as ApiScheduleSlot[]).map((s, idx: number) => ({
             id: s.id || `api-${idx}`,
-            day: daysOfWeek[s.dayOfWeek] || s.day || '월',
-            startTime: s.startTime || s.start_time,
-            endTime: s.endTime || s.end_time,
+            day: daysOfWeek[s.dayOfWeek ?? 0] || s.day || '월',
+            startTime: s.startTime || s.start_time || '',
+            endTime: s.endTime || s.end_time || '',
             isAvailable: s.available !== false,
             session: s.session ? {
               mentee: s.session.mentee,

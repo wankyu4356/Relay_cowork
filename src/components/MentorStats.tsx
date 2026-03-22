@@ -140,9 +140,21 @@ export function MentorStats({ onBack }: MentorStatsProps) {
   const [mentees, setMentees] = useState<MenteeSuccess[]>(menteeData);
 
   useEffect(() => {
-    api.getSessions().then((res: any) => {
-      if (res.sessions?.length > 0) {
-        const mapped: MenteeSuccess[] = res.sessions.map((s: any, idx: number) => ({
+    interface ApiStatsSession {
+      id?: string;
+      mentee_name?: string;
+      mentee_avatar?: string;
+      university?: string;
+      major?: string;
+      result?: string;
+      session_count?: number;
+      period?: string;
+      result_label?: string;
+      rating?: number;
+    }
+    api.getSessions().then((res: { sessions?: ApiStatsSession[] }) => {
+      if (res.sessions?.length && res.sessions.length > 0) {
+        const mapped: MenteeSuccess[] = res.sessions.map((s, idx: number) => ({
           id: s.id || `api-${idx}`,
           name: s.mentee_name || '멘티',
           avatar: s.mentee_avatar || '👤',

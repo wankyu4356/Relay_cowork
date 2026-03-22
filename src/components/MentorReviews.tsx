@@ -111,12 +111,25 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
       try {
         const res = await api.getMentorReviews('me');
         if (res.reviews?.length > 0) {
-          setReviews(res.reviews.map((r: any) => ({
+          interface ApiReview {
+            id: string;
+            mentee_name?: string;
+            mentee_avatar?: string;
+            rating: number;
+            date?: string;
+            created_at?: string;
+            content: string;
+            tags?: string[];
+            university?: string;
+            success_status?: 'passed' | 'pending';
+            helpful?: number;
+          }
+          setReviews((res.reviews as ApiReview[]).map((r) => ({
             id: r.id,
             menteeName: r.mentee_name || '멘티',
             menteeAvatar: r.mentee_avatar || '👤',
             rating: r.rating,
-            date: r.date || r.created_at,
+            date: r.date || r.created_at || '',
             content: r.content,
             tags: r.tags || [],
             university: r.university || '',

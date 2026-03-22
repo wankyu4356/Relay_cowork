@@ -76,7 +76,18 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
 
         if (sessionsRes.status === 'fulfilled' && sessionsRes.value.sessions?.length > 0) {
           const sessions = sessionsRes.value.sessions;
-          setDashboardSessions(sessions.filter((s: any) => s.status === 'upcoming').map((s: any) => ({
+          interface ApiDashboardSession {
+            id: string;
+            status: string;
+            mentee_name?: string;
+            mentor_name?: string;
+            mentee_id?: string;
+            date: string;
+            time: string;
+            duration?: number;
+            price?: number;
+          }
+          setDashboardSessions((sessions as ApiDashboardSession[]).filter((s) => s.status === 'upcoming').map((s) => ({
             id: s.id,
             mentee: s.mentee_name || s.mentor_name || '멘티',
             date: s.date,
@@ -86,9 +97,10 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
           })));
 
           // Derive stats from sessions
-          const uniqueMentees = new Set(sessions.map((s: any) => s.mentee_id).filter(Boolean));
-          const completedSessions = sessions.filter((s: any) => s.status === 'completed');
-          const totalRevenue = completedSessions.reduce((sum: number, s: any) => sum + (s.price || 0), 0);
+          const typedSessions = sessions as ApiDashboardSession[];
+          const uniqueMentees = new Set(typedSessions.map((s) => s.mentee_id).filter(Boolean));
+          const completedSessions = typedSessions.filter((s) => s.status === 'completed');
+          const totalRevenue = completedSessions.reduce((sum: number, s) => sum + (s.price || 0), 0);
           setStats(prev => ({
             ...prev,
             monthlySessions: completedSessions.length,
@@ -99,7 +111,10 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
 
         if (reviewsRes.status === 'fulfilled' && reviewsRes.value.reviews?.length > 0) {
           const reviews = reviewsRes.value.reviews;
-          const avgRating = reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length;
+          interface ApiReviewSummary {
+            rating: number;
+          }
+          const avgRating = (reviews as ApiReviewSummary[]).reduce((sum: number, r) => sum + r.rating, 0) / reviews.length;
           setStats(prev => ({
             ...prev,
             rating: parseFloat(avgRating.toFixed(1)),
