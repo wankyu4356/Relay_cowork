@@ -64,27 +64,64 @@ goto INSTALL
 :ALREADY_INSIDE
 echo       Already inside project folder.
 echo       Pulling latest changes from GitHub...
+
+:: Stash any local changes to prevent pull conflicts
+git stash --include-untracked >nul 2>&1
+
+:: Fetch all remote branches
+git fetch --all >nul 2>&1
+
+:: Get current branch
 for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
 echo       Current branch: %CURRENT_BRANCH%
-git pull origin %CURRENT_BRANCH%
+
+:: Reset to match remote (force update)
+git reset --hard origin/%CURRENT_BRANCH% >nul 2>&1
 if %errorlevel% neq 0 (
-    color 0E
-    echo       [WARN] git pull failed. Running with local version.
-    echo       Check your network or run "git pull origin %CURRENT_BRANCH%" manually.
+    :: If reset fails, try normal pull
+    git pull origin %CURRENT_BRANCH%
+    if %errorlevel% neq 0 (
+        color 0E
+        echo       [WARN] git pull failed. Running with local version.
+    )
+) else (
+    echo       Updated to latest version from origin/%CURRENT_BRANCH%
 )
+
+:: Restore stashed changes (if any)
+git stash pop >nul 2>&1
+
 goto INSTALL
 
 :UPDATE_REPO
 echo       Updating existing repository...
 cd %REPO_DIR%
+
+:: Stash any local changes to prevent pull conflicts
+git stash --include-untracked >nul 2>&1
+
+:: Fetch all remote branches
+git fetch --all >nul 2>&1
+
+:: Get current branch
 for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
 echo       Current branch: %CURRENT_BRANCH%
-git pull origin %CURRENT_BRANCH%
+
+:: Reset to match remote (force update)
+git reset --hard origin/%CURRENT_BRANCH% >nul 2>&1
 if %errorlevel% neq 0 (
-    color 0E
-    echo       [WARN] git pull failed. Running with local version.
-    echo       Check your network or run "git pull origin %CURRENT_BRANCH%" manually.
+    git pull origin %CURRENT_BRANCH%
+    if %errorlevel% neq 0 (
+        color 0E
+        echo       [WARN] git pull failed. Running with local version.
+    )
+) else (
+    echo       Updated to latest version from origin/%CURRENT_BRANCH%
 )
+
+:: Restore stashed changes (if any)
+git stash pop >nul 2>&1
+
 goto INSTALL
 
 :INSTALL
