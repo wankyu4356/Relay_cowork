@@ -168,6 +168,7 @@ export function UnifiedHome({
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -177,6 +178,7 @@ export function UnifiedHome({
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -439,6 +441,7 @@ export function UnifiedHome({
                   {recommendedMentors.slice(0, 4).map((mentor, index) => {
                     const getBadgeColor = (badge: string) => {
                       switch (badge) {
+                        case 'platinum': return 'from-purple-400 to-indigo-500';
                         case 'gold': return 'from-amber-400 to-yellow-500';
                         case 'silver': return 'from-gray-300 to-gray-400';
                         case 'bronze': return 'from-orange-400 to-orange-500';
@@ -448,6 +451,7 @@ export function UnifiedHome({
 
                     const getBadgeName = (badge: string) => {
                       switch (badge) {
+                        case 'platinum': return '플래티넘 러너';
                         case 'gold': return '골드 러너';
                         case 'silver': return '실버 러너';
                         case 'bronze': return '브론즈 러너';
@@ -467,6 +471,11 @@ export function UnifiedHome({
                           onClick={() => onMentorSelect(mentor)}
                         >
                           {/* Badge Ribbon */}
+                          {mentor.badge === 'platinum' && (
+                            <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
+                              TOP
+                            </div>
+                          )}
                           {mentor.badge === 'gold' && (
                             <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
                               BEST
@@ -511,7 +520,7 @@ export function UnifiedHome({
                               {/* Price */}
                               <div className="text-right">
                                 <div className="text-xl font-bold gradient-text">
-                                  ₩{(mentor.price / 1000).toFixed(0)}k
+                                  {mentor.price.toLocaleString()}원
                                 </div>
                                 <div className="text-xs text-gray-500">60분</div>
                               </div>
@@ -635,7 +644,7 @@ export function UnifiedHome({
                         <DollarSign className="w-5 h-5 text-green-600" />
                         <span className="text-sm text-gray-600">이번 달 수익</span>
                       </div>
-                      <div className="text-3xl font-bold">₩420k</div>
+                      <div className="text-3xl font-bold">420,000원</div>
                     </Card>
 
                     <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('session-list')}>
@@ -710,7 +719,7 @@ export function UnifiedHome({
                             <div className="text-sm text-gray-600">박지원 • 연세대 경영 지원</div>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-sky-600">₩80,000</div>
+                            <div className="font-bold text-sky-600">80,000원</div>
                             <div className="text-xs text-gray-500">2시간 전</div>
                           </div>
                         </div>

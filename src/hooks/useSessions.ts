@@ -4,11 +4,11 @@ import { fetchWithFallback } from './useDataService';
 import type { Session } from '../App';
 
 const MOCK_SESSIONS: Session[] = [
-  { id: '1', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.20', time: '14:00', duration: 60, price: 80000, status: 'upcoming' },
-  { id: '2', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.25', time: '16:00', duration: 60, price: 80000, status: 'upcoming' },
-  { id: '3', mentorId: '2', mentorName: '김민준', mentorAvatar: '👨‍🎓', date: '2025.02.18', time: '10:00', duration: 90, price: 120000, status: 'ongoing' },
-  { id: '4', mentorId: '3', mentorName: '박지우', mentorAvatar: '👨‍💼', date: '2025.01.15', time: '15:00', duration: 60, price: 70000, status: 'completed' },
-  { id: '5', mentorId: '4', mentorName: '최예은', mentorAvatar: '👩‍💼', date: '2025.01.10', time: '11:00', duration: 60, price: 75000, status: 'completed' },
+  { id: '1', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.20', time: '14:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '2', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.25', time: '16:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '3', mentorId: '2', mentorName: '김민준', mentorAvatar: '👨‍🎓', date: '2025.02.18', time: '10:00', duration: 60, price: 45000, status: 'ongoing' },
+  { id: '4', mentorId: '3', mentorName: '박지우', mentorAvatar: '👨‍💼', date: '2025.01.15', time: '15:00', duration: 60, price: 38000, status: 'completed' },
+  { id: '5', mentorId: '4', mentorName: '최예은', mentorAvatar: '👩‍💼', date: '2025.01.10', time: '11:00', duration: 60, price: 50000, status: 'completed' },
 ];
 
 export function useSessions() {

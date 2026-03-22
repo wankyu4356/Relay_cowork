@@ -109,6 +109,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -118,6 +119,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -158,7 +160,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-3xl font-bold">{mentor.name}</h2>
                       <Badge className={`${getBadgeStyle(mentor.badge)} border-0`}>
-                        {getBadgeIcon(mentor.badge)} {mentor.badge.toUpperCase()}
+                        {getBadgeIcon(mentor.badge)} {mentor.badge === 'platinum' ? '플래티넘' : mentor.badge === 'gold' ? '골드' : mentor.badge === 'silver' ? '실버' : '브론즈'}
                       </Badge>
                       {mentor.verified && (
                         <Badge className="bg-blue-500 text-white">
@@ -504,7 +506,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
               <div className="text-center mb-6">
                 <div className="text-sm text-gray-600 mb-2">60분 세션</div>
                 <div className="text-4xl font-bold text-emerald-600 mb-1">
-                  ₩{mentor.price.toLocaleString()}
+                  {mentor.price.toLocaleString()}원
                 </div>
                 <div className="text-sm text-gray-500">VAT 포함</div>
               </div>

@@ -184,7 +184,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">이번 달 수익</div>
-                    <div className="text-2xl font-bold">₩{(stats.totalRevenue / 1000).toFixed(0)}k</div>
+                    <div className="text-2xl font-bold">{stats.totalRevenue.toLocaleString()}원</div>
                   </div>
                 </div>
               </Card>
@@ -244,11 +244,11 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Award className="w-8 h-8" />
-                    <Badge className="bg-white/20 text-white border-0">🥇 GOLD 러너</Badge>
+                    <Badge className="bg-white/20 text-white border-0">🥇 골드 러너</Badge>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Experience Asset (EA) 등록 완료</h3>
+                  <h3 className="text-2xl font-bold mb-2">골드 러너 - 세션 가격 50,000~80,000원</h3>
                   <p className="text-white/90 mb-4">
-                    합격 경험이 등록되었습니다. 더 많은 정보를 공유하면 매칭률이 올라가요!
+                    실적이 쌓이면 더 높은 가격을 설정할 수 있어요! 플래티넘까지 세션 19건 남았습니다.
                   </p>
                   <Button
                     className="bg-white text-emerald-600 hover:bg-gray-100"

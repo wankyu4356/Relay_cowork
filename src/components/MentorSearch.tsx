@@ -55,21 +55,23 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
     ...mentorConfig.filterOptions.filter((o: string) => o !== 'all'),
     ...allMentors.map(m => m.university).filter(Boolean),
   ]));
-  const badges = ['all', 'gold', 'silver', 'bronze'];
+  const badges = ['all', 'platinum', 'gold', 'silver', 'bronze'];
   const priceRanges = [
     { value: 'all', label: '전체 가격' },
-    { value: 'low', label: '5만원 이하' },
-    { value: 'mid', label: '5-8만원' },
-    { value: 'high', label: '8만원 이상' },
+    { value: 'low', label: '3만원 이하' },
+    { value: 'mid', label: '3-5만원' },
+    { value: 'high', label: '5-8만원' },
+    { value: 'premium', label: '8만원 이상' },
   ];
 
   const filteredMentors = allMentors
     .filter(mentor => {
       if (selectedUniversity !== 'all' && mentor.university !== selectedUniversity) return false;
       if (selectedBadge !== 'all' && mentor.badge !== selectedBadge) return false;
-      if (priceRange === 'low' && mentor.price > 50000) return false;
-      if (priceRange === 'mid' && (mentor.price <= 50000 || mentor.price > 80000)) return false;
-      if (priceRange === 'high' && mentor.price <= 80000) return false;
+      if (priceRange === 'low' && mentor.price > 30000) return false;
+      if (priceRange === 'mid' && (mentor.price <= 30000 || mentor.price > 50000)) return false;
+      if (priceRange === 'high' && (mentor.price <= 50000 || mentor.price > 80000)) return false;
+      if (priceRange === 'premium' && mentor.price <= 80000) return false;
       if (searchQuery && !mentor.name.includes(searchQuery) && !mentor.university.includes(searchQuery)) return false;
       return true;
     })
@@ -82,6 +84,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
   const getBadgeColor = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'from-purple-400 to-indigo-500';
       case 'gold': return 'from-amber-400 to-yellow-500';
       case 'silver': return 'from-gray-300 to-gray-400';
       case 'bronze': return 'from-orange-400 to-orange-500';
@@ -91,6 +94,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
   const getBadgeName = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '플래티넘 러너';
       case 'gold': return '골드 러너';
       case 'silver': return '실버 러너';
       case 'bronze': return '브론즈 러너';
@@ -299,6 +303,11 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 onClick={() => onMentorSelect(mentor)}
               >
                 {/* Badge Ribbon */}
+                {mentor.badge === 'platinum' && (
+                  <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xs font-bold px-16 py-1 shadow-lg">
+                    TOP
+                  </div>
+                )}
                 {mentor.badge === 'gold' && (
                   <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold px-16 py-1 shadow-lg">
                     BEST
@@ -341,7 +350,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                     {/* Price */}
                     <div className="text-right">
                       <div className="text-2xl font-bold gradient-text">
-                        ₩{(mentor.price / 1000).toFixed(0)}k
+                        {mentor.price.toLocaleString()}원
                       </div>
                       <div className="text-xs text-gray-500">60분 기준</div>
                     </div>

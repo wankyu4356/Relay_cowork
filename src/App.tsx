@@ -188,7 +188,7 @@ export interface Mentor {
   successRate: number;
   responseTime: string;
   price: number;
-  badge: 'gold' | 'silver' | 'bronze';
+  badge: 'gold' | 'silver' | 'bronze' | 'platinum';
   verified: boolean;
   avatar: string;
 }

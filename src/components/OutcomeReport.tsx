@@ -44,9 +44,9 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       onSubmit(outcome, detail);
 
       if (outcome === 'success') {
-        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+        toast.success('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
       } else {
-        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+        toast.success('재도전 크레딧 15,000원이 지급되었습니다. 다시 도전하세요!');
       }
     } catch (err) {
       logger.warn('API outcome submission failed, proceeding with local callback:', err);
@@ -54,9 +54,9 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       onSubmit(outcome, detail);
 
       if (outcome === 'success') {
-        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+        toast.success('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
       } else {
-        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+        toast.success('재도전 크레딧 15,000원이 지급되었습니다. 다시 도전하세요!');
       }
     } finally {
       setSubmitting(false);
@@ -136,7 +136,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                     축하합니다! 러너님의 성공률이 올라갑니다
                   </p>
                   <Badge className="bg-green-500 text-white">
-                    +₩10,000 크레딧
+                    +10,000원 크레딧
                   </Badge>
                 </motion.button>
 
@@ -159,7 +159,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                     다시 도전하세요! 재도전 지원 크레딧 지급
                   </p>
                   <Badge className="bg-blue-500 text-white">
-                    +₩15,000 크레딧
+                    +15,000원 크레딧
                   </Badge>
                 </motion.button>
               </div>

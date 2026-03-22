@@ -35,6 +35,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
   const [showSuccessStories, setShowSuccessStories] = useState(false);
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -44,6 +45,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -231,7 +233,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div>
                         <div className="text-lg font-bold text-sky-600">
-                          ₩{(mentor.price / 1000).toFixed(0)}k
+                          {mentor.price.toLocaleString()}원
                         </div>
                         <div className="text-xs text-gray-500">60분 세션</div>
                       </div>

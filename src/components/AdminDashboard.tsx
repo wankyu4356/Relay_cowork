@@ -136,10 +136,10 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">월 매출</div>
-                    <div className="text-2xl font-bold">₩24.9M</div>
+                    <div className="text-2xl font-bold">24,900,000원</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-600">수수료: ₩5.2M</div>
+                <div className="text-sm text-gray-600">수수료: 5,200,000원</div>
               </Card>
             </motion.div>
           </div>
