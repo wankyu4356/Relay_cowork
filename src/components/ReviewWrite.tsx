@@ -72,7 +72,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
             </Button>
             <div>
               <h1 className="text-2xl font-bold">릴레이 후기 작성</h1>
-              <p className="text-gray-600 mt-1">멘토링 경험을 공유해주세요</p>
+              <p className="text-gray-600 mt-1">릴레이 세션 경험을 공유해주세요</p>
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 멘토</h3>
+                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 러너</h3>
                   <p className="text-gray-600">
                     {mentor.university} {mentor.major} {mentor.year}
                   </p>
@@ -109,7 +109,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
           >
             <Card className="p-8">
               <h3 className="text-lg font-semibold mb-2 text-center">
-                멘토링이 어떠셨나요?
+                릴레이 세션이 어떠셨나요?
               </h3>
               <p className="text-gray-600 text-center mb-6">
                 별점을 선택해주세요
@@ -162,7 +162,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">상세 후기</h3>
               <Textarea
-                placeholder="멘토링에서 좋았던 점, 개선이 필요한 점 등을 자유롭게 작성해주세요 (최소 30자)"
+                placeholder="릴레이 세션에서 좋았던 점, 개선이 필요한 점 등을 자유롭게 작성해주세요 (최소 30자)"
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 className="min-h-40 mb-2"

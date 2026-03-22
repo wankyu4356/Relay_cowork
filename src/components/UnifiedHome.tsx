@@ -219,13 +219,13 @@ export function UnifiedHome({
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="w-full grid grid-cols-2 h-14 bg-gray-100/80 backdrop-blur-sm p-1">
               <TabsTrigger value="mentee" className="text-base font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md">
-                <span className="mr-2">🎯</span> 경험 받기
+                <span className="mr-2">🎯</span> 바통 받기
               </TabsTrigger>
               <TabsTrigger 
                 value="mentor" 
                 className="text-base font-semibold relative data-[state=active]:bg-white data-[state=active]:shadow-md"
               >
-                <span className="mr-2">⚡</span> 경험 전달하기
+                <span className="mr-2">⚡</span> 바통 넘기기
                 {!isMentorActive && (
                   <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs border-0 shadow-lg">
                     시작하기

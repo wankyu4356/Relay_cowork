@@ -146,7 +146,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               릴레이 시작하기
             </h1>
             <p className="text-xl text-gray-600">
-              맞춤 멘토 추천을 위한 정보를 입력해주세요
+              맞춤 러너 추천을 위한 정보를 입력해주세요
             </p>
           </div>
 
@@ -279,7 +279,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 <h2 className="text-3xl font-bold mb-4">릴레이 준비 완료!</h2>
                 <p className="text-xl text-gray-600 mb-8">
                   {formData.targetUniversity} {formData.targetMajor} {content.label}을 위한<br />
-                  맞춤 멘토를 추천해드릴게요
+                  맞춤 러너를 추천해드릴게요
                 </p>
                 <Card className="p-6 bg-gradient-to-br from-pink-50 to-rose-50 border-pink-200 max-w-md mx-auto">
                   <div className="space-y-3 text-left">

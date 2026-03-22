@@ -154,7 +154,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                   <Users className="w-7 h-7 text-blue-600" />
                 </div>
                 <div className="text-3xl font-bold text-gray-900 mb-1">142</div>
-                <div className="text-sm text-gray-600">활성 멘토</div>
+                <div className="text-sm text-gray-600">활성 러너</div>
               </Card>
             </motion.div>
 
@@ -172,7 +172,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
           {/* Recommended Mentors */}
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">⭐ 추천 멘토</h2>
+              <h2 className="text-2xl font-bold">⭐ 추천 러너</h2>
               <Button 
                 variant="ghost"
                 onClick={() => onNavigate('mentor-search')}

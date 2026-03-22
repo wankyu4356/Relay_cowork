@@ -329,7 +329,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                     </div>
                     <div>
                       <div className="font-medium">크레딧 충전</div>
-                      <div className="text-sm text-gray-600">AI 학계서 생성 크레딧</div>
+                      <div className="text-sm text-gray-600">AI 바통 작성 크레딧</div>
                     </div>
                   </div>
                   <div className="text-right">

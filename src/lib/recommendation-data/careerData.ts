@@ -272,9 +272,9 @@ export const mockCareerAlternatives: CareerAlternative[] = [
 
 export const careerNextSteps = [
   {
-    title: '현직자 멘토 연결',
+    title: '현직자 러너 연결',
     description:
-      '추천된 기업의 현직자 멘토와 1:1 상담을 통해 실제 업무 환경과 입사 준비 전략을 들어보세요.',
+      '추천된 기업의 현직자 러너와 1:1 상담을 통해 실제 업무 환경과 입사 준비 전략을 들어보세요.',
   },
   {
     title: 'AI 자소서 첨삭',

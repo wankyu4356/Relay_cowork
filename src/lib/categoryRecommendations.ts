@@ -82,8 +82,8 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     resultSummaryUnit: '최적 대학',
     alternativeTitle: '다른 학과 후보',
     nextSteps: [
-      { title: '경험 전달자 매칭', description: '추천 대학에 합격한 선배들과 연결되어 실제 경험을 들어보세요' },
-      { title: 'AI 학계서 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
+      { title: '릴레이 러너 매칭', description: '추천 대학에 합격한 선배들과 연결되어 실제 경험을 들어보세요' },
+      { title: 'AI 바통 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
       { title: '전략적 준비', description: '추천받은 정보를 바탕으로 체계적인 편입 준비를 시작하세요' },
     ],
     recommendations: [
@@ -158,7 +158,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     resultSummaryUnit: '최적 대학',
     alternativeTitle: '다른 전공 후보',
     nextSteps: [
-      { title: '합격생 멘토 매칭', description: '추천 대학에 합격한 선배들과 연결되어 입시 경험을 들어보세요' },
+      { title: '합격생 러너 매칭', description: '추천 대학에 합격한 선배들과 연결되어 입시 경험을 들어보세요' },
       { title: 'AI 자소서 작성', description: 'AI의 도움을 받아 합격 가능성 높은 자기소개서를 작성하세요' },
       { title: '전략적 준비', description: '추천받은 정보를 바탕으로 체계적인 입시 준비를 시작하세요' },
     ],
@@ -234,7 +234,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     resultSummaryUnit: '최적 기업',
     alternativeTitle: '다른 직무 후보',
     nextSteps: [
-      { title: '현직자 멘토 매칭', description: '추천 기업의 현직자와 연결되어 실제 업무 경험을 들어보세요' },
+      { title: '현직자 러너 매칭', description: '추천 기업의 현직자와 연결되어 실제 업무 경험을 들어보세요' },
       { title: 'AI 자소서 작성', description: 'AI의 도움을 받아 합격 가능성 높은 자기소개서를 작성하세요' },
       { title: '전략적 준비', description: '추천받은 정보를 바탕으로 체계적인 취업 준비를 시작하세요' },
     ],
@@ -310,7 +310,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     resultSummaryUnit: '추천 자격증',
     alternativeTitle: '다른 자격증 후보',
     nextSteps: [
-      { title: '합격자 멘토 매칭', description: '추천 자격증 합격자와 연결되어 학습 전략을 들어보세요' },
+      { title: '합격자 러너 매칭', description: '추천 자격증 합격자와 연결되어 학습 전략을 들어보세요' },
       { title: 'AI 포트폴리오 작성', description: 'AI의 도움을 받아 체계적인 학습 계획을 수립하세요' },
       { title: '전략적 학습', description: '추천받은 정보를 바탕으로 효율적인 자격증 준비를 시작하세요' },
     ],
@@ -386,7 +386,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     resultSummaryUnit: '추천 경로',
     alternativeTitle: '다른 경로 후보',
     nextSteps: [
-      { title: '경험자 멘토 매칭', description: '같은 목표를 달성한 선배와 연결되어 실제 경험을 들어보세요' },
+      { title: '경험자 러너 매칭', description: '같은 목표를 달성한 선배와 연결되어 실제 경험을 들어보세요' },
       { title: 'AI 문서 작성', description: 'AI의 도움을 받아 필요한 서류를 체계적으로 준비하세요' },
       { title: '전략적 실행', description: '추천받은 경로를 바탕으로 단계별 실행 계획을 시작하세요' },
     ],

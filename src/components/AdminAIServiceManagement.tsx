@@ -918,9 +918,9 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-purple-50 rounded-xl p-4">
-                    <div className="text-sm text-purple-600 mb-1">AI → 멘토 전환율</div>
+                    <div className="text-sm text-purple-600 mb-1">AI → 러너 전환율</div>
                     <div className="text-2xl font-bold text-purple-700">36.8%</div>
-                    <div className="text-xs text-purple-500 mt-1">AI 이용 → 멘토 프로필 클릭</div>
+                    <div className="text-xs text-purple-500 mt-1">AI 이용 → 러너 프로필 클릭</div>
                   </div>
                   <div className="bg-sky-50 rounded-xl p-4">
                     <div className="text-sm text-sky-600 mb-1">세션 전환율</div>

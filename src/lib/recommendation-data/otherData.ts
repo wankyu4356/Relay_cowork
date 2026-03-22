@@ -40,7 +40,7 @@ export const OTHER_CONFIG = {
     '✓ 실행 전략 수립 중...',
   ],
   nextSteps: [
-    { title: '경험자 멘토 매칭', description: '같은 목표를 달성한 선배와 연결되어 실제 경험을 들어보세요' },
+    { title: '경험자 러너 매칭', description: '같은 목표를 달성한 선배와 연결되어 실제 경험을 들어보세요' },
     { title: 'AI 문서 작성', description: 'AI의 도움을 받아 필요한 서류를 체계적으로 준비하세요' },
     { title: '전략적 실행', description: '추천받은 경로를 바탕으로 단계별 실행 계획을 시작하세요' },
   ],

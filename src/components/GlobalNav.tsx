@@ -325,7 +325,7 @@ export function GlobalNav({
                       {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {currentRole === 'mentee' ? '멘토로 전환' : '멘티로 전환'}
+                      {currentRole === 'mentee' ? '러너로 전환' : '멘티로 전환'}
                     </div>
                   </div>
                 </Button>
@@ -524,7 +524,7 @@ export function GlobalNav({
                         {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {currentRole === 'mentee' ? '멘토로 전환' : '멘티로 전환'}
+                        {currentRole === 'mentee' ? '러너로 전환' : '멘티로 전환'}
                       </div>
                     </div>
                   </Button>

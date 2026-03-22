@@ -217,8 +217,8 @@ export const mockAdmissionAlternatives: AdmissionAlternative[] = [
 
 export const admissionNextSteps = [
   {
-    title: '합격생 멘토 매칭',
-    description: '목표 대학 합격 선배와 1:1 멘토링을 통해 실전 노하우를 전수받으세요.',
+    title: '합격생 러너 매칭',
+    description: '목표 대학 합격 선배와 1:1 릴레이 세션을 통해 실전 노하우를 전수받으세요.',
   },
   {
     title: 'AI 자소서 첨삭',

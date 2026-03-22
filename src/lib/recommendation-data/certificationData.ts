@@ -45,7 +45,7 @@ export const CERTIFICATION_CONFIG = {
   ],
   nextSteps: [
     {
-      title: '경험 전달자 매칭',
+      title: '릴레이 러너 매칭',
       description:
         '추천 자격증에 합격한 선배들과 연결되어 실제 경험을 들어보세요',
     },

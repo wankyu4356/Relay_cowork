@@ -270,7 +270,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
                 릴레이 톡
               </h1>
-              <p className="text-gray-600 mt-1">멘토와 실시간으로 소통하세요</p>
+              <p className="text-gray-600 mt-1">러너와 실시간으로 소통하세요</p>
             </div>
             {conversations.reduce((sum, conv) => sum + conv.unreadCount, 0) > 0 && (
               <Badge className="bg-red-500 text-white border-0">

@@ -122,7 +122,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 </span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                편입·취업·자격증·대학원까지, AI 첨삭과 선배 멘토링으로<br />
+                편입·취업·자격증·대학원까지, AI 첨삭과 선배 릴레이 세션으로<br />
                 릴레이에서 당신의 성공 바톤을 이어받으세요.
               </p>
             </div>
@@ -260,7 +260,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       <div className="grid grid-cols-2 gap-3">
                         {[
                           { value: 'mentee', label: '멘티', desc: '편입 준비생', icon: Sparkles },
-                          { value: 'mentor', label: '멘토', desc: '편입 합격생', icon: Users },
+                          { value: 'mentor', label: '러너', desc: '편입 합격생', icon: Users },
                         ].map((option) => (
                           <button
                             key={option.value}
