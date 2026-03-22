@@ -43,7 +43,7 @@ const mockReviews: Review[] = [
     menteeAvatar: '👩‍💼',
     rating: 5.0,
     date: '2024.12.25',
-    content: '김서연 멘토님 덕분에 성균관대 글로벌경영에 합격했습니다! 학업계획서 첨삭이 정말 꼼꼼하고 세밀했어요. 특히 제 경험을 스토리텔링하는 방법을 알려주셔서 큰 도움이 됐습니다. 면접 준비도 함께 해주셔서 자신감 있게 임할 수 있었어요. 정말 감사합니다!',
+    content: '김서연 러너님 덕분에 성균관대 글로벌경영에 합격했습니다! 학업계획서 첨삭이 정말 꼼꼼하고 세밀했어요. 특히 제 경험을 스토리텔링하는 방법을 알려주셔서 큰 도움이 됐습니다. 면접 준비도 함께 해주셔서 자신감 있게 임할 수 있었어요. 정말 감사합니다!',
     tags: ['학계서 첨삭', '면접 준비', '친절함', '전문성'],
     university: '성균관대',
     successStatus: 'passed',
@@ -55,7 +55,7 @@ const mockReviews: Review[] = [
     menteeAvatar: '👨‍🎓',
     rating: 4.9,
     date: '2024.12.18',
-    content: '한양대 경영학과 합격했습니다! 멘토님이 실제 합격생이셔서 현실적인 조언을 많이 해주셨어요. 학계서 구조를 잡는 것부터 디테일까지 하나하나 봐주셔서 좋았습니다. 특히 제 강점을 부각하는 방법을 알려주신 게 결정적이었던 것 같아요.',
+    content: '한양대 경영학과 합격했습니다! 러너님이 실제 합격생이셔서 현실적인 조언을 많이 해주셨어요. 학계서 구조를 잡는 것부터 디테일까지 하나하나 봐주셔서 좋았습니다. 특히 제 강점을 부각하는 방법을 알려주신 게 결정적이었던 것 같아요.',
     tags: ['학계서 첨삭', '전문성', '꼼꼼함'],
     university: '한양대',
     successStatus: 'passed',
@@ -67,7 +67,7 @@ const mockReviews: Review[] = [
     menteeAvatar: '👨‍🎓',
     rating: 5.0,
     date: '2025.02.18',
-    content: '아직 결과는 안 나왔지만 멘토님과 준비하면서 많이 성장한 것 같아요. 세션마다 피드백이 구체적이고 실용적이어서 바로 적용할 수 있었습니다. 응답도 빠르시고 질문에 항상 친절하게 답변해주세요. 좋은 결과 있길 기대합니다!',
+    content: '아직 결과는 안 나왔지만 러너님과 준비하면서 많이 성장한 것 같아요. 세션마다 피드백이 구체적이고 실용적이어서 바로 적용할 수 있었습니다. 응답도 빠르시고 질문에 항상 친절하게 답변해주세요. 좋은 결과 있길 기대합니다!',
     tags: ['빠른 응답', '친절함', '실용적 조언'],
     university: '연세대',
     successStatus: 'pending',
@@ -79,7 +79,7 @@ const mockReviews: Review[] = [
     menteeAvatar: '👨‍💼',
     rating: 4.8,
     date: '2025.02.10',
-    content: '멘토님이 정말 열정적으로 가르쳐주세요. 학계서 작성하는 법뿐만 아니라 편입 준비 전반에 대한 조언도 많이 해주셔서 큰 도움이 됐어요. 제 상황을 이해하고 맞춤형으로 피드백 주시는 점이 좋았습니다.',
+    content: '러너님이 정말 열정적으로 가르쳐주세요. 학계서 작성하는 법뿐만 아니라 편입 준비 전반에 대한 조언도 많이 해주셔서 큰 도움이 됐어요. 제 상황을 이해하고 맞춤형으로 피드백 주시는 점이 좋았습니다.',
     tags: ['열정적', '맞춤 피드백', '전문성'],
     university: '고려대',
     successStatus: 'pending',
@@ -101,26 +101,49 @@ const mockReviews: Review[] = [
 
 export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>(mockReviews);
+  const [loading, setLoading] = useState(true);
   const [filterRating, setFilterRating] = useState<number | 'all'>('all');
   const [filterSuccess, setFilterSuccess] = useState<'all' | 'passed' | 'pending'>('all');
 
   useEffect(() => {
-    api.getMentorReviews('me').then((res: any) => {
-      if (res.reviews?.length > 0) {
-        setReviews(res.reviews.map((r: any) => ({
-          id: r.id,
-          menteeName: r.mentee_name || '멘티',
-          menteeAvatar: r.mentee_avatar || '👤',
-          rating: r.rating,
-          date: r.date || r.created_at,
-          content: r.content,
-          tags: r.tags || [],
-          university: r.university || '',
-          successStatus: r.success_status,
-          helpful: r.helpful || 0,
-        })));
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getMentorReviews('me');
+        if (res.reviews?.length > 0) {
+          interface ApiReview {
+            id: string;
+            mentee_name?: string;
+            mentee_avatar?: string;
+            rating: number;
+            date?: string;
+            created_at?: string;
+            content: string;
+            tags?: string[];
+            university?: string;
+            success_status?: 'passed' | 'pending';
+            helpful?: number;
+          }
+          setReviews((res.reviews as ApiReview[]).map((r) => ({
+            id: r.id,
+            menteeName: r.mentee_name || '러너',
+            menteeAvatar: r.mentee_avatar || '👤',
+            rating: r.rating,
+            date: r.date || r.created_at || '',
+            content: r.content,
+            tags: r.tags || [],
+            university: r.university || '',
+            successStatus: r.success_status,
+            helpful: r.helpful || 0,
+          })));
+        }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchReviews();
   }, []);
 
   const filteredReviews = reviews.filter(review => {
@@ -175,7 +198,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold gradient-text mb-2">내 리뷰 & 평점</h1>
-          <p className="text-gray-600">멘티들이 남긴 솔직한 후기를 확인하세요</p>
+          <p className="text-gray-600">러너들이 남긴 솔직한 후기를 확인하세요</p>
         </div>
 
         {/* Overview Stats */}
@@ -222,16 +245,16 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                   <Award className="w-7 h-7 text-green-600" />
                 </div>
                 <div className="text-3xl font-bold text-green-700 mb-1">{passedReviews}</div>
-                <div className="text-sm text-gray-600">합격 멘티</div>
+                <div className="text-sm text-gray-600">합격 러너</div>
               </Card>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <ThumbsUp className="w-7 h-7 text-blue-600" />
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <ThumbsUp className="w-7 h-7 text-emerald-600" />
                 </div>
-                <div className="text-3xl font-bold text-blue-700 mb-1">{totalHelpful}</div>
+                <div className="text-3xl font-bold text-emerald-700 mb-1">{totalHelpful}</div>
                 <div className="text-sm text-gray-600">도움됨 수</div>
               </Card>
             </motion.div>

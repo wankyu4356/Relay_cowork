@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -33,6 +33,7 @@ import type { Category } from './GlobalNav';
 import { CATEGORY_CONTENT } from '../lib/categoryContent';
 import { CATEGORY_STATS } from '../lib/categoryStats';
 import { useMentors } from '../hooks/useMentors';
+import * as api from './api';
 
 interface UnifiedHomeProps {
   onNavigate: (screen: Screen) => void;
@@ -59,6 +60,83 @@ export function UnifiedHome({
   const [showMentorOnboarding, setShowMentorOnboarding] = useState(false);
   const [showSuccessRateModal, setShowSuccessRateModal] = useState(false);
   const { mentors: recommendedMentors, loading: mentorsLoading } = useMentors();
+
+  // Dashboard stats fetched from API with mock fallbacks
+  const [draftCount, setDraftCount] = useState(2);
+  const [upcomingSessionCount, setUpcomingSessionCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [creditBalance, setCreditBalance] = useState(credits);
+  const [mentorNetworkCount, setMentorNetworkCount] = useState(12);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchDashboardData() {
+      setDashboardLoading(true);
+
+      // Fetch all data in parallel, each with its own try/catch
+      const [draftsResult, sessionsResult, notificationsResult, creditsResult, mentorsResult] = await Promise.allSettled([
+        api.getDrafts(),
+        api.getSessions(),
+        api.getNotifications(),
+        api.getCredits(),
+        api.getMentors(),
+      ]);
+
+      if (cancelled) return;
+
+      // Drafts count
+      if (draftsResult.status === 'fulfilled') {
+        const drafts = draftsResult.value?.drafts;
+        if (Array.isArray(drafts)) {
+          setDraftCount(drafts.length);
+        }
+      }
+
+      // Upcoming sessions count
+      if (sessionsResult.status === 'fulfilled') {
+        const sessions = sessionsResult.value?.sessions;
+        if (Array.isArray(sessions)) {
+          const upcoming = sessions.filter((s: { status?: string }) => s.status === 'upcoming');
+          setUpcomingSessionCount(upcoming.length);
+        }
+      }
+
+      // Notifications count
+      if (notificationsResult.status === 'fulfilled') {
+        const notifications = notificationsResult.value?.notifications;
+        if (Array.isArray(notifications)) {
+          const unread = notifications.filter((n: { read?: boolean }) => !n.read);
+          setNotificationCount(unread.length);
+        }
+      }
+
+      // Credit balance
+      if (creditsResult.status === 'fulfilled') {
+        const creditsData = creditsResult.value;
+        if (typeof creditsData?.balance === 'number') {
+          setCreditBalance(creditsData.balance);
+        } else if (typeof creditsData?.credits === 'number') {
+          setCreditBalance(creditsData.credits);
+        }
+      }
+
+      // Mentor network count
+      if (mentorsResult.status === 'fulfilled') {
+        const mentors = mentorsResult.value?.mentors;
+        if (Array.isArray(mentors)) {
+          setMentorNetworkCount(mentors.length);
+        }
+      }
+
+      setDashboardLoading(false);
+    }
+
+    fetchDashboardData();
+
+    return () => { cancelled = true; };
+  }, []);
 
   const handleTabChange = (tab: 'mentee' | 'mentor') => {
     if (tab === 'mentor' && !isMentorActive) {
@@ -117,14 +195,16 @@ export function UnifiedHome({
                 안녕하세요 👋
               </h1>
               <p className="text-gray-600">
-                {activeTab === 'mentee' ? content.greeting : '멘토 활동을 시작하세요'}
+                {activeTab === 'mentee' ? content.greeting : '러너 활동을 시작하세요'}
               </p>
             </div>
             <div className="flex gap-2">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" size="icon" onClick={() => onNavigate('notifications')} className="relative">
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  {notificationCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  )}
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -139,13 +219,13 @@ export function UnifiedHome({
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="w-full grid grid-cols-2 h-14 bg-gray-100/80 backdrop-blur-sm p-1">
               <TabsTrigger value="mentee" className="text-base font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md">
-                <span className="mr-2">🎯</span> 경험 받기
+                <span className="mr-2">🎯</span> 바통 받기
               </TabsTrigger>
               <TabsTrigger 
                 value="mentor" 
                 className="text-base font-semibold relative data-[state=active]:bg-white data-[state=active]:shadow-md"
               >
-                <span className="mr-2">⚡</span> 경험 전달하기
+                <span className="mr-2">⚡</span> 바통 넘기기
                 {!isMentorActive && (
                   <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs border-0 shadow-lg">
                     시작하기
@@ -251,7 +331,7 @@ export function UnifiedHome({
                     </Button>
                     <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
                       <Sparkles className="w-4 h-4" />
-                      <span>남은 크레딧: {credits}회</span>
+                      <span>남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
                     </div>
                   </div>
                 </Card>
@@ -277,7 +357,7 @@ export function UnifiedHome({
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-4">
                           <Users className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">나에게 맞는 멘토 찾기</h2>
+                          <h2 className="text-2xl font-bold text-white">나에게 맞는 러너 찾기</h2>
                         </div>
                         <p className="text-white/90 text-lg mb-4">
                           {content.mentorDescription}
@@ -293,7 +373,7 @@ export function UnifiedHome({
                       size="lg"
                       className="bg-white text-emerald-600 hover:bg-emerald-50 w-full md:w-auto"
                     >
-                      멘토 찾아보기
+                      러너 찾아보기
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </div>
@@ -307,7 +387,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <BookOpen className="w-7 h-7 text-purple-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">2</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : draftCount}</div>
                     <div className="text-sm text-gray-600">{content.docLabel}</div>
                   </Card>
                 </motion.div>
@@ -317,7 +397,7 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-sky-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Calendar className="w-7 h-7 text-sky-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">3</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : upcomingSessionCount}</div>
                     <div className="text-sm text-gray-600">예정된 세션</div>
                   </Card>
                 </motion.div>
@@ -327,8 +407,8 @@ export function UnifiedHome({
                     <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                       <Users className="w-7 h-7 text-indigo-600" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">12</div>
-                    <div className="text-sm text-gray-600">내 인맥 멘토</div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : mentorNetworkCount}</div>
+                    <div className="text-sm text-gray-600">내 인맥 러너</div>
                   </Card>
                 </motion.div>
 
@@ -346,7 +426,7 @@ export function UnifiedHome({
               {/* Recommended Mentors */}
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold">⭐ 추천 멘토</h2>
+                  <h2 className="text-2xl font-bold">⭐ 추천 러너</h2>
                   <Button 
                     variant="ghost"
                     onClick={() => onNavigate('mentor-search')}
@@ -368,9 +448,9 @@ export function UnifiedHome({
 
                     const getBadgeName = (badge: string) => {
                       switch (badge) {
-                        case 'gold': return '골드 멘토';
-                        case 'silver': return '실버 멘토';
-                        case 'bronze': return '브론즈 멘토';
+                        case 'gold': return '골드 러너';
+                        case 'silver': return '실버 러너';
+                        case 'bronze': return '브론즈 러너';
                         default: return '';
                       }
                     };
@@ -508,7 +588,7 @@ export function UnifiedHome({
                         <Award className="w-10 h-10 text-white" />
                       </div>
                       <h2 className="text-3xl font-bold text-white mb-4">
-                        멘토가 되어보세요
+                        러너가 되어보세요
                       </h2>
                       <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
                         합격 경험을 공유하고 월 30~100만 원의 부수입을 얻으세요.<br />
@@ -536,7 +616,7 @@ export function UnifiedHome({
                         className="bg-white text-purple-600 hover:bg-gray-50"
                         onClick={handleStartMentorVerification}
                       >
-                        멘토 등록하기
+                        러너 등록하기
                         <ArrowRight className="w-5 h-5 ml-2" />
                       </Button>
                       <p className="text-white/70 text-sm mt-4">
@@ -616,7 +696,7 @@ export function UnifiedHome({
                   {/* Recent Requests */}
                   <Card className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold">최근 멘토링 요청</h3>
+                      <h3 className="font-semibold">최근 릴레이 요청</h3>
                       <Button variant="ghost" size="sm">전체보기</Button>
                     </div>
                     <div className="space-y-3">
@@ -799,7 +879,7 @@ export function UnifiedHome({
                     }}
                   >
                     <Search className="w-4 h-4 mr-2" />
-                    멘토 찾기
+                    러너 찾기
                   </Button>
                   <Button
                     variant="outline"

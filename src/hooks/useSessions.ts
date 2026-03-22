@@ -22,10 +22,21 @@ export function useSessions() {
       const data = await fetchWithFallback(
         async () => {
           const res = await api.getSessions();
-          return (res.sessions || []).map((s: any) => ({
+          interface ApiSession {
+            id: string;
+            mentor_id: string;
+            mentor_name?: string;
+            mentor_avatar?: string;
+            date: string;
+            time: string;
+            duration?: number;
+            price?: number;
+            status?: string;
+          }
+          return (res.sessions || []).map((s: ApiSession) => ({
             id: s.id,
             mentorId: s.mentor_id,
-            mentorName: s.mentor_name || '멘토',
+            mentorName: s.mentor_name || '러너',
             mentorAvatar: s.mentor_avatar || '👨‍🎓',
             date: s.date,
             time: s.time,
@@ -38,8 +49,8 @@ export function useSessions() {
       );
       setSessions(data);
       setError(null);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }

@@ -4,8 +4,10 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { PartyPopper, Frown, ArrowLeft } from 'lucide-react';
+import { PartyPopper, Frown, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
+import { logger } from '../utils/logger';
 import type { Mentor } from '../App';
 
 interface OutcomeReportProps {
@@ -18,8 +20,9 @@ interface OutcomeReportProps {
 export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeReportProps) {
   const [outcome, setOutcome] = useState<'success' | 'fail' | null>(null);
   const [detail, setDetail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!outcome) {
       toast.error('결과를 선택해주세요');
       return;
@@ -29,17 +32,39 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       return;
     }
 
-    onSubmit(outcome, detail);
-    
-    if (outcome === 'success') {
-      toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
-    } else {
-      toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+    setSubmitting(true);
+    try {
+      await api.createOutcome({
+        mentorId: mentor.id,
+        result: outcome,
+        detail,
+        purpose,
+      });
+
+      onSubmit(outcome, detail);
+
+      if (outcome === 'success') {
+        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+      } else {
+        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+      }
+    } catch (err) {
+      logger.warn('API outcome submission failed, proceeding with local callback:', err);
+      // Fallback: still call onSubmit so the UI updates
+      onSubmit(outcome, detail);
+
+      if (outcome === 'success') {
+        toast.success('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+      } else {
+        toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
@@ -48,8 +73,8 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">결과 보고</h1>
-              <p className="text-gray-600 mt-1">멘토링 결과를 알려주세요</p>
+              <h1 className="text-2xl font-bold">릴레이 성과 보고</h1>
+              <p className="text-gray-600 mt-1">릴레이 세션 결과를 알려주세요</p>
             </div>
           </div>
         </div>
@@ -64,11 +89,11 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           >
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-3xl">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-3xl">
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 멘토</h3>
+                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 러너</h3>
                   <p className="text-gray-600">
                     {mentor.university} {mentor.major}
                   </p>
@@ -108,7 +133,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                   }`} />
                   <div className="text-2xl font-bold mb-2">합격했어요!</div>
                   <p className="text-sm text-gray-600 mb-3">
-                    축하합니다! 멘토님의 성공률이 올라갑니다
+                    축하합니다! 러너님의 성공률이 올라갑니다
                   </p>
                   <Badge className="bg-green-500 text-white">
                     +₩10,000 크레딧
@@ -154,7 +179,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                 <Textarea
                   placeholder={
                     outcome === 'success'
-                      ? '멘토링이 어떻게 도움이 되었나요? (최소 10자)'
+                      ? '릴레이 세션이 어떻게 도움이 되었나요? (최소 10자)'
                       : '다음 시도 때 개선할 점이 있나요? (최소 10자)'
                   }
                   value={detail}
@@ -169,19 +194,19 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           )}
 
           {/* Benefits */}
-          <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
-            <h4 className="font-semibold mb-3">📌 결과 보고 시 혜택</h4>
+          <Card className="p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200">
+            <h4 className="font-semibold mb-3">📌 릴레이 성과 보고 시 혜택</h4>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span>
-                  <strong>멘토:</strong> 성공률 지표 업데이트, 프로필 강화
+                  <strong>러너:</strong> 성공률 지표 업데이트, 프로필 강화
                 </span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span>
-                  <strong>멘티:</strong> 크레딧 지급, 다음 멘토링 할인
+                  <strong>멘티:</strong> 크레딧 지급, 다음 릴레이 세션 할인
                 </span>
               </div>
               <div className="flex items-start gap-2">
@@ -205,11 +230,11 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
             </Button>
             <Button
               onClick={handleSubmit}
-              className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white"
               size="lg"
-              disabled={!outcome || detail.length < 10}
+              disabled={!outcome || detail.length < 10 || submitting}
             >
-              보고 완료
+              {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />제출 중...</> : '보고 완료'}
             </Button>
           </div>
         </div>

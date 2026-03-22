@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -115,7 +116,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
       case 'mentor':
         return 'from-purple-400 to-indigo-500';
       case 'peer':
-        return 'from-blue-400 to-cyan-500';
+        return 'from-blue-400 to-green-500';
       case 'mentee':
         return 'from-green-400 to-emerald-500';
       default:
@@ -180,7 +181,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
               <div className="text-3xl font-bold text-blue-700 mb-1">{peerConnections.length}</div>
@@ -190,7 +191,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)} className="space-y-6">
           <TabsList className="grid grid-cols-2 h-14 bg-white/50 backdrop-blur-sm shadow-sm">
             <TabsTrigger value="chain" className="data-[state=active]:bg-white text-base font-semibold">
               <Zap className="w-4 h-4 mr-2" />
@@ -207,7 +208,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             <RelayChainVisualization 
               currentUserName="러너 #2847"
               onNodeClick={(node) => {
-                console.log('Node clicked:', node);
+                logger.log('Node clicked:', node);
               }}
               onStartMentoring={onStartMentoring}
             />
@@ -319,7 +320,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             {peerConnections.length > 0 && (
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center">
                     <Users className="w-4 h-4 text-blue-600" />
                   </div>
                   동료 러너 ({peerConnections.length})
@@ -351,19 +352,19 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                         </div>
 
                         {/* Connection Path */}
-                        <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
+                        <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl">
                           <div className="text-xs text-gray-600 mb-1">경험 연결 경로</div>
                           <div className="flex items-center gap-2 text-sm font-medium text-blue-700">
                             {runner.connectionPath.map((name, i) => (
                               <div key={i} className="flex items-center gap-2">
                                 <span className="truncate max-w-[80px]">{name}</span>
                                 {i < runner.connectionPath.length - 1 && (
-                                  <Zap className="w-3 h-3 text-cyan-500" />
+                                  <Zap className="w-3 h-3 text-green-500" />
                                 )}
                               </div>
                             ))}
                           </div>
-                          <div className="text-xs text-cyan-600 mt-1">
+                          <div className="text-xs text-green-600 mt-1">
                             {runner.distance}단계 연결
                           </div>
                         </div>

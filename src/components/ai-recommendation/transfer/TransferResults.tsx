@@ -265,7 +265,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
                         <div className="flex gap-3">
                           <Button className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 rounded-xl py-6">
                             <Users className="w-5 h-5 mr-2" />
-                            경험 전달자 찾기
+                            릴레이 러너 찾기
                           </Button>
                           <Button variant="outline" className="rounded-xl px-6">
                             <ExternalLink className="w-5 h-5" />

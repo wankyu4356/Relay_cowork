@@ -8,9 +8,11 @@ import { Badge } from './ui/badge';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
+import type { AuthSession, ProfileData } from '../App';
 
 interface AuthScreenProps {
-  onAuthSuccess: (session: any, profile: any) => void;
+  onAuthSuccess: (session: AuthSession | null, profile: ProfileData) => void;
 }
 
 export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
@@ -53,7 +55,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         onAuthSuccess(data.session, profile);
       }
     } catch (err: any) {
-      console.error('Auth error:', err);
+      logger.error('Auth error:', err);
       toast.error(err.message || '인증에 실패했습니다.');
     } finally {
       setLoading(false);
@@ -114,21 +116,21 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               </motion.div>
 
               <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                편입 합격의 경험을<br />
+                성공의 경험을<br />
                 <span className="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
                   다음 세대로 이어갑니다
                 </span>
               </h1>
               <p className="text-lg text-gray-600 mb-8">
-                AI 학업계획서 첨삭부터 합격생 멘토링까지,<br />
-                릴레이에서 편입 성공의 바톤을 이어받으세요.
+                편입·취업·자격증·대학원까지, AI 첨삭과 선배 릴레이 세션으로<br />
+                릴레이에서 당신의 성공 바톤을 이어받으세요.
               </p>
             </div>
 
             <div className="space-y-4">
               {[
-                { icon: Sparkles, title: 'AI 학업계획서', desc: 'GPT 기반 맞춤형 초안 자동 생성' },
-                { icon: Users, title: '1:1 멘토 매칭', desc: '검증된 합격생과 익명 기반 연결' },
+                { icon: Sparkles, title: 'AI 바통 작성', desc: 'AI 기반 맞춤형 초안 자동 생성' },
+                { icon: Users, title: '1:1 러너 매칭', desc: '검증된 합격생과 익명 기반 연결' },
                 { icon: Shield, title: '프라이버시 보호', desc: '러너 #XXXX 익명 시스템 적용' },
               ].map((item, i) => (
                 <motion.div
@@ -168,10 +170,12 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               </div>
 
               {/* Tab switcher */}
-              <div className="flex bg-gray-100 rounded-2xl p-1 mb-8">
+              <div className="flex bg-gray-100 rounded-2xl p-1 mb-8" role="tablist" aria-label="인증 방식 선택">
                 {(['login', 'signup'] as const).map((tab) => (
                   <button
                     key={tab}
+                    role="tab"
+                    aria-selected={mode === tab}
                     onClick={() => setMode(tab)}
                     className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                       mode === tab
@@ -193,6 +197,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   transition={{ duration: 0.2 }}
                   onSubmit={handleSubmit}
                   className="space-y-5"
+                  role="form"
+                  aria-label={mode === 'login' ? '로그인 양식' : '회원가입 양식'}
                 >
                   {mode === 'signup' && (
                     <div className="space-y-2">
@@ -204,6 +210,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                           value={form.name}
                           onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                           className="pl-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                          aria-label="이름"
                         />
                       </div>
                     </div>
@@ -219,6 +226,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                         value={form.email}
                         onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
                         className="pl-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                        aria-label="이메일"
                       />
                     </div>
                   </div>
@@ -233,11 +241,13 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                         value={form.password}
                         onChange={(e) => setForm(prev => ({ ...prev, password: e.target.value }))}
                         className="pl-10 pr-10 h-12 rounded-xl border-gray-200 focus:border-sky-400 focus:ring-sky-400/20"
+                        aria-label="비밀번호"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -250,7 +260,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       <div className="grid grid-cols-2 gap-3">
                         {[
                           { value: 'mentee', label: '멘티', desc: '편입 준비생', icon: Sparkles },
-                          { value: 'mentor', label: '멘토', desc: '편입 합격생', icon: Users },
+                          { value: 'mentor', label: '러너', desc: '편입 합격생', icon: Users },
                         ].map((option) => (
                           <button
                             key={option.value}
@@ -261,6 +271,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                                 ? 'border-sky-400 bg-sky-50'
                                 : 'border-gray-200 bg-white hover:border-gray-300'
                             }`}
+                            aria-pressed={form.role === option.value}
+                            aria-label={`${option.label} (${option.desc})`}
                           >
                             <option.icon className={`w-5 h-5 mb-2 ${
                               form.role === option.value ? 'text-sky-600' : 'text-gray-400'
@@ -281,6 +293,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     type="submit"
                     disabled={loading}
                     className="w-full h-12 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold text-base shadow-lg shadow-sky-200/50"
+                    aria-label={mode === 'login' ? '로그인' : '회원가입'}
                   >
                     {loading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -319,7 +332,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       setForm(prev => ({ ...prev, email: 'mentor@relay.kr', password: 'mentor1234' }));
                     }}
                   >
-                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">멘토</Badge>
+                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">러너</Badge>
                     데모 계정
                   </Button>
                 </div>
@@ -337,7 +350,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   }}
                   className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2"
                 >
-                  로그인 없이 둘러보기
+                  릴레이 체험하기
                 </button>
               </div>
             </Card>

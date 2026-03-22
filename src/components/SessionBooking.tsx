@@ -12,6 +12,7 @@ import { ArrowLeft, Calendar as CalendarIcon, Clock, CreditCard, FileText, Alert
 import { toast } from 'sonner';
 import type { Mentor } from '../App';
 import * as api from './api';
+import { logger } from '../utils/logger';
 
 interface SessionBookingProps {
   onBack: () => void;
@@ -70,7 +71,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
         topic: request,
       });
     } catch (e) {
-      console.log('Session booking to server failed:', e);
+      logger.log('Session booking to server failed:', e);
     }
 
     toast.success('예약이 완료되었습니다! 🎉');
@@ -78,7 +79,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 pb-20 md:pb-0">
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
@@ -86,8 +87,8 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">세션 예약</h1>
-              <p className="text-gray-600 mt-1">{mentor.name} 멘토</p>
+              <h1 className="text-2xl font-bold">릴레이 세션 예약</h1>
+              <p className="text-gray-600 mt-1">{mentor.name} 러너</p>
             </div>
           </div>
         </div>
@@ -104,7 +105,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
             >
               <Card className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center text-3xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-2xl flex items-center justify-center text-3xl">
                     {mentor.avatar}
                   </div>
                   <div className="flex-1">
@@ -119,7 +120,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-sky-600">
+                    <div className="text-2xl font-bold text-indigo-600">
                       ₩{(getPrice() / 1000).toFixed(0)}k
                     </div>
                     <div className="text-sm text-gray-600">{duration}분</div>
@@ -131,7 +132,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
             {/* Date Selection */}
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-sky-600" />
+                <CalendarIcon className="w-5 h-5 text-indigo-600" />
                 날짜 선택
               </h3>
               <div className="flex justify-center">
@@ -140,7 +141,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   className="rounded-lg border"
-                  disabled={(date) => date < new Date()}
+                  disabled={(date: Date) => date < new Date()}
                 />
               </div>
             </Card>
@@ -148,7 +149,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
             {/* Time & Duration */}
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-sky-600" />
+                <Clock className="w-5 h-5 text-indigo-600" />
                 시간 및 세션 길이
               </h3>
 
@@ -159,8 +160,8 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                     <Card 
                       className={`p-4 cursor-pointer transition-all ${
                         duration === '30' 
-                          ? 'border-2 border-sky-500 bg-sky-50' 
-                          : 'border-2 border-transparent hover:border-sky-200'
+                          ? 'border-2 border-indigo-500 bg-indigo-50' 
+                          : 'border-2 border-transparent hover:border-indigo-200'
                       }`}
                       onClick={() => setDuration('30')}
                     >
@@ -177,8 +178,8 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                     <Card 
                       className={`p-4 cursor-pointer transition-all ${
                         duration === '60' 
-                          ? 'border-2 border-sky-500 bg-sky-50' 
-                          : 'border-2 border-transparent hover:border-sky-200'
+                          ? 'border-2 border-indigo-500 bg-indigo-50' 
+                          : 'border-2 border-transparent hover:border-indigo-200'
                       }`}
                       onClick={() => setDuration('60')}
                     >
@@ -206,7 +207,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                       size="sm"
                       disabled={!slot.available}
                       onClick={() => setSelectedTime(slot.time)}
-                      className={selectedTime === slot.time ? 'bg-sky-500 hover:bg-sky-600' : ''}
+                      className={selectedTime === slot.time ? 'bg-indigo-500 hover:bg-indigo-600' : ''}
                     >
                       {slot.time}
                     </Button>
@@ -221,34 +222,34 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
             {/* Request */}
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-sky-600" />
-                멘토에게 전달할 내용
+                <FileText className="w-5 h-5 text-indigo-600" />
+                러너에게 전달할 내용
               </h3>
               
               <div className="space-y-4">
                 <div>
                   <Label className="mb-2 block">요청사항 (선택)</Label>
                   <Textarea
-                    placeholder="멘토에게 미리 알려주고 싶은 내용이 있다면 작성해주세요&#10;예: 학업계획서 초안을 준비했습니다. 전체적인 구조와 표현을 봐주셨으면 좋겠습니다."
+                    placeholder="러너에게 미리 알려주고 싶은 내용이 있다면 작성해주세요&#10;예: 학업계획서 초안을 준비했습니다. 전체적인 구조와 표현을 봐주셨으면 좋겠습니다."
                     value={request}
                     onChange={(e) => setRequest(e.target.value)}
                     className="min-h-32"
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    구체적으로 작성할수록 더 효과적인 멘토링을 받을 수 있어요
+                    구체적으로 작성할수록 더 효과적인 릴레이를 진행할 수 있어요
                   </p>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                <div className="flex items-start gap-3 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
                   <Checkbox 
                     id="share"
                     checked={shareDocument}
-                    onCheckedChange={(checked) => setShareDocument(checked as boolean)}
+                    onCheckedChange={(checked: boolean) => setShareDocument(checked as boolean)}
                   />
                   <label htmlFor="share" className="cursor-pointer flex-1 text-sm">
                     <div className="font-semibold mb-1">AI 학업계획서 공유하기</div>
                     <div className="text-gray-600">
-                      작성한 AI 초안을 멘토와 공유합니다. 세션에서 바로 첨삭받을 수 있어요.
+                      작성한 AI 초안을 러너와 공유합니다. 릴레이 세션에서 바로 첨삭받을 수 있어요.
                     </div>
                   </label>
                 </div>
@@ -258,7 +259,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
             {/* Payment */}
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-sky-600" />
+                <CreditCard className="w-5 h-5 text-indigo-600" />
                 결제 수단
               </h3>
               
@@ -273,8 +274,8 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                       key={method.value}
                       className={`p-4 cursor-pointer transition-all ${
                         paymentMethod === method.value 
-                          ? 'border-2 border-sky-500 bg-sky-50' 
-                          : 'border-2 border-transparent hover:border-sky-200'
+                          ? 'border-2 border-indigo-500 bg-indigo-50' 
+                          : 'border-2 border-transparent hover:border-indigo-200'
                       }`}
                       onClick={() => setPaymentMethod(method.value)}
                     >
@@ -297,7 +298,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 <Checkbox 
                   id="terms"
                   checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                  onCheckedChange={(checked: boolean) => setAgreedToTerms(checked as boolean)}
                 />
                 <label htmlFor="terms" className="cursor-pointer flex-1 text-sm">
                   <div className="font-semibold mb-2">환불 정책 동의 (필수)</div>
@@ -305,7 +306,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                     <li>• 세션 24시간 전까지: 100% 환불</li>
                     <li>• 세션 24시간 이내 ~ 2시간 전: 50% 환불</li>
                     <li>• 세션 2시간 이내: 환불 불가</li>
-                    <li>• 멘토 불참 시: 100% 환불 및 추가 보상</li>
+                    <li>• 러너 불참 시: 100% 환불 및 추가 보상</li>
                   </ul>
                 </label>
               </div>
@@ -335,7 +336,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   <span className="font-medium">{duration}분</span>
                 </div>
                 <div className="flex justify-between pb-3 border-b">
-                  <span className="text-gray-600">멘토</span>
+                  <span className="text-gray-600">러너</span>
                   <span className="font-medium">{mentor.name}</span>
                 </div>
               </div>
@@ -351,12 +352,12 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-3 border-t">
                   <span>총 결제금액</span>
-                  <span className="text-sky-600">₩{getPrice().toLocaleString()}</span>
+                  <span className="text-indigo-600">₩{getPrice().toLocaleString()}</span>
                 </div>
               </div>
 
               <Button
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white mb-3"
+                className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white mb-3"
                 size="lg"
                 onClick={handleConfirm}
                 disabled={!selectedDate || !selectedTime || !agreedToTerms}
@@ -369,7 +370,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   <AlertCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
                     세션 비용은 에스크로로 보호됩니다. 
-                    세션 완료 후 멘토에게 전달됩니다.
+                    릴레이 완료 후 러너에게 전달됩니다.
                   </div>
                 </div>
               </Card>

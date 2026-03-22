@@ -4,8 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
-import { 
-  ArrowLeft, 
+import {
+  ArrowLeft,
   Send,
   Paperclip,
   Image as ImageIcon,
@@ -128,17 +128,34 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [loadingConversations, setLoadingConversations] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   // Load conversations from API on mount with fallback to mock data
   useEffect(() => {
+    setLoadingConversations(true);
     api.getConversations().then(res => {
       if (res.conversations?.length > 0) {
-        const mapped: Conversation[] = res.conversations.map((c: any) => ({
+        interface ApiConversation {
+          id: string;
+          userId?: string;
+          name?: string;
+          userName?: string;
+          userAvatar?: string;
+          avatar?: string;
+          userRole?: string;
+          lastMessage?: string;
+          lastMessageTime?: string;
+          unreadCount?: number;
+          online?: boolean;
+        }
+        const mapped: Conversation[] = (res.conversations as ApiConversation[]).map((c) => ({
           id: c.id,
           userId: c.userId || c.id,
           userName: c.userName || c.name || '사용자',
           userAvatar: c.userAvatar || c.avatar || '👤',
-          userRole: c.userRole || '멘토',
+          userRole: (c.userRole === '멘토' || c.userRole === '멘티' ? c.userRole : '멘토') as '멘토' | '멘티',
           lastMessage: c.lastMessage || '',
           lastMessageTime: c.lastMessageTime || '',
           unreadCount: c.unreadCount || 0,
@@ -147,13 +164,57 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
         setConversations(mapped);
         setSelectedConversation(mapped[0]);
       }
-    }).catch(() => {}); // keep mock data
+    }).catch(() => {
+      // keep mock data as fallback
+    }).finally(() => {
+      setLoadingConversations(false);
+    });
   }, []);
 
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
+  // Load messages from API when a conversation is selected
+  useEffect(() => {
+    if (!selectedConversation) return;
 
-    const message: Message = {
+    setLoadingMessages(true);
+    api.getMessages(selectedConversation.id).then(res => {
+      if (res.messages?.length > 0) {
+        interface ApiMessage {
+          id: string;
+          senderId?: string;
+          sender_id?: string;
+          content?: string;
+          timestamp?: string;
+          read?: boolean;
+          type?: 'text' | 'image' | 'file';
+        }
+        const mapped: Message[] = (res.messages as ApiMessage[]).map((m) => ({
+          id: m.id,
+          senderId: m.senderId || m.sender_id || 'unknown',
+          content: m.content || '',
+          timestamp: m.timestamp || '',
+          read: m.read ?? false,
+          type: m.type || 'text',
+        }));
+        setMessages(mapped);
+      } else {
+        setMessages([]);
+      }
+    }).catch(() => {
+      // If this is the first conversation (from mock data), keep mock messages as fallback
+      if (selectedConversation.id === mockConversations[0]?.id) {
+        setMessages(mockMessages);
+      } else {
+        setMessages([]);
+      }
+    }).finally(() => {
+      setLoadingMessages(false);
+    });
+  }, [selectedConversation?.id]);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedConversation || sendingMessage) return;
+
+    const optimisticMessage: Message = {
       id: Date.now().toString(),
       senderId: 'me',
       content: newMessage,
@@ -162,9 +223,25 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
       type: 'text',
     };
 
-    setMessages(prev => [...prev, message]);
+    // Optimistically add the message to the UI
+    setMessages(prev => [...prev, optimisticMessage]);
+    const messageContent = newMessage;
     setNewMessage('');
-    toast.success('메시지가 전송되었습니다');
+
+    setSendingMessage(true);
+    try {
+      await api.sendMessage(
+        selectedConversation.userId,
+        messageContent,
+        selectedConversation.id,
+      );
+      toast.success('메시지가 전송되었습니다');
+    } catch {
+      // Message already shown optimistically; notify user of send failure
+      toast.error('메시지 전송에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setSendingMessage(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -179,7 +256,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -190,10 +267,10 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                메시지
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                릴레이 톡
               </h1>
-              <p className="text-gray-600 mt-1">멘토와 실시간으로 소통하세요</p>
+              <p className="text-gray-600 mt-1">러너와 실시간으로 소통하세요</p>
             </div>
             {conversations.reduce((sum, conv) => sum + conv.unreadCount, 0) > 0 && (
               <Badge className="bg-red-500 text-white border-0">
@@ -224,18 +301,24 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
 
               {/* List */}
               <div className="flex-1 overflow-y-auto">
+                {loadingConversations && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="ml-2 text-sm text-gray-500">대화 불러오는 중...</span>
+                  </div>
+                )}
                 {filteredConversations.map((conv) => (
                   <motion.div
                     key={conv.id}
-                    whileHover={{ backgroundColor: 'rgba(14, 165, 233, 0.05)' }}
+                    whileHover={{ backgroundColor: 'rgba(20, 184, 166, 0.05)' }}
                     onClick={() => setSelectedConversation(conv)}
                     className={`p-4 cursor-pointer border-b border-gray-100 transition-colors ${
-                      selectedConversation?.id === conv.id ? 'bg-sky-50' : ''
+                      selectedConversation?.id === conv.id ? 'bg-teal-50' : ''
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-2xl">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-2xl">
                           {conv.userAvatar}
                         </div>
                         {conv.online && (
@@ -276,7 +359,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-xl">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xl">
                           {selectedConversation.userAvatar}
                         </div>
                         {selectedConversation.online && (
@@ -303,6 +386,12 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {loadingMessages && (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="ml-2 text-sm text-gray-500">메시지 불러오는 중...</span>
+                    </div>
+                  )}
                   <AnimatePresence>
                     {messages.map((message) => {
                       const isMe = message.senderId === 'me';
@@ -317,7 +406,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                             <div
                               className={`rounded-2xl px-4 py-2 ${
                                 isMe
-                                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white'
+                                  ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white'
                                   : 'bg-gray-100 text-gray-900'
                               }`}
                             >
@@ -327,7 +416,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                               <span className="text-xs text-gray-500">{message.timestamp}</span>
                               {isMe && (
                                 message.read ? (
-                                  <CheckCheck className="w-3 h-3 text-sky-500" />
+                                  <CheckCheck className="w-3 h-3 text-teal-500" />
                                 ) : (
                                   <Check className="w-3 h-3 text-gray-400" />
                                 )
@@ -354,7 +443,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        placeholder="메시지를 입력하세요..."
+                        placeholder="릴레이 톡 메시지를 입력하세요..."
                         className="min-h-[44px]"
                       />
                     </div>
@@ -363,8 +452,8 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                     </Button>
                     <Button
                       onClick={handleSendMessage}
-                      disabled={!newMessage.trim()}
-                      className="flex-shrink-0 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                      disabled={!newMessage.trim() || sendingMessage}
+                      className="flex-shrink-0 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white"
                     >
                       <Send className="w-5 h-5" />
                     </Button>

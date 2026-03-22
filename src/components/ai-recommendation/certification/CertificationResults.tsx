@@ -499,7 +499,7 @@ export function CertificationResults({
       {/* Next steps */}
       <NextStepsCard
         steps={CERTIFICATION_CONFIG.nextSteps}
-        ctaText="경험 전달자 찾으러 가기"
+        ctaText="릴레이 러너 찾으러 가기"
         onComplete={onComplete}
       />
     </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { logger } from './utils/logger';
 import { GlobalNav } from './components/GlobalNav';
 import type { Category } from './components/GlobalNav';
 import { AuthScreen } from './components/AuthScreen';
@@ -125,6 +126,32 @@ export type Screen =
 
 export type UserRole = 'mentee' | 'mentor' | 'admin';
 
+export interface AuthSession {
+  access_token: string;
+  refresh_token?: string;
+  user: {
+    id: string;
+    email?: string;
+    user_metadata?: Record<string, unknown>;
+  };
+}
+
+export interface UserProfile {
+  id: string;
+  email?: string;
+  name: string;
+  role: UserRole;
+  createdAt?: string;
+  onboardingCompleted?: boolean;
+  profile?: Record<string, unknown>;
+  avatar?: string;
+}
+
+export interface ProfileData {
+  profile: UserProfile | null;
+  credits?: number;
+}
+
 export interface AIData {
   university: string;
   major: string;
@@ -195,8 +222,8 @@ function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Auth state
-  const [authSession, setAuthSession] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [authSession, setAuthSession] = useState<AuthSession | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
@@ -229,14 +256,14 @@ function App() {
           } catch (profileErr) {
             // Session exists but profile fetch failed (expired JWT, etc.)
             // Clear stale session and show auth screen
-            console.log('Session expired or invalid, clearing:', profileErr);
+            logger.log('Session expired or invalid, clearing:', profileErr);
             await api.signOut();
             setAuthSession(null);
             setCurrentScreen('auth');
           }
         }
       } catch (e) {
-        console.log('No existing session:', e);
+        logger.log('No existing session:', e);
       } finally {
         setAuthChecked(true);
       }
@@ -257,15 +284,15 @@ function App() {
     return () => subscription?.unsubscribe();
   }, []);
 
-  const navigateTo = useCallback((screen: Screen) => {
-    setCurrentScreen(screen);
+  const navigateTo = useCallback((screen: Screen | string) => {
+    setCurrentScreen(screen as Screen);
     const path = screenToPath[screen];
     if (path) {
       navigate(path, { replace: false });
     }
   }, [navigate]);
 
-  const handleAuthSuccess = useCallback(async (session: any, profileData: any) => {
+  const handleAuthSuccess = useCallback(async (session: AuthSession | null, profileData: ProfileData) => {
     if (!session) {
       // Guest mode
       setIsGuest(true);
@@ -307,7 +334,7 @@ function App() {
       setCurrentScreen('auth');
       toast.success('로그아웃 되었습니다.');
     } catch (e) {
-      console.error('Logout error:', e);
+      logger.error('Logout error:', e);
     }
   };
 
@@ -319,7 +346,7 @@ function App() {
       try {
         await api.updateProfile({ role });
       } catch (e) {
-        console.error('Failed to save role:', e);
+        logger.error('Failed to save role:', e);
       }
     }
 
@@ -338,7 +365,7 @@ function App() {
       try {
         await api.updateProfile({ onboardingCompleted: true });
       } catch (e) {
-        console.error('Failed to save onboarding status:', e);
+        logger.error('Failed to save onboarding status:', e);
       }
     }
     navigateTo('unified-home');
@@ -353,7 +380,7 @@ function App() {
         const result = await api.useCredit(1);
         setCredits(result.balance);
       } catch (e: any) {
-        console.error('Credit use error:', e);
+        logger.error('Credit use error:', e);
         if (e.message?.includes('부족')) {
           toast.error('크레딧이 부족합니다. 충전해주세요.');
           navigateTo('credit-purchase');
@@ -396,7 +423,7 @@ function App() {
         });
         toast.success('세션이 예약되었습니다!');
       } catch (e) {
-        console.error('Session booking error:', e);
+        logger.error('Session booking error:', e);
       }
     }
     navigateTo('session-workspace');
@@ -435,7 +462,7 @@ function App() {
     }
     
     if (!session) {
-      console.error('No session or mentor available');
+      logger.error('No session or mentor available');
       navigateTo('session-list');
       return;
     }
@@ -466,7 +493,7 @@ function App() {
         const result = await api.addCredits(newCredits);
         setCredits(result.balance);
       } catch (e) {
-        console.error('Credit purchase error:', e);
+        logger.error('Credit purchase error:', e);
         setCredits(prev => prev + newCredits);
       }
     } else {
@@ -487,7 +514,7 @@ function App() {
         });
         toast.success('초안이 저장되었습니다!');
       } catch (e) {
-        console.error('Draft save error:', e);
+        logger.error('Draft save error:', e);
         toast.error('초안 저장에 실패했습니다.');
       }
     }
@@ -519,6 +546,19 @@ function App() {
     );
   }
 
+  // Route protection: redirect unauthorized users
+  const isAdminScreen = currentScreen.startsWith('admin');
+  const isMentorScreen = currentScreen.startsWith('mentor-') && currentScreen !== 'mentor-search' && currentScreen !== 'mentor-profile' && currentScreen !== 'mentor-network' && currentScreen !== 'mentor-verification';
+
+  if (isAdminScreen && userRole !== 'admin') {
+    navigateTo('unified-home');
+    return null;
+  }
+  if (isMentorScreen && userRole !== 'mentor') {
+    navigateTo('unified-home');
+    return null;
+  }
+
   const isAuthScreen = currentScreen === 'onboarding' || currentScreen === 'mentee-onboarding';
 
   return (
@@ -527,7 +567,7 @@ function App() {
         currentScreen={currentScreen}
         onNavigate={navigateTo}
         onRoleChange={(role) => setUserRole(role)}
-        currentRole={userRole}
+        currentRole={userRole === 'admin' ? undefined : userRole}
         unreadMessages={2}
         unreadNotifications={3}
         collapsed={sidebarCollapsed}
@@ -670,19 +710,21 @@ function App() {
           <SessionWorkspace 
             onBack={() => navigateTo('session-detail')}
             onComplete={() => handleReviewWrite()}
-            mentor={{
+            mentor={selectedMentor ?? {
               id: '1',
               name: '러너 A',
               avatar: '👨‍🎓',
               university: '연세대',
               major: '경영학과',
-              year: 2023,
+              year: '22학번',
               rating: 4.9,
-              reviewCount: 45,
-              totalSessions: 156,
-              isVerified: true,
+              reviews: 45,
+              sessions: 156,
+              successRate: 87,
               responseTime: '2시간 이내',
-              expertise: [CATEGORY_CONTENT[selectedCategory].docLabel.replace('내 AI ', ''), '자기소개서', '면접 준비']
+              price: 30000,
+              badge: 'gold' as const,
+              verified: true,
             }}
           />
         )}
@@ -715,7 +757,7 @@ function App() {
           <OutcomeReport 
             onBack={() => navigateTo('unified-home')}
             onSubmit={(outcome, detail) => {
-              console.log('Outcome:', outcome, detail);
+              logger.log('Outcome:', outcome, detail);
               navigateTo('unified-home');
             }}
             mentor={selectedMentor}

@@ -14,7 +14,8 @@ import {
   FileText,
   MoreVertical,
   X,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Session } from '../App';
@@ -35,11 +36,16 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
   const upcomingSessions = sessions.filter(s => s.status === 'upcoming');
   const completedSessions = sessions.filter(s => s.status === 'completed');
 
-  const handleCancelSession = (sessionId: string) => {
+  const handleCancelSession = async (sessionId: string) => {
     if (confirm('세션을 취소하시겠습니까? 취소 수수료가 발생할 수 있습니다.')) {
-      cancelSession(sessionId);
-      toast.success('세션이 취소되었습니다');
-      setSelectedSession(null);
+      try {
+        await cancelSession(sessionId);
+        toast.success('세션이 취소되었습니다');
+      } catch {
+        toast.error('세션 취소에 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setSelectedSession(null);
+      }
     }
   };
 
@@ -52,7 +58,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
     if (onNavigate) {
       onNavigate('message-center');
     } else {
-      toast.success(`${session.mentorName} 멘토에게 메시지를 보냅니다`);
+      toast.success(`${session.mentorName} 러너에게 메시지를 보냅니다`);
     }
   };
 
@@ -136,14 +142,14 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
         )}
 
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
             {session.mentorAvatar}
           </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-lg font-bold mb-1">{session.mentorName} 멘토</h3>
+                <h3 className="text-lg font-bold mb-1">{session.mentorName} 러너</h3>
                 <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -164,7 +170,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             {/* Days Until Badge */}
             {session.status === 'upcoming' && (
               <div className="mb-3">
-                <Badge variant="outline" className="text-sky-600 border-sky-300 bg-sky-50">
+                <Badge variant="outline" className="text-indigo-600 border-indigo-300 bg-indigo-50">
                   {getDaysUntil(session.date)}
                 </Badge>
               </div>
@@ -177,7 +183,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   <Button 
                     size="sm"
                     onClick={() => onSessionSelect(session)}
-                    className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                    className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white"
                   >
                     <Video className="w-4 h-4 mr-1" />
                     세션 입장
@@ -206,7 +212,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   <Button 
                     size="sm"
                     variant="outline"
-                    onClick={() => toast.success('세션 기록을 확인합니다')}
+                    onClick={() => toast.success('릴레이 기록을 확인합니다')}
                   >
                     <FileText className="w-4 h-4 mr-1" />
                     기록 보기
@@ -218,7 +224,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             {/* Price Info */}
             <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-sm text-gray-600">결제 금액</span>
-              <span className="font-bold text-sky-600">₩{(session.price / 1000).toFixed(0)}k</span>
+              <span className="font-bold text-indigo-600">₩{(session.price / 1000).toFixed(0)}k</span>
             </div>
           </div>
         </div>
@@ -227,7 +233,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
@@ -238,10 +244,10 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
               </Button>
             </motion.div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                내 세션
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                릴레이 세션
               </h1>
-              <p className="text-gray-600 mt-1">멘토링 세션을 관리하세요</p>
+              <p className="text-gray-600 mt-1">릴레이 세션을 관리하세요</p>
             </div>
           </div>
         </div>
@@ -249,11 +255,19 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
 
       <div className="container-web py-8 pb-24">
         <div className="max-w-4xl mx-auto">
+          {/* Loading State */}
+          {sessionsLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+              <span className="ml-3 text-gray-600">세션을 불러오는 중...</span>
+            </div>
+          )}
+
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <Card className="p-4 text-center">
-                <div className="text-3xl font-bold text-sky-600 mb-1">
+                <div className="text-3xl font-bold text-indigo-600 mb-1">
                   {upcomingSessions.length}
                 </div>
                 <div className="text-sm text-gray-600">예정된 세션</div>
@@ -289,18 +303,18 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
               animate={{ opacity: 1, y: 0 }}
               className="mb-6"
             >
-              <Card className="p-4 bg-gradient-to-r from-sky-500 to-blue-600 border-0">
+              <Card className="p-4 bg-gradient-to-r from-indigo-500 to-blue-600 border-0">
                 <div className="flex items-center gap-3 text-white">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="font-semibold mb-1">오늘 세션이 있어요!</div>
                     <div className="text-sm text-white/90">
-                      {upcomingSessions[0].mentorName} 멘토와 {upcomingSessions[0].time}에 세션이 시작됩니다
+                      {upcomingSessions[0].mentorName} 러너와 {upcomingSessions[0].time}에 릴레이 시작됩니다
                     </div>
                   </div>
                   <Button 
                     size="sm"
-                    className="bg-white text-sky-600 hover:bg-gray-100"
+                    className="bg-white text-indigo-600 hover:bg-gray-100"
                     onClick={() => onSessionSelect(upcomingSessions[0])}
                   >
                     입장
@@ -329,13 +343,13 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   </div>
                   <h3 className="text-xl font-semibold mb-2">예정된 세션이 없습니다</h3>
                   <p className="text-gray-600 mb-6">
-                    멘토를 찾아 첫 세션을 예약해보세요
+                    러너를 찾아 첫 릴레이 세션을 예약해보세요
                   </p>
                   <Button 
                     onClick={onBack}
-                    className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                    className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white"
                   >
-                    멘토 찾기
+                    러너 찾기
                   </Button>
                 </Card>
               ) : (

@@ -53,12 +53,16 @@ echo -e "${GREEN}[3/5]${NC} 저장소 준비 중..."
 
 # 이미 프로젝트 폴더 안에서 실행 중인지 확인
 if [ -f "package.json" ] && grep -q "RELAY Figma Prototype" package.json 2>/dev/null; then
-    echo "      이미 프로젝트 폴더 안에 있습니다. 최신 코드를 가져옵니다..."
-    git pull origin main 2>/dev/null || echo "      [INFO] pull 실패 - 오프라인이거나 권한 문제일 수 있습니다."
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    echo "      이미 프로젝트 폴더 안에 있습니다. (브랜치: $CURRENT_BRANCH)"
+    echo "      최신 코드를 가져옵니다..."
+    git pull origin "$CURRENT_BRANCH" 2>/dev/null || echo "      [INFO] pull 실패 - 오프라인이거나 권한 문제일 수 있습니다."
 elif [ -d "$REPO_DIR/.git" ]; then
     echo "      기존 저장소를 업데이트합니다..."
     cd "$REPO_DIR"
-    git pull origin main 2>/dev/null || echo "      [INFO] pull 실패 - 오프라인이거나 권한 문제일 수 있습니다."
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    echo "      현재 브랜치: $CURRENT_BRANCH"
+    git pull origin "$CURRENT_BRANCH" 2>/dev/null || echo "      [INFO] pull 실패 - 오프라인이거나 권한 문제일 수 있습니다."
 else
     echo "      저장소를 클론합니다..."
     git clone "$REPO_URL" "$REPO_DIR"

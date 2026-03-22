@@ -4,10 +4,11 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { ArrowLeft, Sparkles, Download, RefreshCw, Users, Loader2, Save } from 'lucide-react';
+import { ArrowLeft, Sparkles, Download, RefreshCw, Users, Loader2, Save, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
+import { logger } from '../utils/logger';
 
 interface AIDraftEditorProps {
   onBack: () => void;
@@ -60,7 +61,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
       } else {
         clearInterval(typingInterval);
         setLoading(false);
-        toast.success('초안 생성이 완료되었습니다! ✨');
+        toast.success('바통 초안이 완료되었습니다! ✨');
       }
     }, 8);
 
@@ -87,15 +88,15 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         storyline,
         aiData,
       });
-      toast.success('초안이 서버에 저장되었습니다!');
+      toast.success('바통 초안이 서버에 저장되었습니다!');
     } catch (e) {
-      console.error('Draft save error:', e);
+      logger.error('Draft save error:', e);
       toast.success('저장되었습니다 (로컬)');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="container-web py-6">
           <div className="flex items-center justify-between">
@@ -104,7 +105,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">✨ AI 학업계획서 초안</h1>
+                <h1 className="text-2xl font-bold">✨ AI 바통 작성 초안</h1>
                 <p className="text-gray-600 mt-1">
                   {aiData.university} {aiData.major} · 스토리라인 {storyline.id}
                 </p>
@@ -115,7 +116,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 {wordCount} / {aiData.wordCount}자
               </Badge>
               <Button variant="outline" onClick={onManage}>
-                내 학계서 관리
+                내 바통 관리
               </Button>
             </div>
           </div>
@@ -127,15 +128,15 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
           {/* Editor */}
           <div className="space-y-4">
             {loading && (
-              <Card className="p-5 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+              <Card className="p-5 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
                 <div className="flex items-center gap-3">
-                  <Loader2 className="w-6 h-6 text-sky-600 animate-spin" />
+                  <Loader2 className="w-6 h-6 text-violet-600 animate-spin" />
                   <div>
                     <div className="font-semibold text-lg mb-1">
-                      AI가 초안을 생성하고 있습니다...
+                      릴레이 AI가 바통 초안을 생성하고 있습니다...
                     </div>
                     <div className="text-gray-600">
-                      선택하신 스토리라인으로 학업계획서를 작성 중입니다
+                      선택하신 스토리라인으로 바통 초안을 작성 중입니다
                     </div>
                   </div>
                 </div>
@@ -150,7 +151,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                   setWordCount(e.target.value.length);
                 }}
                 className="min-h-[700px] font-serif text-base leading-relaxed border-0 focus-visible:ring-0 p-0"
-                placeholder="AI가 초안을 생성하고 있습니다..."
+                placeholder="릴레이 AI가 바통 초안을 생성하고 있습니다..."
               />
             </Card>
 
@@ -186,15 +187,15 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
             {/* AI Analysis */}
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-5 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-sky-600" />
-                AI 분석
+                <Sparkles className="w-5 h-5 text-violet-600" />
+                릴레이 AI 분석
               </h3>
               <div className="space-y-4">
                 {[
                   { label: '구조 완성도', value: analysis.structure, color: 'bg-green-500' },
                   { label: '구체성', value: analysis.specificity, color: 'bg-blue-500' },
                   { label: '차별화', value: analysis.uniqueness, color: 'bg-purple-500' },
-                  { label: '학과 적합도', value: analysis.relevance, color: 'bg-sky-500' },
+                  { label: '학과 적합도', value: analysis.relevance, color: 'bg-violet-500' },
                 ].map((item, index) => (
                   <div key={item.label}>
                     <div className="flex justify-between text-sm mb-2">
@@ -227,10 +228,10 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                   <Button
                     key={tool.label}
                     variant="outline"
-                    className="w-full justify-start hover:bg-sky-50 hover:border-sky-300"
+                    className="w-full justify-start hover:bg-violet-50 hover:border-violet-300"
                     size="sm"
                   >
-                    <tool.icon className="w-4 h-4 mr-2 text-sky-600" />
+                    <tool.icon className="w-4 h-4 mr-2 text-violet-600" />
                     {tool.label}
                   </Button>
                 ))}
@@ -249,17 +250,17 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">
-                    이 학교 합격생<br />멘토 3명 추천
+                    이 학교 합격생<br />러너 3명 추천
                   </h3>
                   <p className="text-gray-600 mb-5 text-sm">
-                    AI 초안을 실제 합격생이<br />
+                    AI 바통 초안을 실제 합격생이<br />
                     1:1로 완성해드려요
                   </p>
                   <Button 
                     className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg"
                     onClick={onMentorConnect}
                   >
-                    멘토 첨삭받기 →
+                    러너 첨삭받기 →
                   </Button>
                 </div>
               </Card>

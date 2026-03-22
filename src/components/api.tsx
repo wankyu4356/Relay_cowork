@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { logger } from '../utils/logger';
 
 const SUPABASE_URL = `https://${projectId}.supabase.co`;
 const API_BASE = `${SUPABASE_URL}/functions/v1/make-server-370ee075`;
@@ -29,7 +30,7 @@ async function checkEdgeFunctionAvailability(): Promise<boolean> {
     clearTimeout(timeoutId);
     edgeFunctionAvailable = res.ok;
   } catch (err) {
-    console.warn('Edge Function not available. Using mock data mode.', err);
+    logger.warn('Edge Function not available. Using mock data mode.', err);
     edgeFunctionAvailable = false;
   }
 
@@ -42,7 +43,7 @@ const _GK = '__relay_sb';
 
 function getSupabaseClient(): ReturnType<typeof createClient> {
   if (!(globalThis as any)[_GK]) {
-    console.log('Initializing Supabase client:', {
+    logger.log('Initializing Supabase client:', {
       url: SUPABASE_URL,
       hasAnonKey: !!publicAnonKey,
       anonKeyPrefix: publicAnonKey.substring(0, 20) + '...',
@@ -56,9 +57,9 @@ function getSupabaseClient(): ReturnType<typeof createClient> {
           detectSessionInUrl: false,
         },
       });
-      console.log('Supabase client initialized successfully');
+      logger.log('Supabase client initialized successfully');
     } catch (err) {
-      console.error('Failed to initialize Supabase client:', err);
+      logger.error('Failed to initialize Supabase client:', err);
       throw err;
     }
   }
@@ -189,7 +190,7 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 
   const data = await parseResponse(res);
   if (!res.ok) {
-    console.error(`API Error [${path}]:`, data);
+    logger.error(`API Error [${path}]:`, data);
     throw new Error(data.error || data.message || `요청 실패 (${res.status})`);
   }
   return data;
@@ -203,7 +204,7 @@ async function publicFetch(path: string, options: RequestInit = {}) {
   const res = await rawFetch(path, publicAnonKey, options);
   const data = await parseResponse(res);
   if (!res.ok) {
-    console.error(`API Error [${path}]:`, data);
+    logger.error(`API Error [${path}]:`, data);
     throw new Error(data.error || data.message || `요청 실패 (${res.status})`);
   }
   return data;
@@ -217,7 +218,7 @@ async function tokenFetch(path: string, token: string, options: RequestInit = {}
   const res = await rawFetch(path, token, options);
   const data = await parseResponse(res);
   if (!res.ok) {
-    console.error(`API Error [${path}]:`, data);
+    logger.error(`API Error [${path}]:`, data);
     throw new Error(data.error || data.message || `요청 실패 (${res.status})`);
   }
   return data;
@@ -234,7 +235,7 @@ export async function signUp(
   try {
     const sb = getSupabaseClient();
     
-    console.log('Attempting signup with Supabase Auth...');
+    logger.log('Attempting signup with Supabase Auth...');
     
     // Create user with Supabase Auth (no Edge Function needed)
     const { data, error } = await sb.auth.signUp({
@@ -250,7 +251,7 @@ export async function signUp(
     });
 
     if (error) {
-      console.error('Supabase Auth signup error:', error);
+      logger.error('Supabase Auth signup error:', error);
       throw new Error(`회원가입 실패: ${error.message}`);
     }
     
@@ -258,7 +259,7 @@ export async function signUp(
       throw new Error('회원가입 실패: 사용자 정보를 받지 못했습니다.');
     }
     
-    console.log('Signup successful:', data.user.id);
+    logger.log('Signup successful:', data.user.id);
     
     const accessToken = data.session?.access_token ?? null;
     setImmediateToken(accessToken);
@@ -275,9 +276,9 @@ export async function signUp(
           userId: data.user.id,
         }),
       });
-      console.log('Edge Function sync successful');
+      logger.log('Edge Function sync successful');
     } catch (err) {
-      console.warn('Edge Function sync failed (continuing anyway):', err);
+      logger.warn('Edge Function sync failed (continuing anyway):', err);
     }
 
     return { 
@@ -288,7 +289,7 @@ export async function signUp(
       accessToken 
     };
   } catch (err: any) {
-    console.error('SignUp error:', err);
+    logger.error('SignUp error:', err);
     // Re-throw with more helpful message
     if (err.message?.includes('Failed to fetch')) {
       throw new Error('네트워크 연결을 확인해주세요. Supabase 프로젝트에 접근할 수 없습니다.');
@@ -301,12 +302,12 @@ export async function signIn(email: string, password: string) {
   try {
     const sb = getSupabaseClient();
     
-    console.log('Attempting signin with Supabase Auth...');
+    logger.log('Attempting signin with Supabase Auth...');
     
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
     
     if (error) {
-      console.error('Supabase Auth signin error:', error);
+      logger.error('Supabase Auth signin error:', error);
       throw new Error(`로그인 실패: ${error.message}`);
     }
     
@@ -314,14 +315,14 @@ export async function signIn(email: string, password: string) {
       throw new Error('로그인 실패: 세션을 받지 못했습니다.');
     }
     
-    console.log('Signin successful:', data.user.id);
+    logger.log('Signin successful:', data.user.id);
 
     const accessToken = data.session.access_token ?? null;
     setImmediateToken(accessToken);
 
     return { ...data, accessToken };
   } catch (err: any) {
-    console.error('SignIn error:', err);
+    logger.error('SignIn error:', err);
     // Re-throw with more helpful message
     if (err.message?.includes('Failed to fetch')) {
       throw new Error('네트워크 연결을 확인해주세요. Supabase 프로젝트에 접근할 수 없습니다.');
@@ -368,7 +369,7 @@ export async function getProfile(explicitToken?: string) {
     return await apiFetch('/profile');
   } catch (err: any) {
     // If Edge Function is not available, construct profile from Supabase Auth
-    console.warn('Edge Function profile fetch failed, using auth metadata:', err);
+    logger.warn('Edge Function profile fetch failed, using auth metadata:', err);
     
     const sb = getSupabaseClient();
     const { data } = await sb.auth.getSession();
@@ -401,7 +402,7 @@ export async function updateProfile(updates: Record<string, any>) {
     });
   } catch (err: any) {
     // If Edge Function is not available, update user metadata directly
-    console.warn('Edge Function profile update failed, using auth metadata update:', err);
+    logger.warn('Edge Function profile update failed, using auth metadata update:', err);
     
     const sb = getSupabaseClient();
     const { data, error } = await sb.auth.updateUser({
@@ -455,8 +456,8 @@ export async function createDraft(data: {
   university: string;
   major: string;
   content: string;
-  storyline?: any;
-  aiData?: any;
+  storyline?: import('../App').Storyline;
+  aiData?: import('../App').AIData;
 }) {
   return apiFetch('/drafts', {
     method: 'POST',
@@ -653,4 +654,26 @@ export async function verifyMentor(mentorId: string, verified: boolean = true) {
 
 export async function getAdminStats() {
   return apiFetch('/admin/stats');
+}
+
+// ============ MENTOR REVENUE ============
+
+export async function getMentorRevenue() {
+  return apiFetch('/mentors/revenue');
+}
+
+export async function requestWithdraw() {
+  return apiFetch('/mentors/revenue/withdraw', { method: 'POST' });
+}
+
+// ============ RELAY CHAIN ============
+
+export async function getRelayChain() {
+  return apiFetch('/relay-chain');
+}
+
+// ============ MENTORS (with category filter) ============
+
+export async function getMentorsByCategory(category: string) {
+  return apiFetch(`/mentors?category=${encodeURIComponent(category)}`);
 }

@@ -134,39 +134,49 @@ const mockMentees: Mentee[] = [
 
 export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) {
   const [mentees, setMentees] = useState<Mentee[]>(mockMentees);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed'>('all');
 
   useEffect(() => {
-    api.getSessions().then((res: any) => {
-      if (res.sessions?.length > 0) {
-        const menteeMap = new Map<string, Mentee>();
-        res.sessions.forEach((s: any) => {
-          if (s.mentee_id && !menteeMap.has(s.mentee_id)) {
-            menteeMap.set(s.mentee_id, {
-              id: s.mentee_id,
-              name: s.mentee_name || '멘티',
-              avatar: s.mentee_avatar || '👤',
-              university: s.university || '',
-              major: s.major || '',
-              status: s.status === 'completed' ? 'completed' : 'active',
-              sessions: 1,
-              lastSession: s.date,
-              totalPaid: s.price || 0,
-              joinedDate: s.created_at || s.date,
-              goal: s.topic || '',
-            });
-          } else if (s.mentee_id) {
-            const existing = menteeMap.get(s.mentee_id)!;
-            existing.sessions += 1;
-            existing.totalPaid += (s.price || 0);
+    const fetchMentees = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getSessions();
+        if (res.sessions?.length > 0) {
+          const menteeMap = new Map<string, Mentee>();
+          res.sessions.forEach((s: any) => {
+            if (s.mentee_id && !menteeMap.has(s.mentee_id)) {
+              menteeMap.set(s.mentee_id, {
+                id: s.mentee_id,
+                name: s.mentee_name || '러너',
+                avatar: s.mentee_avatar || '👤',
+                university: s.university || '',
+                major: s.major || '',
+                status: s.status === 'completed' ? 'completed' : 'active',
+                sessions: 1,
+                lastSession: s.date,
+                totalPaid: s.price || 0,
+                joinedDate: s.created_at || s.date,
+                goal: s.topic || '',
+              });
+            } else if (s.mentee_id) {
+              const existing = menteeMap.get(s.mentee_id)!;
+              existing.sessions += 1;
+              existing.totalPaid += (s.price || 0);
+            }
+          });
+          if (menteeMap.size > 0) {
+            setMentees(Array.from(menteeMap.values()));
           }
-        });
-        if (menteeMap.size > 0) {
-          setMentees(Array.from(menteeMap.values()));
         }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchMentees();
   }, []);
 
   const filteredMentees = mentees.filter(mentee => {
@@ -203,8 +213,8 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
       <div className="container-web py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">내 멘티</h1>
-          <p className="text-gray-600">멘토링을 제공한 모든 멘티를 관리하세요</p>
+          <h1 className="text-4xl font-bold gradient-text mb-2">내 러너</h1>
+          <p className="text-gray-600">릴레이를 제공한 모든 러너를 관리하세요</p>
         </div>
 
         {/* Stats Overview */}
@@ -215,7 +225,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                 <Users className="w-6 h-6 text-indigo-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 mb-1">{stats.total}</div>
-              <div className="text-sm text-gray-600">총 멘티</div>
+              <div className="text-sm text-gray-600">총 러너</div>
             </Card>
           </motion.div>
 
@@ -231,10 +241,10 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-sky-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <Award className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <Award className="w-6 h-6 text-emerald-600" />
               </div>
-              <div className="text-3xl font-bold text-blue-700 mb-1">{stats.completed}</div>
+              <div className="text-3xl font-bold text-emerald-700 mb-1">{stats.completed}</div>
               <div className="text-sm text-gray-600">완료</div>
             </Card>
           </motion.div>
@@ -267,7 +277,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
-                placeholder="멘티 이름, 학교로 검색..."
+                placeholder="러너 이름, 학교로 검색..."
                 className="pl-12 pr-4 h-12 rounded-2xl border-gray-200 focus:border-indigo-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -275,7 +285,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
             </div>
 
             {/* Tabs */}
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full md:w-auto">
+            <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)} className="w-full md:w-auto">
               <TabsList className="grid grid-cols-3 h-12 bg-gray-100/80">
                 <TabsTrigger value="all" className="data-[state=active]:bg-white">
                   전체 ({stats.total})
@@ -363,7 +373,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                     <Button
                       variant="outline"
                       className="btn-secondary rounded-xl flex-1 md:flex-none"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onNavigate('chat');
                       }}
@@ -373,7 +383,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                     </Button>
                     <Button
                       className="btn-primary rounded-xl flex-1 md:flex-none"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onNavigate('session-detail');
                       }}
@@ -410,9 +420,9 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
               <Users className="w-12 h-12 text-gray-300" />
             </div>
-            <h3 className="empty-state-title">멘티가 없습니다</h3>
+            <h3 className="empty-state-title">러너가 없습니다</h3>
             <p className="empty-state-description">
-              검색 결과가 없거나 아직 멘토링을 시작하지 않았습니다
+              검색 결과가 없거나 아직 릴레이를 시작하지 않았습니다
             </p>
           </motion.div>
         )}

@@ -35,7 +35,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
 
   useEffect(() => {
     // Revenue API not yet available - ready for integration
-    api.getProfile().then((res: any) => {
+    api.getProfile().then((res: { profile?: { revenue?: { available?: number } } }) => {
       if (res.profile?.revenue) {
         setAvailableBalance(res.profile.revenue.available || 640000);
       }
@@ -57,7 +57,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
@@ -66,7 +66,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
             </Button>
             <div className="flex-1">
               <h1 className="text-2xl font-bold">수익 & 정산</h1>
-              <p className="text-gray-600 mt-1">멘토링 수익을 확인하고 출금하세요</p>
+              <p className="text-gray-600 mt-1">릴레이 수익을 확인하고 출금하세요</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
           {/* Summary Cards */}
           <div className="grid md:grid-cols-3 gap-6">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white">
+              <Card className="p-6 bg-gradient-to-br from-emerald-500 to-green-600 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                     <DollarSign className="w-6 h-6" />
@@ -92,17 +92,17 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-6 border-2 border-sky-200">
+              <Card className="p-6 border-2 border-emerald-200">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                     <TrendingUp className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">출금 가능</div>
-                    <div className="text-3xl font-bold text-sky-600">₩640k</div>
+                    <div className="text-3xl font-bold text-emerald-600">₩640k</div>
                   </div>
                 </div>
-                <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white" onClick={handleWithdraw}>출금 신청</Button>
+                <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white" onClick={handleWithdraw}>출금 신청</Button>
               </Card>
             </motion.div>
 
@@ -137,8 +137,8 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                 <Bar dataKey="revenue" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0EA5E9" />
-                    <stop offset="100%" stopColor="#38BDF8" />
+                    <stop offset="0%" stopColor="#10B981" />
+                    <stop offset="100%" stopColor="#34D399" />
                   </linearGradient>
                 </defs>
               </BarChart>
@@ -162,7 +162,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-sky-50 transition-colors">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors">
                     <div className="flex-1">
                       <div className="font-semibold">{tx.mentee}</div>
                       <div className="text-sm text-gray-600">{tx.date}</div>
@@ -180,7 +180,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
           </Card>
 
           {/* Fee Info */}
-          <Card className="p-6 bg-sky-50 border-sky-200">
+          <Card className="p-6 bg-emerald-50 border-emerald-200">
             <h3 className="font-semibold mb-3">💰 수수료 안내</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -191,7 +191,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                 <span>🥈 Silver (11-30건)</span>
                 <span className="font-semibold">22%</span>
               </div>
-              <div className="flex justify-between text-sky-600">
+              <div className="flex justify-between text-emerald-600">
                 <span>🥇 Gold (31건+) - 현재 등급</span>
                 <span className="font-semibold">18%</span>
               </div>

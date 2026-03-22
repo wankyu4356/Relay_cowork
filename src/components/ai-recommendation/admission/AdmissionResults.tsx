@@ -334,7 +334,7 @@ export function AdmissionResults({ recommendations, alternatives, onComplete }: 
       {/* Next Steps */}
       <NextStepsCard
         steps={admissionNextSteps}
-        ctaText="합격생 멘토 찾으러 가기"
+        ctaText="합격생 러너 찾으러 가기"
         onComplete={onComplete}
       />
     </motion.div>

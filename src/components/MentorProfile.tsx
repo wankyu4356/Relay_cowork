@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -15,9 +16,11 @@ import {
   CheckCircle,
   FileText,
   Network,
-  Users
+  Users,
+  Loader2
 } from 'lucide-react';
 import type { Mentor } from '../App';
+import * as api from './api';
 
 interface MentorProfileProps {
   onBack: () => void;
@@ -28,7 +31,16 @@ interface MentorProfileProps {
   onNavigate?: (screen: string) => void;
 }
 
-const mockReviews = [
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  content: string;
+  tags: string[];
+}
+
+const mockReviewsFallback: Review[] = [
   {
     id: '1',
     author: '박지원',
@@ -71,6 +83,28 @@ const availableTimes = [
 
 export function MentorProfile({ onBack, onBook, mentor, networkDistance, connectionPath, onNavigate }: MentorProfileProps) {
   const [selectedTab, setSelectedTab] = useState('about');
+  const [reviews, setReviews] = useState<Review[]>(mockReviewsFallback);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchReviews() {
+      setReviewsLoading(true);
+      try {
+        const data = await api.getMentorReviews(mentor.id);
+        if (!cancelled && Array.isArray(data?.reviews) && data.reviews.length > 0) {
+          setReviews(data.reviews);
+        }
+      } catch (err) {
+        logger.log('Failed to fetch reviews from API, using mock fallback:', err);
+        // Keep mockReviewsFallback (already set as default)
+      } finally {
+        if (!cancelled) setReviewsLoading(false);
+      }
+    }
+    fetchReviews();
+    return () => { cancelled = true; };
+  }, [mentor.id]);
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
@@ -91,7 +125,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 pb-20 md:pb-0">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="container-web py-6">
@@ -99,7 +133,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-2xl font-bold">멘토 프로필</h1>
+            <h1 className="text-2xl font-bold">러너 프로필</h1>
           </div>
         </div>
       </div>
@@ -115,7 +149,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             >
               <Card className="p-8">
                 <div className="flex gap-6 mb-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-sky-400 to-blue-500 rounded-3xl flex items-center justify-center text-5xl flex-shrink-0 shadow-xl">
+                  <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-green-500 rounded-3xl flex items-center justify-center text-5xl flex-shrink-0 shadow-xl">
                     {mentor.avatar}
                   </div>
                   
@@ -155,7 +189,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
                 <div className="flex gap-3">
                   <Button 
-                    className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
                     size="lg"
                     onClick={onBook}
                   >
@@ -177,9 +211,9 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   <Network className="w-6 h-6 text-purple-600 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="font-semibold text-purple-900 mb-1">
-                      {networkDistance === 1 && '🔗 1촌 멘토 (직접 연결)'}
-                      {networkDistance === 2 && '🔗 2촌 멘토 (친구의 친구)'}
-                      {networkDistance === 3 && '🔗 3촌 멘토 (간접 연결)'}
+                      {networkDistance === 1 && '🔗 1촌 러너 (직접 연결)'}
+                      {networkDistance === 2 && '🔗 2촌 러너 (친구의 친구)'}
+                      {networkDistance === 3 && '🔗 3촌 러너 (간접 연결)'}
                     </div>
                     {connectionPath && connectionPath.length > 0 && (
                       <div className="text-sm text-purple-700">
@@ -209,7 +243,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                       직접 연결이 없습니다
                     </div>
                     <div className="text-sm text-gray-600">
-                      연결 요청 시 멘토가 수락하면 세션 예약이 가능합니다
+                      연결 요청 시 러너가 수락하면 세션 예약이 가능합니다
                     </div>
                   </div>
                 </div>
@@ -247,9 +281,9 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                         { icon: '✍️', title: '학업계획서 전문', desc: '35건 이상 첨삭 경험' },
                         { icon: '🎯', title: '전공전환 노하우', desc: '다른 전공 → 경영 합격' },
                         { icon: '⚡', title: '빠른 피드백', desc: '평균 2시간 이내 응답' },
-                        { icon: '🤝', title: '진심 어린 멘토링', desc: '합격까지 끝까지 함께' },
+                        { icon: '🤝', title: '진심 어린 릴레이', desc: '합격까지 끝까지 함께' },
                       ].map((item, index) => (
-                        <Card key={index} className="p-4 bg-sky-50 border-sky-200">
+                        <Card key={index} className="p-4 bg-emerald-50 border-emerald-200">
                           <div className="flex items-start gap-3">
                             <span className="text-3xl">{item.icon}</span>
                             <div>
@@ -295,7 +329,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                           transition={{ delay: index * 0.1 }}
                           className="flex gap-4"
                         >
-                          <div className="w-1 bg-gradient-to-b from-sky-400 to-blue-500 rounded-full flex-shrink-0" />
+                          <div className="w-1 bg-gradient-to-b from-emerald-400 to-green-500 rounded-full flex-shrink-0" />
                           <div className="flex-1 pb-6">
                             <div className="text-sm text-gray-600 mb-1">{item.period}</div>
                             <div className="font-semibold mb-1">{item.title}</div>
@@ -311,10 +345,10 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     <div className="grid md:grid-cols-3 gap-4">
                       <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
                         <div className="text-3xl font-bold text-green-600 mb-1">87%</div>
-                        <div className="text-sm text-gray-700">멘티 합격률</div>
+                        <div className="text-sm text-gray-700">러너 합격률</div>
                       </Card>
-                      <Card className="p-4 text-center bg-gradient-to-br from-blue-50 to-sky-50 border-blue-200">
-                        <div className="text-3xl font-bold text-blue-600 mb-1">35건</div>
+                      <Card className="p-4 text-center bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
+                        <div className="text-3xl font-bold text-emerald-600 mb-1">35건</div>
                         <div className="text-sm text-gray-700">총 세션 수</div>
                       </Card>
                       <Card className="p-4 text-center bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
@@ -325,7 +359,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-lg mb-3">🏆 합격 대학 (멘티)</h3>
+                    <h3 className="font-semibold text-lg mb-3">🏆 합격 대학 (후배 러너)</h3>
                     <div className="flex flex-wrap gap-2">
                       {['연세대 경영 12명', '고려대 경영 8명', '서강대 경영 5명', '성균관대 경영 6명', '한양대 경영 4명'].map((achievement, index) => (
                         <Badge key={index} variant="outline" className="text-sm px-3 py-1">
@@ -357,7 +391,14 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     </div>
                   </div>
 
-                  {mockReviews.map((review, index) => (
+                  {reviewsLoading && (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-emerald-500 mr-2" />
+                      <span className="text-gray-500">리뷰를 불러오는 중...</span>
+                    </div>
+                  )}
+
+                  {!reviewsLoading && reviews.map((review, index) => (
                     <motion.div
                       key={review.id}
                       initial={{ opacity: 0, y: 20 }}
@@ -396,9 +437,9 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
                 {/* Schedule */}
                 <TabsContent value="schedule" className="space-y-4">
-                  <Card className="p-4 bg-sky-50 border-sky-200">
+                  <Card className="p-4 bg-emerald-50 border-emerald-200">
                     <div className="flex gap-3">
-                      <Calendar className="w-6 h-6 text-sky-600 flex-shrink-0" />
+                      <Calendar className="w-6 h-6 text-emerald-600 flex-shrink-0" />
                       <div>
                         <div className="font-semibold mb-1">예약 가능 시간</div>
                         <div className="text-sm text-gray-600">
@@ -423,7 +464,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                               key={slot}
                               variant="outline"
                               size="sm"
-                              className="hover:bg-sky-50 hover:border-sky-400"
+                              className="hover:bg-emerald-50 hover:border-emerald-400"
                             >
                               {slot}
                             </Button>
@@ -433,8 +474,8 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     </motion.div>
                   ))}
 
-                  <Button 
-                    className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                  <Button
+                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
                     size="lg"
                     onClick={onBook}
                   >
@@ -451,7 +492,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             <Card className="p-6 sticky top-24">
               <div className="text-center mb-6">
                 <div className="text-sm text-gray-600 mb-2">60분 세션</div>
-                <div className="text-4xl font-bold text-sky-600 mb-1">
+                <div className="text-4xl font-bold text-emerald-600 mb-1">
                   ₩{mentor.price.toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-500">VAT 포함</div>
@@ -476,8 +517,8 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                 </div>
               </div>
 
-              <Button 
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white mb-3"
+              <Button
+                className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white mb-3"
                 size="lg"
                 onClick={onBook}
               >

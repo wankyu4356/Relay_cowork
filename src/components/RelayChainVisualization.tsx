@@ -68,7 +68,7 @@ const relayChain: RelayNode[] = [
   },
   {
     id: '5', name: '박지우', avatar: '👨‍💼', university: '고려대', major: '경영학과', year: '21학번',
-    generation: 2, status: 'completed', experiences: ['학생회', 'IT 동아리', '멘토링'],
+    generation: 2, status: 'completed', experiences: ['학생회', 'IT 동아리', '릴레이 세션'],
     receivedFrom: '김민준', passedTo: 2, childIds: ['9', '10'], sessions: 12, rating: 4.7,
     bio: 'IT와 경영의 융합에 관심이 많아 관련 활동을 적극적으로 하고 있습니다.',
   },

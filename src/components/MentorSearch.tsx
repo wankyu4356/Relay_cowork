@@ -40,9 +40,8 @@ interface MentorSearchProps {
 export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCategory = 'transfer' }: MentorSearchProps) {
   const catContent = CATEGORY_CONTENT[selectedCategory];
   const mentorConfig = CATEGORY_MENTORS[selectedCategory];
-  const { mentors: apiMentors, loading: mentorsLoading } = useMentors();
-  // Use API mentors when available (more than default 6), otherwise use large local set
-  const allMentors = apiMentors.length > 6 ? apiMentors : mentorConfig.mentors;
+  // Pass category-specific mock mentors as fallback for when the API is unavailable
+  const { mentors: allMentors, loading: mentorsLoading } = useMentors(mentorConfig.mentors);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUniversity, setSelectedUniversity] = useState<string>('all');
@@ -50,7 +49,12 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
   const [priceRange, setPriceRange] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'rating' | 'price' | 'successRate'>('rating');
 
-  const universities = mentorConfig.filterOptions;
+  // Derive filter options from actual mentor data, with category defaults as base
+  const universities = Array.from(new Set([
+    'all',
+    ...mentorConfig.filterOptions.filter((o: string) => o !== 'all'),
+    ...allMentors.map(m => m.university).filter(Boolean),
+  ]));
   const badges = ['all', 'gold', 'silver', 'bronze'];
   const priceRanges = [
     { value: 'all', label: '전체 가격' },
@@ -87,9 +91,9 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
   const getBadgeName = (badge: string) => {
     switch (badge) {
-      case 'gold': return '골드 멘토';
-      case 'silver': return '실버 멘토';
-      case 'bronze': return '브론즈 멘토';
+      case 'gold': return '골드 러너';
+      case 'silver': return '실버 러너';
+      case 'bronze': return '브론즈 러너';
       default: return '';
     }
   };
@@ -100,7 +104,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold gradient-text">경험 전달자 찾기</h1>
+            <h1 className="text-4xl font-bold gradient-text">러너 찾기</h1>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -110,10 +114,12 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 <Network className="w-4 h-4" />
                 릴레이 네트워크
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className={`gap-2 rounded-xl transition-all ${showFilters ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'btn-secondary'}`}
+                aria-expanded={showFilters}
+                aria-label="필터"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 필터
@@ -130,6 +136,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="러너 검색"
             />
           </div>
         </div>
@@ -250,7 +257,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         {/* Results Count */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-gray-600">
-            <span className="text-2xl font-bold text-gray-900">{filteredMentors.length}</span>명의 멘토
+            <span className="text-2xl font-bold text-gray-900">{filteredMentors.length}</span>명의 러너
           </div>
           <div className="flex gap-2">
             <Badge className="badge-primary text-sm px-3 py-1">
@@ -261,13 +268,31 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         </div>
 
         {/* Mentor Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+        {mentorsLoading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="p-6 animate-pulse">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 bg-gray-200 rounded-full" />
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
+                    <div className="h-3 bg-gray-200 rounded w-32" />
+                  </div>
+                </div>
+                <div className="h-3 bg-gray-200 rounded w-full mb-2" />
+                <div className="h-3 bg-gray-200 rounded w-3/4" />
+              </Card>
+            ))}
+          </div>
+        ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6" role="list" aria-label="러너 목록">
           {filteredMentors.map((mentor, index) => (
             <motion.div
               key={mentor.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
+              role="listitem"
             >
               <Card 
                 className="relative overflow-hidden card-modern hover-lift cursor-pointer group"
@@ -364,7 +389,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   {/* Quick Info */}
                   <div className="flex items-center gap-4 mb-6 text-sm">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Clock className="w-4 h-4 text-cyan-600" />
+                      <Clock className="w-4 h-4 text-green-600" />
                       <span>응답 {mentor.responseTime}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
@@ -377,7 +402,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   <div className="flex gap-3">
                     <Button 
                       className="flex-1 btn-primary rounded-xl h-12 font-semibold group-hover:shadow-2xl transition-all"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
                       }}
@@ -385,10 +410,10 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                       <Calendar className="w-4 h-4 mr-2" />
                       예약하기
                     </Button>
-                    <Button 
+                    <Button
                       variant="outline"
                       className="btn-secondary rounded-xl h-12 px-6"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
                       }}
@@ -404,6 +429,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
             </motion.div>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
         {filteredMentors.length === 0 && (

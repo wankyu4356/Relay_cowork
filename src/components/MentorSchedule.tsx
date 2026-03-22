@@ -115,24 +115,50 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'week' | 'day'>('week');
   const [schedule, setSchedule] = useState<TimeSlot[]>(mockSchedule);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api.getMentorSchedule('me').then((res: any) => {
-      if (res.schedules?.length > 0) {
-        setSchedule(res.schedules.map((s: any, idx: number) => ({
-          id: s.id || `api-${idx}`,
-          day: daysOfWeek[s.dayOfWeek] || s.day || '월',
-          startTime: s.startTime || s.start_time,
-          endTime: s.endTime || s.end_time,
-          isAvailable: s.available !== false,
-          session: s.session ? {
-            mentee: s.session.mentee,
-            avatar: s.session.avatar || '👤',
-            topic: s.session.topic || '',
-          } : undefined,
-        })));
+    const fetchSchedule = async () => {
+      setLoading(true);
+      try {
+        const res = await api.getMentorSchedule('me');
+        if (res.schedules?.length > 0) {
+          interface ApiScheduleSlot {
+            id?: string;
+            dayOfWeek?: number;
+            day?: string;
+            startTime?: string;
+            start_time?: string;
+            endTime?: string;
+            end_time?: string;
+            available?: boolean;
+            session?: {
+              mentee: string;
+              avatar?: string;
+              topic?: string;
+            };
+          }
+          setSchedule((res.schedules as ApiScheduleSlot[]).map((s, idx: number) => ({
+            id: s.id || `api-${idx}`,
+            day: daysOfWeek[s.dayOfWeek ?? 0] || s.day || '월',
+            startTime: s.startTime || s.start_time || '',
+            endTime: s.endTime || s.end_time || '',
+            isAvailable: s.available !== false,
+            session: s.session ? {
+              mentee: s.session.mentee,
+              avatar: s.session.avatar || '👤',
+              topic: s.session.topic || '',
+            } : undefined,
+          })));
+        }
+      } catch {
+        // keep mock data on failure
+      } finally {
+        setLoading(false);
       }
-    }).catch(() => {}); // keep mock data on failure
+    };
+    fetchSchedule();
   }, []);
 
   const getScheduleForDay = (day: string) => {
@@ -158,7 +184,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
     );
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     // Add selected slots to schedule as available
     const newSlots = selectedSlots.map((slotKey, index) => {
       const [day, time] = slotKey.split('-');
@@ -170,9 +196,25 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
         isAvailable: true,
       };
     });
-    
-    setSchedule([...schedule, ...newSlots]);
+
+    const updatedSchedule = [...schedule, ...newSlots];
+    setSchedule(updatedSchedule);
     setSelectedSlots([]);
+
+    // Save to backend
+    setSaving(true);
+    try {
+      await api.updateMentorSchedule(updatedSchedule.map(s => ({
+        dayOfWeek: daysOfWeek.indexOf(s.day),
+        startTime: s.startTime,
+        endTime: s.endTime,
+        available: s.isAvailable,
+      })));
+    } catch {
+      // Local state already updated, silent fail
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -187,7 +229,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
               </Button>
               <div>
                 <h1 className="text-2xl font-bold gradient-text">일정 관리</h1>
-                <p className="text-sm text-gray-600">멘토링 가능 시간을 설정하세요</p>
+                <p className="text-sm text-gray-600">릴레이 가능 시간을 설정하세요</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -215,7 +257,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
       <div className="container-web py-8">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* This Week's Sessions Summary */}
-          <Card className="p-6 bg-gradient-to-br from-sky-50 via-white to-cyan-50 border-2 border-sky-200">
+          <Card className="p-6 bg-gradient-to-br from-emerald-50 via-white to-green-50 border-2 border-emerald-200">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold gradient-text mb-1">이번 주 세션</h2>
@@ -235,7 +277,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
 
             {/* Session Cards */}
             <div className="grid md:grid-cols-3 gap-4">
-              {mockSchedule.filter(slot => slot.session).map((slot, index) => (
+              {schedule.filter(slot => slot.session).map((slot, index) => (
                 <motion.div
                   key={slot.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -313,13 +355,13 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-sky-50 rounded-xl p-4 border border-blue-200">
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-200">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                     <Video className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-700">3</div>
+                    <div className="text-2xl font-bold text-emerald-700">3</div>
                     <div className="text-xs text-gray-600">예약 세션</div>
                   </div>
                 </div>
@@ -442,7 +484,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       variant="ghost"
                                       size="icon"
                                       className="h-6 w-6"
-                                      onClick={(e) => {
+                                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                         e.stopPropagation();
                                       }}
                                     >
@@ -452,7 +494,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       variant="ghost"
                                       size="icon"
                                       className="h-6 w-6"
-                                      onClick={(e) => {
+                                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                         e.stopPropagation();
                                       }}
                                     >

@@ -50,6 +50,29 @@
   --glow-primary: 0 0 20px rgb(14 165 233 / 0.3);
   --glow-accent: 0 0 20px rgb(34 211 238 / 0.3);
   --glow-success: 0 0 20px rgb(16 185 129 / 0.3);
+
+  /* Feature-specific colors */
+  --color-feature-ai: #7c3aed;        /* Violet - AI/Innovation */
+  --color-feature-ai-light: #a78bfa;
+  --color-feature-ai-bg: #f5f3ff;
+  --color-feature-mentor: #059669;     /* Emerald - Discovery/Growth */
+  --color-feature-mentor-light: #34d399;
+  --color-feature-mentor-bg: #ecfdf5;
+  --color-feature-session: #4f46e5;    /* Indigo - Trust/Connection */
+  --color-feature-session-light: #818cf8;
+  --color-feature-session-bg: #eef2ff;
+  --color-feature-message: #0d9488;    /* Teal - Communication */
+  --color-feature-message-light: #2dd4bf;
+  --color-feature-message-bg: #f0fdfa;
+  --color-feature-review: #d97706;     /* Amber - Achievement */
+  --color-feature-review-light: #fbbf24;
+  --color-feature-review-bg: #fffbeb;
+  --color-feature-admin: #475569;      /* Slate - Professional */
+  --color-feature-admin-light: #94a3b8;
+  --color-feature-admin-bg: #f8fafc;
+  --color-feature-onboard: #ec4899;    /* Pink - Welcome */
+  --color-feature-onboard-light: #f472b6;
+  --color-feature-onboard-bg: #fdf2f8;
 }
 
 /* Base styles */
@@ -431,6 +454,87 @@ input::placeholder, textarea::placeholder {
   @apply absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Feature-specific button variants */
+.btn-ai {
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgb(124 58 237 / 0.3);
+}
+.btn-ai:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-mentor {
+  background: linear-gradient(135deg, #059669, #34d399);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgb(5 150 105 / 0.3);
+}
+.btn-mentor:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-session {
+  background: linear-gradient(135deg, #4f46e5, #818cf8);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgb(79 70 229 / 0.3);
+}
+.btn-session:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-message {
+  background: linear-gradient(135deg, #0d9488, #2dd4bf);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgb(13 148 136 / 0.3);
+}
+.btn-message:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-review {
+  background: linear-gradient(135deg, #d97706, #fbbf24);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgb(217 119 6 / 0.3);
+}
+.btn-review:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* Feature gradient backgrounds */
+.gradient-ai { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+.gradient-mentor { background: linear-gradient(135deg, #059669, #34d399); }
+.gradient-session { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+.gradient-message { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
+.gradient-review { background: linear-gradient(135deg, #d97706, #fbbf24); }
+.gradient-admin { background: linear-gradient(135deg, #475569, #94a3b8); }
+
+/* Feature glow effects */
+.glow-ai { box-shadow: 0 0 20px rgb(124 58 237 / 0.3); }
+.glow-mentor { box-shadow: 0 0 20px rgb(5 150 105 / 0.3); }
+.glow-session { box-shadow: 0 0 20px rgb(79 70 229 / 0.3); }
+.glow-message { box-shadow: 0 0 20px rgb(13 148 136 / 0.3); }
+.glow-review { box-shadow: 0 0 20px rgb(217 119 6 / 0.3); }
 
 /* Print styles */
 @media print {

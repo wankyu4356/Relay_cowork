@@ -6,6 +6,13 @@
 
   export default defineConfig({
     plugins: [react(), tailwindcss()],
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/test/setup.ts',
+      css: false,
+      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -52,6 +59,48 @@
     build: {
       target: 'esnext',
       outDir: 'build',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-supabase': ['@supabase/supabase-js'],
+            'vendor-ui': ['sonner', 'lucide-react', 'motion/react'],
+            'admin': [
+              './src/components/AdminDashboard.tsx',
+              './src/components/AdminMentorApproval.tsx',
+              './src/components/AdminDisputeManagement.tsx',
+              './src/components/AdminAIServiceManagement.tsx',
+            ],
+            'mentor': [
+              './src/components/MentorDashboard.tsx',
+              './src/components/MentorMenteeList.tsx',
+              './src/components/MentorReviews.tsx',
+              './src/components/MentorEAWizard.tsx',
+              './src/components/MentorSchedule.tsx',
+              './src/components/MentorRevenue.tsx',
+              './src/components/MentorStats.tsx',
+              './src/components/MentorVerification.tsx',
+            ],
+            'ai-core': [
+              './src/components/AIExperienceInput.tsx',
+              './src/components/AIStoryline.tsx',
+              './src/components/AIDraftEditor.tsx',
+              './src/components/AIManagement.tsx',
+            ],
+            'ai-recommendation': [
+              './src/components/AIRecommendation.tsx',
+              './src/components/ai-recommendation/transfer/TransferRecommendation.tsx',
+              './src/components/ai-recommendation/admission/AdmissionRecommendation.tsx',
+            ],
+            'ai-recommendation-2': [
+              './src/components/ai-recommendation/career/CareerRecommendation.tsx',
+              './src/components/ai-recommendation/certification/CertificationRecommendation.tsx',
+              './src/components/ai-recommendation/other/OtherRecommendation.tsx',
+            ],
+            'vendor-recharts': ['recharts'],
+          },
+        },
+      },
     },
     server: {
       port: 3000,
