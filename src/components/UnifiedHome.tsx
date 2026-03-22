@@ -98,7 +98,7 @@ export function UnifiedHome({
       if (sessionsResult.status === 'fulfilled') {
         const sessions = sessionsResult.value?.sessions;
         if (Array.isArray(sessions)) {
-          const upcoming = sessions.filter((s: any) => s.status === 'upcoming');
+          const upcoming = sessions.filter((s: { status?: string }) => s.status === 'upcoming');
           setUpcomingSessionCount(upcoming.length);
         }
       }
@@ -107,7 +107,7 @@ export function UnifiedHome({
       if (notificationsResult.status === 'fulfilled') {
         const notifications = notificationsResult.value?.notifications;
         if (Array.isArray(notifications)) {
-          const unread = notifications.filter((n: any) => !n.read);
+          const unread = notifications.filter((n: { read?: boolean }) => !n.read);
           setNotificationCount(unread.length);
         }
       }
