@@ -74,7 +74,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
             </Button>
             <div>
               <h1 className="text-2xl font-bold">릴레이 성과 보고</h1>
-              <p className="text-gray-600 mt-1">멘토링 결과를 알려주세요</p>
+              <p className="text-gray-600 mt-1">릴레이 세션 결과를 알려주세요</p>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 멘토</h3>
+                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 러너</h3>
                   <p className="text-gray-600">
                     {mentor.university} {mentor.major}
                   </p>
@@ -133,7 +133,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                   }`} />
                   <div className="text-2xl font-bold mb-2">합격했어요!</div>
                   <p className="text-sm text-gray-600 mb-3">
-                    축하합니다! 멘토님의 성공률이 올라갑니다
+                    축하합니다! 러너님의 성공률이 올라갑니다
                   </p>
                   <Badge className="bg-green-500 text-white">
                     +₩10,000 크레딧
@@ -179,7 +179,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                 <Textarea
                   placeholder={
                     outcome === 'success'
-                      ? '멘토링이 어떻게 도움이 되었나요? (최소 10자)'
+                      ? '릴레이 세션이 어떻게 도움이 되었나요? (최소 10자)'
                       : '다음 시도 때 개선할 점이 있나요? (최소 10자)'
                   }
                   value={detail}
@@ -200,13 +200,13 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               <div className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span>
-                  <strong>멘토:</strong> 성공률 지표 업데이트, 프로필 강화
+                  <strong>러너:</strong> 성공률 지표 업데이트, 프로필 강화
                 </span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span>
-                  <strong>멘티:</strong> 크레딧 지급, 다음 멘토링 할인
+                  <strong>멘티:</strong> 크레딧 지급, 다음 릴레이 세션 할인
                 </span>
               </div>
               <div className="flex items-start gap-2">
