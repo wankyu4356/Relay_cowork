@@ -156,7 +156,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
       case 'completed':
         return <Badge className="bg-green-500 text-white border-0">✓ 완료</Badge>;
       case 'with-mentor':
-        return <Badge className="bg-violet-500 text-white border-0">👤 멘토 첨삭 중</Badge>;
+        return <Badge className="bg-violet-500 text-white border-0">👤 러너 첨삭 중</Badge>;
       case 'draft':
         return <Badge variant="outline" className="text-gray-600">✏️ 편집 중</Badge>;
       default:
@@ -240,7 +240,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg mb-2">💡 크레딧이 부족해요</h3>
                     <p className="text-gray-600 mb-4">
-                      추가 크레딧을 구매하거나 멘토링 결과 보고를 작성하여 크레딧을 받으세요
+                      추가 크레딧을 구매하거나 릴레이 세션 결과 보고를 작성하여 크레딧을 받으세요
                     </p>
                     <div className="flex gap-2">
                       <Button 
@@ -403,7 +403,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                           <div className="mb-4 p-3 bg-violet-50 rounded-xl flex items-center gap-2">
                             <Users className="w-4 h-4 text-violet-600" />
                             <span className="text-sm text-gray-700">
-                              <span className="font-semibold">{draft.mentorName}</span> 멘토와 첨삭 중
+                              <span className="font-semibold">{draft.mentorName}</span> 러너와 첨삭 중
                             </span>
                           </div>
                         )}
@@ -444,7 +444,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                                 className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
                               >
                                 <Users className="w-4 h-4 mr-1" />
-                                멘토 찾기
+                                러너 찾기
                               </Button>
                             )}
                           </div>
@@ -466,7 +466,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>AI 바통 초안을 받은 후 멘토와 함께 첨삭하면 합격률이 2배 높아집니다</span>
+                <span>AI 바통 초안을 받은 후 러너와 함께 첨삭하면 합격률이 2배 높아집니다</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>

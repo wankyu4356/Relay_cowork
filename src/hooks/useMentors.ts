@@ -32,7 +32,7 @@ interface ApiMentor {
 function transformApiMentor(m: ApiMentor): Mentor {
   return {
     id: m.id,
-    name: m.name || '멘토',
+    name: m.name || '러너',
     university: m.university || '',
     major: m.major || '',
     year: m.year || '',

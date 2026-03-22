@@ -332,7 +332,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       setForm(prev => ({ ...prev, email: 'mentor@relay.kr', password: 'mentor1234' }));
                     }}
                   >
-                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">멘토</Badge>
+                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">러너</Badge>
                     데모 계정
                   </Button>
                 </div>

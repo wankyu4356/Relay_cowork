@@ -36,7 +36,7 @@ export function useSessions() {
           return (res.sessions || []).map((s: ApiSession) => ({
             id: s.id,
             mentorId: s.mentor_id,
-            mentorName: s.mentor_name || '멘토',
+            mentorName: s.mentor_name || '러너',
             mentorAvatar: s.mentor_avatar || '👨‍🎓',
             date: s.date,
             time: s.time,

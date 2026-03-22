@@ -250,7 +250,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">
-                    이 학교 합격생<br />멘토 3명 추천
+                    이 학교 합격생<br />러너 3명 추천
                   </h3>
                   <p className="text-gray-600 mb-5 text-sm">
                     AI 바통 초안을 실제 합격생이<br />
@@ -260,7 +260,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                     className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg"
                     onClick={onMentorConnect}
                   >
-                    멘토 첨삭받기 →
+                    러너 첨삭받기 →
                   </Button>
                 </div>
               </Card>

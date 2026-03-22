@@ -13,7 +13,7 @@ export function BottomNav({ currentScreen, onNavigate, isMentorActive = false }:
   const navItems = [
     { screen: 'unified-home' as Screen, icon: Home, label: '홈' },
     { screen: 'ai-management' as Screen, icon: FileText, label: 'AI' },
-    { screen: 'mentor-search' as Screen, icon: Users, label: '멘토' },
+    { screen: 'mentor-search' as Screen, icon: Users, label: '러너' },
     { screen: 'session-list' as Screen, icon: Calendar, label: '세션' },
     { screen: 'settings' as Screen, icon: User, label: '내 정보' },
   ];

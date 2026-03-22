@@ -601,14 +601,14 @@ app.get(`${PREFIX}/mentors`, async (c) => {
 
     const result = (finalMentors || []).map((m: any) => ({
       ...m,
-      name: m.profiles?.name || '멘토',
+      name: m.profiles?.name || '러너',
       email: m.profiles?.email || '',
       avatar: m.profiles?.avatar || '👨‍🎓',
     }));
 
     return c.json({ mentors: result });
   } catch (e) {
-    return c.json({ error: `멘토 목록 조회 실패: ${e}` }, 500);
+    return c.json({ error: `러너 목록 조회 실패: ${e}` }, 500);
   }
 });
 
@@ -640,13 +640,13 @@ app.post(`${PREFIX}/mentors/register`, async (c) => {
       .select()
       .single();
 
-    if (dbError) return c.json({ error: `멘토 등록 실패: ${dbError.message}` }, 500);
+    if (dbError) return c.json({ error: `러너 등록 실패: ${dbError.message}` }, 500);
 
     await db.from('profiles').update({ role: 'mentor' }).eq('id', user!.id);
 
     return c.json({ success: true, mentor: data });
   } catch (e) {
-    return c.json({ error: `멘토 등록 실패: ${e}` }, 500);
+    return c.json({ error: `러너 등록 실패: ${e}` }, 500);
   }
 });
 
@@ -670,19 +670,19 @@ app.put(`${PREFIX}/mentors/:id/verify`, async (c) => {
       .select()
       .single();
 
-    if (dbError) return c.json({ error: `멘토 인증 실패: ${dbError.message}` }, 500);
+    if (dbError) return c.json({ error: `러너 인증 실패: ${dbError.message}` }, 500);
 
     // Notify the mentor about verification result
     await createNotification(
       mentorId,
-      '멘토 인증 결과',
-      isVerified ? '멘토 인증이 완료되었습니다' : '멘토 인증이 거부되었습니다',
+      '러너 인증 결과',
+      isVerified ? '러너 인증이 완료되었습니다' : '러너 인증이 거부되었습니다',
       'verification',
     );
 
     return c.json({ success: true, mentor: data });
   } catch (e) {
-    return c.json({ error: `멘토 인증 실패: ${e}` }, 500);
+    return c.json({ error: `러너 인증 실패: ${e}` }, 500);
   }
 });
 
@@ -703,14 +703,14 @@ app.get(`${PREFIX}/admin/mentors/pending`, async (c) => {
 
     const result = (mentors || []).map((m: any) => ({
       ...m,
-      name: m.profiles?.name || '멘토',
+      name: m.profiles?.name || '러너',
       email: m.profiles?.email || '',
       avatar: m.profiles?.avatar || '👨‍🎓',
     }));
 
     return c.json({ mentors: result });
   } catch (e) {
-    return c.json({ error: `대기 멘토 조회 실패: ${e}` }, 500);
+    return c.json({ error: `대기 러너 조회 실패: ${e}` }, 500);
   }
 });
 
@@ -1256,7 +1256,7 @@ app.get(`${PREFIX}/relay-chain`, async (c) => {
         .single();
       nodes.push({
         mentor_id: mentorId,
-        mentor_name: profile?.name || '멘토',
+        mentor_name: profile?.name || '러너',
         mentee_count: info.mentee_ids.size,
         completed_sessions: info.completed_sessions,
         success_outcomes: info.success_outcomes,
