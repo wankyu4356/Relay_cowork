@@ -38,6 +38,7 @@ import { Settings } from './components/Settings';
 import { CreditPurchase } from './components/CreditPurchase';
 import { MessageCenter } from './components/MessageCenter';
 import { BottomNav } from './components/BottomNav';
+import { CategoryFeaturePlaceholder } from './components/CategoryFeaturePlaceholder';
 import { SupabaseHealthCheck } from './components/SupabaseHealthCheck';
 import { Toaster } from './components/ui/sonner';
 import * as api from './components/api';
@@ -81,13 +82,24 @@ const screenToPath: Record<string, string> = {
   'credit-purchase': '/credits/purchase',
   'message-center': '/messages',
   'chat': '/messages',
+  // Category-specific screens
+  'admission-guide': '/category/admission-guide',
+  'grade-prediction': '/category/grade-prediction',
+  'transcript-manager': '/category/transcript-manager',
+  'admission-strategy': '/category/admission-strategy',
+  'job-board': '/category/job-board',
+  'mock-interview': '/category/mock-interview',
+  'exam-calendar': '/category/exam-calendar',
+  'study-planner': '/category/study-planner',
+  'roadmap': '/category/roadmap',
+  'community': '/category/community',
 };
 
 const pathToScreen: Record<string, string> = Object.fromEntries(
   Object.entries(screenToPath).map(([k, v]) => [v, k])
 );
 
-export type Screen = 
+export type Screen =
   | 'auth'
   | 'onboarding'
   | 'mentee-onboarding'
@@ -122,7 +134,18 @@ export type Screen =
   | 'settings'
   | 'credit-purchase'
   | 'message-center'
-  | 'chat';
+  | 'chat'
+  // Category-specific screens
+  | 'admission-guide'
+  | 'grade-prediction'
+  | 'transcript-manager'
+  | 'admission-strategy'
+  | 'job-board'
+  | 'mock-interview'
+  | 'exam-calendar'
+  | 'study-planner'
+  | 'roadmap'
+  | 'community';
 
 export type UserRole = 'mentee' | 'mentor' | 'admin';
 
@@ -883,12 +906,25 @@ function App() {
         )}
         
         {currentScreen === 'chat' && (
-          <MessageCenter 
+          <MessageCenter
             onBack={() => {
               if (userRole === 'mentee') navigateTo('unified-home');
               else if (userRole === 'mentor') navigateTo('mentor-dashboard');
               else navigateTo('admin-dashboard');
             }}
+          />
+        )}
+
+        {/* Category-specific feature screens */}
+        {([
+          'admission-guide', 'grade-prediction', 'transcript-manager',
+          'admission-strategy', 'job-board', 'mock-interview',
+          'exam-calendar', 'study-planner', 'roadmap', 'community'
+        ] as Screen[]).includes(currentScreen) && (
+          <CategoryFeaturePlaceholder
+            screen={currentScreen}
+            selectedCategory={selectedCategory}
+            onBack={() => navigateTo('unified-home')}
           />
         )}
         {userRole === 'mentee' && !(isAuthScreen) && (

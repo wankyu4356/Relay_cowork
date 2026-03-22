@@ -20,9 +20,19 @@ import {
   GraduationCap,
   Repeat,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ClipboardList,
+  BarChart3,
+  FileText,
+  Target,
+  Mic,
+  CalendarDays,
+  BookMarked,
+  Map,
+  Lightbulb,
 } from 'lucide-react';
 import type { Screen } from '../App';
+import { CATEGORY_CONTENT } from '../lib/categoryContent';
 
 interface GlobalNavProps {
   currentScreen: Screen;
@@ -53,8 +63,8 @@ const categories: CategoryConfig[] = [
     id: 'transfer',
     label: '편입',
     icon: BookOpen,
-    color: 'text-sky-600',
-    bgColor: 'bg-sky-100',
+    color: 'text-indigo-600',
+    bgColor: 'bg-indigo-100',
     description: '대학 편입 준비',
   },
   {
@@ -69,24 +79,24 @@ const categories: CategoryConfig[] = [
     id: 'career',
     label: '취업',
     icon: Briefcase,
-    color: 'text-cyan-600',
-    bgColor: 'bg-cyan-100',
+    color: 'text-slate-700',
+    bgColor: 'bg-slate-100',
     description: '인턴/이직',
   },
   {
     id: 'certification',
     label: '자격증',
     icon: Award,
-    color: 'text-teal-600',
-    bgColor: 'bg-teal-100',
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-100',
     description: '자격증/공모전',
   },
   {
     id: 'other',
     label: '기타',
     icon: Star,
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-100',
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-100',
     description: '다양한 경험',
   },
 ];
@@ -124,6 +134,14 @@ export function GlobalNav({
 
   const currentCategory = categories.find(c => c.id === selectedCategory);
   const CategoryIcon = currentCategory?.icon || BookOpen;
+
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    ClipboardList, BarChart3, FileText, Target, Briefcase, Mic,
+    CalendarDays, BookMarked, Map, Lightbulb,
+  };
+
+  const categoryContent = CATEGORY_CONTENT[selectedCategory];
+  const sidebarExtras = categoryContent?.sidebarExtras || [];
 
   // Mobile menu only when not on home
   const showMobileNav = currentScreen !== 'onboarding' && currentScreen !== 'mentee-onboarding' && currentScreen !== 'auth';
@@ -309,6 +327,35 @@ export function GlobalNav({
               />
             </div>
 
+            {/* Category-specific menu items */}
+            {currentRole === 'mentee' && sidebarExtras.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                {!collapsed && (
+                  <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                    {categoryContent.label} 전용
+                  </p>
+                )}
+                <div className="space-y-1">
+                  {sidebarExtras.map((extra) => {
+                    const ExtraIcon = iconMap[extra.iconName] || Star;
+                    return (
+                      <NavItem
+                        key={extra.screen}
+                        icon={ExtraIcon}
+                        label={extra.label}
+                        active={currentScreen === extra.screen}
+                        onClick={() => onNavigate(extra.screen as Screen)}
+                        collapsed={collapsed}
+                        activeColor={extra.activeColor}
+                        activeBg={extra.activeBg}
+                        hoverBg={extra.hoverBg}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Role Switch */}
             {!collapsed && (
               <div className="mt-6 pt-6 border-t border-gray-200">
@@ -469,6 +516,33 @@ export function GlobalNav({
                     })}
                   </div>
                 </div>
+
+                {/* Category-specific Menu Items (Mobile) */}
+                {currentRole === 'mentee' && sidebarExtras.length > 0 && (
+                  <div className="mb-6">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">{categoryContent.label} 전용</p>
+                    <div className="space-y-1">
+                      {sidebarExtras.map((extra) => {
+                        const ExtraIcon = iconMap[extra.iconName] || Star;
+                        return (
+                          <NavItem
+                            key={extra.screen}
+                            icon={ExtraIcon}
+                            label={extra.label}
+                            active={currentScreen === extra.screen}
+                            onClick={() => {
+                              onNavigate(extra.screen as Screen);
+                              setIsMobileMenuOpen(false);
+                            }}
+                            activeColor={extra.activeColor}
+                            activeBg={extra.activeBg}
+                            hoverBg={extra.hoverBg}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Mobile Menu Items */}
                 <div className="space-y-1">
