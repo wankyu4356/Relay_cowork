@@ -77,7 +77,7 @@ describe('OutcomeReport', () => {
 
   it('displays mentor information and purpose', () => {
     render(<OutcomeReport {...defaultProps} />);
-    expect(screen.getByText('이서연 멘토')).toBeInTheDocument();
+    expect(screen.getByText('이서연 러너')).toBeInTheDocument();
     expect(screen.getByText('연세대 경영학과')).toBeInTheDocument();
     expect(screen.getByText('목표: 연세대 경영 편입')).toBeInTheDocument();
   });
@@ -101,7 +101,7 @@ describe('OutcomeReport', () => {
     render(<OutcomeReport {...defaultProps} />);
     await userEvent.click(screen.getByText('합격했어요!'));
     expect(screen.getByText('합격 소감')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/멘토링이 어떻게 도움이 되었나요/)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/릴레이 세션이 어떻게 도움이 되었나요/)).toBeInTheDocument();
   });
 
   it('shows detail textarea after selecting fail outcome', async () => {
@@ -120,7 +120,7 @@ describe('OutcomeReport', () => {
     render(<OutcomeReport {...defaultProps} />);
     await userEvent.click(screen.getByText('합격했어요!'));
 
-    const textarea = screen.getByPlaceholderText(/멘토링이 어떻게 도움이 되었나요/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션이 어떻게 도움이 되었나요/);
     fireEvent.change(textarea, { target: { value: '짧은' } });
 
     expect(screen.getByText('보고 완료')).toBeDisabled();
@@ -133,7 +133,7 @@ describe('OutcomeReport', () => {
 
     await userEvent.click(screen.getByText('합격했어요!'));
 
-    const textarea = screen.getByPlaceholderText(/멘토링이 어떻게 도움이 되었나요/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션이 어떻게 도움이 되었나요/);
     const detailText = 'Thanks to the mentor I passed the exam successfully!';
     fireEvent.change(textarea, { target: { value: detailText } });
 
@@ -185,7 +185,7 @@ describe('OutcomeReport', () => {
 
     await userEvent.click(screen.getByText('합격했어요!'));
 
-    const textarea = screen.getByPlaceholderText(/멘토링이 어떻게 도움이 되었나요/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션이 어떻게 도움이 되었나요/);
     const detailText = 'Thanks to the mentor I passed the exam successfully!';
     fireEvent.change(textarea, { target: { value: detailText } });
 
@@ -217,7 +217,7 @@ describe('OutcomeReport', () => {
       expect(screen.getByText('0자')).toBeInTheDocument();
     });
 
-    const textarea = screen.getByPlaceholderText(/멘토링이 어떻게 도움이 되었나요/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션이 어떻게 도움이 되었나요/);
     fireEvent.change(textarea, { target: { value: 'a' } });
 
     expect(screen.getByText('1자')).toBeInTheDocument();

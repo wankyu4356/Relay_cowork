@@ -69,7 +69,7 @@ describe('ReviewWrite', () => {
 
   it('displays mentor information', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    expect(screen.getByText('이서연 멘토')).toBeInTheDocument();
+    expect(screen.getByText('이서연 러너')).toBeInTheDocument();
     expect(screen.getByText('연세대 경영학과 4학년')).toBeInTheDocument();
   });
 
@@ -113,7 +113,7 @@ describe('ReviewWrite', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
     expect(screen.getByText('0자')).toBeInTheDocument();
 
-    const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션에서 좋았던 점/);
     fireEvent.change(textarea, { target: { value: 'abc' } });
 
     expect(screen.getByText('3자')).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe('ReviewWrite', () => {
 
     // Type review text (30+ chars)
     const reviewText = 'This is a test review that is longer than thirty characters for testing.';
-    const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션에서 좋았던 점/);
     fireEvent.change(textarea, { target: { value: reviewText } });
 
     // Select a tag
@@ -164,7 +164,7 @@ describe('ReviewWrite', () => {
     );
     fireEvent.click(starButtons[4]);
 
-    const textarea = screen.getByPlaceholderText(/멘토링에서 좋았던 점/);
+    const textarea = screen.getByPlaceholderText(/릴레이 세션에서 좋았던 점/);
     fireEvent.change(textarea, { target: { value: 'This is a test review that is longer than thirty characters for testing.' } });
 
     fireEvent.click(screen.getByText('후기 등록하기'));

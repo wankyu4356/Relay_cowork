@@ -128,7 +128,7 @@ describe('useMentors', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     const mentor = result.current.mentors[0];
-    expect(mentor.name).toBe('멘토');
+    expect(mentor.name).toBe('러너');
     expect(mentor.university).toBe('');
     expect(mentor.rating).toBe(0);
     expect(mentor.price).toBe(30000);

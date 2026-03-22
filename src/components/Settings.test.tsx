@@ -75,12 +75,12 @@ describe('Settings', () => {
 
   it('shows mentor badge when isMentorActive is true', () => {
     render(<Settings onBack={mockOnBack} isMentorActive={true} />);
-    expect(screen.getByText('멘토')).toBeInTheDocument();
+    expect(screen.getByText('러너')).toBeInTheDocument();
   });
 
   it('does not show mentor badge when isMentorActive is false', () => {
     render(<Settings onBack={mockOnBack} isMentorActive={false} />);
-    expect(screen.queryByText('멘토')).not.toBeInTheDocument();
+    expect(screen.queryByText('러너')).not.toBeInTheDocument();
   });
 
   it('calls onBack when back button is clicked', async () => {
