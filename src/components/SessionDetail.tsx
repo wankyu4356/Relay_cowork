@@ -31,6 +31,7 @@ interface SessionDetailProps {
 export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
   const [sessionStatus, setSessionStatus] = useState<'pending' | 'confirmed' | 'completed' | 'cancelled'>('confirmed');
   const [activeTab, setActiveTab] = useState<'details' | 'materials' | 'notes'>('details');
+  const [sessionNotes, setSessionNotes] = useState('');
 
   // Mock session data
   const session = {
@@ -279,7 +280,16 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                             <div className="font-semibold text-gray-900">{material.name}</div>
                             <div className="text-sm text-gray-600">업로드: {material.uploadedAt}</div>
                           </div>
-                          <Button size="sm" className="btn-secondary rounded-xl">
+                          <Button size="sm" className="btn-secondary rounded-xl" onClick={() => {
+                            const blob = new Blob([''], { type: 'application/octet-stream' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = material.name;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                            toast.success(`${material.name} 다운로드를 시작합니다`);
+                          }}>
                             다운로드
                           </Button>
                         </div>
@@ -301,10 +311,18 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                 <Card className="p-6 card-modern">
                   <textarea
                     placeholder="세션 노트를 작성하세요..."
+                    value={sessionNotes}
+                    onChange={(e) => setSessionNotes(e.target.value)}
                     className="w-full min-h-[300px] p-4 border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 resize-none"
                   />
                   <div className="mt-4 flex justify-end">
-                    <Button className="btn-primary rounded-xl">
+                    <Button className="btn-primary rounded-xl" onClick={() => {
+                      if (!sessionNotes.trim()) {
+                        toast.error('노트 내용을 입력해주세요');
+                        return;
+                      }
+                      toast.success('세션 노트가 저장되었습니다');
+                    }}>
                       <Send className="w-4 h-4 mr-2" />
                       노트 저장
                     </Button>

@@ -235,7 +235,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                         </div>
                         <div className="text-xs text-gray-500">60분 세션</div>
                       </div>
-                      <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white">
+                      <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white" onClick={() => onMentorSelect(mentor)}>
                         상세보기
                       </Button>
                     </div>
