@@ -533,7 +533,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         </div>
         <h2 className="text-4xl font-bold gradient-text mb-3">경험의 흐름</h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-          익명으로 연결되는 경험의 바통. 선배에게 받은 경험을 후배에게 전달하며 릴레이는 계속됩니다.
+          익명으로 연결되는 경험의 릴레이. 선배에게 받은 경험을 후배에게 전달하며 릴레이는 계속됩니다.
         </p>
       </motion.div>
 

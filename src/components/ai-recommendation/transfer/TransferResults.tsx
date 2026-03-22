@@ -29,7 +29,7 @@ interface TransferResultsProps {
 
 export function TransferResults({ recommendations, alternatives, onComplete }: TransferResultsProps) {
   const [expandedSchool, setExpandedSchool] = useState<string | null>(null);
-  const [filterType, setFilterType] = useState<'전체' | '일반편입' | '학사편입'>('전체');
+  const [filterType, setFilterType] = useState<'전체' | '일반편입' | '학사편입' | '기타전형'>('전체');
 
   const filteredRecommendations = filterType === '전체'
     ? recommendations
@@ -74,12 +74,13 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
       {/* Filter Tabs */}
       <Tabs
         value={filterType}
-        onValueChange={(value) => setFilterType(value as '전체' | '일반편입' | '학사편입')}
+        onValueChange={(value) => setFilterType(value as '전체' | '일반편입' | '학사편입' | '기타전형')}
       >
         <TabsList>
           <TabsTrigger value="전체">전체</TabsTrigger>
           <TabsTrigger value="일반편입">일반편입</TabsTrigger>
           <TabsTrigger value="학사편입">학사편입</TabsTrigger>
+          <TabsTrigger value="기타전형">기타전형</TabsTrigger>
         </TabsList>
       </Tabs>
 

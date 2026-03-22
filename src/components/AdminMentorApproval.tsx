@@ -143,6 +143,20 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
     }).finally(() => setLoading(false));
   }, []);
 
+  const handleDownload = (fileName: string) => {
+    toast.success(`'${fileName}' 다운로드를 시작합니다`);
+    // Simulate file download by creating a blob
+    const blob = new Blob([`[Simulated file content for: ${fileName}]`], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const pendingApps = applications.filter(a => a.status === 'pending');
   const approvedApps = applications.filter(a => a.status === 'approved');
   const rejectedApps = applications.filter(a => a.status === 'rejected');
@@ -493,7 +507,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                             <div className="text-sm text-gray-600">{selectedApp.studentIdFile.name}</div>
                           </div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => handleDownload(selectedApp.studentIdFile.name)}>
                           <Download className="w-4 h-4 mr-1" />
                           다운로드
                         </Button>
@@ -511,7 +525,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                             <div className="text-sm text-gray-600">{selectedApp.admissionFile.name}</div>
                           </div>
                         </div>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => handleDownload(selectedApp.admissionFile.name)}>
                           <Download className="w-4 h-4 mr-1" />
                           다운로드
                         </Button>

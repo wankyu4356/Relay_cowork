@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -13,10 +13,18 @@ import {
   MoreVertical,
   Search,
   Check,
-  CheckCheck
+  CheckCheck,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+
+const EMOJI_LIST = [
+  '😊', '👍', '❤️', '😂', '🎉', '👏',
+  '🔥', '💪', '✨', '😍', '🙏', '💯',
+  '😢', '🤔', '😎', '🥳', '💕', '👋',
+  '🙌', '😅', '🤗', '💡', '📌', '🎯',
+];
 
 interface MessageCenterProps {
   onBack: () => void;
@@ -131,6 +139,66 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [attachedFile, setAttachedFile] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setShowMoreMenu(false);
+      }
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleFileAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAttachedFile(file.name);
+      toast.success(`파일 첨부: ${file.name}`);
+    }
+    e.target.value = '';
+  };
+
+  const handleImageAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAttachedFile(file.name);
+      toast.success(`이미지 첨부: ${file.name}`);
+    }
+    e.target.value = '';
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    setNewMessage(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handleMoreMenuAction = (action: string) => {
+    setShowMoreMenu(false);
+    switch (action) {
+      case 'leave':
+        toast.info('대화에서 나갔습니다');
+        break;
+      case 'mute':
+        toast.info('알림이 꺼졌습니다');
+        break;
+      case 'report':
+        toast.info('신고가 접수되었습니다');
+        break;
+    }
+  };
 
   // Load conversations from API on mount with fallback to mock data
   useEffect(() => {
@@ -378,9 +446,41 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                         </p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical className="w-5 h-5" />
-                    </Button>
+                    <div className="relative" ref={moreMenuRef}>
+                      <Button variant="ghost" size="icon" onClick={() => setShowMoreMenu(prev => !prev)}>
+                        <MoreVertical className="w-5 h-5" />
+                      </Button>
+                      <AnimatePresence>
+                        {showMoreMenu && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute right-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden"
+                          >
+                            <button
+                              onClick={() => handleMoreMenuAction('leave')}
+                              className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
+                            >
+                              대화 나가기
+                            </button>
+                            <button
+                              onClick={() => handleMoreMenuAction('mute')}
+                              className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors"
+                            >
+                              알림 끄기
+                            </button>
+                            <button
+                              onClick={() => handleMoreMenuAction('report')}
+                              className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                            >
+                              신고하기
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </div>
 
@@ -431,11 +531,54 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
 
                 {/* Input Area */}
                 <div className="p-4 border-t border-gray-200 bg-white">
+                  {/* Hidden file inputs */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileAttach}
+                  />
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageAttach}
+                  />
+
+                  {/* Attached file indicator */}
+                  <AnimatePresence>
+                    {attachedFile && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mb-2 flex items-center gap-2 text-sm text-teal-700 bg-teal-50 rounded-lg px-3 py-1.5"
+                      >
+                        <Paperclip className="w-3.5 h-3.5" />
+                        <span className="truncate flex-1">{attachedFile}</span>
+                        <button onClick={() => setAttachedFile(null)} className="hover:text-red-500 transition-colors">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <div className="flex items-end gap-2">
-                    <Button variant="ghost" size="icon" className="flex-shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="flex-shrink-0"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
                       <Paperclip className="w-5 h-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="flex-shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="flex-shrink-0"
+                      onClick={() => imageInputRef.current?.click()}
+                    >
                       <ImageIcon className="w-5 h-5" />
                     </Button>
                     <div className="flex-1">
@@ -447,9 +590,39 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                         className="min-h-[44px]"
                       />
                     </div>
-                    <Button variant="ghost" size="icon" className="flex-shrink-0">
-                      <Smile className="w-5 h-5" />
-                    </Button>
+                    <div className="relative" ref={emojiPickerRef}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="flex-shrink-0"
+                        onClick={() => setShowEmojiPicker(prev => !prev)}
+                      >
+                        <Smile className="w-5 h-5" />
+                      </Button>
+                      <AnimatePresence>
+                        {showEmojiPicker && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 4 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute bottom-full right-0 mb-2 bg-white rounded-xl shadow-lg border border-gray-200 p-3 z-50"
+                          >
+                            <div className="grid grid-cols-6 gap-1 w-[220px]">
+                              {EMOJI_LIST.map((emoji) => (
+                                <button
+                                  key={emoji}
+                                  onClick={() => handleEmojiSelect(emoji)}
+                                  className="w-8 h-8 flex items-center justify-center text-lg hover:bg-gray-100 rounded-md transition-colors"
+                                >
+                                  {emoji}
+                                </button>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                     <Button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim() || sendingMessage}

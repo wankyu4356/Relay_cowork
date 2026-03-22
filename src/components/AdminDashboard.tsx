@@ -152,7 +152,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">✨ AI 바통 서비스</h3>
+                  <h3 className="font-semibold text-lg">✨ AI 초안 서비스</h3>
                   <p className="text-sm text-gray-600">러너 전환 퍼널 성과</p>
                 </div>
               </div>

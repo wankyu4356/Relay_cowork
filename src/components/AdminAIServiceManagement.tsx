@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -26,7 +26,8 @@ import {
   Cpu,
   FileText,
   Shield,
-  RefreshCw
+  RefreshCw,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
@@ -102,6 +103,15 @@ const hourlyUsageData = [
 export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementProps) {
   const [activeTab, setActiveTab] = useState('pricing');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showNewPromoModal, setShowNewPromoModal] = useState(false);
+  const [newPromo, setNewPromo] = useState({
+    name: '',
+    description: '',
+    discount: 10,
+    startDate: '',
+    endDate: '',
+    credits: 1,
+  });
 
   // Credit Packages
   const [creditPackages, setCreditPackages] = useState<CreditPackage[]>([
@@ -615,7 +625,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </h3>
                 <Button
                   className="bg-gradient-to-r from-sky-500 to-blue-600 text-white"
-                  onClick={() => toast.info('프로모션 생성 기능 준비 중입니다')}
+                  onClick={() => setShowNewPromoModal(true)}
                 >
                   <Gift className="w-4 h-4 mr-2" />
                   새 프로모션
@@ -943,6 +953,128 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
           </Tabs>
         </div>
       </div>
+      {/* New Promotion Modal */}
+      <AnimatePresence>
+        {showNewPromoModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowNewPromoModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">새 프로모션 만들기</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowNewPromoModal(false)}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-gray-600 block mb-1.5">프로모션 이름</label>
+                  <Input
+                    value={newPromo.name}
+                    onChange={(e) => setNewPromo(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="예: 봄맞이 특별 이벤트"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 block mb-1.5">설명</label>
+                  <Input
+                    value={newPromo.description}
+                    onChange={(e) => setNewPromo(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="프로모션 상세 설명"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-600 block mb-1.5">할인율 (%)</label>
+                    <Input
+                      type="number"
+                      value={newPromo.discount}
+                      onChange={(e) => setNewPromo(prev => ({ ...prev, discount: parseInt(e.target.value) || 0 }))}
+                      min={0}
+                      max={100}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-600 block mb-1.5">보너스 크레딧</label>
+                    <Input
+                      type="number"
+                      value={newPromo.credits}
+                      onChange={(e) => setNewPromo(prev => ({ ...prev, credits: parseInt(e.target.value) || 0 }))}
+                      min={0}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-600 block mb-1.5">시작일</label>
+                    <Input
+                      type="date"
+                      value={newPromo.startDate}
+                      onChange={(e) => setNewPromo(prev => ({ ...prev, startDate: e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-600 block mb-1.5">종료일</label>
+                    <Input
+                      type="date"
+                      value={newPromo.endDate}
+                      onChange={(e) => setNewPromo(prev => ({ ...prev, endDate: e.target.value }))}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3 mt-6">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    setShowNewPromoModal(false);
+                    setNewPromo({ name: '', description: '', discount: 10, startDate: '', endDate: '', credits: 1 });
+                  }}
+                >
+                  취소
+                </Button>
+                <Button
+                  className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                  disabled={!newPromo.name.trim() || !newPromo.startDate || !newPromo.endDate}
+                  onClick={() => {
+                    const id = Date.now().toString();
+                    const formatted = (d: string) => d.replace(/-/g, '.');
+                    setPromotions(prev => [...prev, {
+                      id,
+                      name: newPromo.name,
+                      type: 'event',
+                      credits: newPromo.credits,
+                      active: true,
+                      startDate: formatted(newPromo.startDate),
+                      endDate: formatted(newPromo.endDate),
+                      usage: 0,
+                      maxUsage: 0,
+                    }]);
+                    setShowNewPromoModal(false);
+                    setNewPromo({ name: '', description: '', discount: 10, startDate: '', endDate: '', credits: 1 });
+                    setHasUnsavedChanges(true);
+                    toast.success(`'${newPromo.name}' 프로모션이 생성되었습니다`);
+                  }}
+                >
+                  <Gift className="w-4 h-4 mr-2" />
+                  프로모션 생성
+                </Button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

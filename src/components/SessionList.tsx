@@ -209,10 +209,10 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                     <Star className="w-4 h-4 mr-1" />
                     리뷰 작성
                   </Button>
-                  <Button 
+                  <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => toast.success('릴레이 기록을 확인합니다')}
+                    onClick={() => onSessionSelect(session)}
                   >
                     <FileText className="w-4 h-4 mr-1" />
                     기록 보기

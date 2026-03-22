@@ -6,7 +6,8 @@ export interface TransferFormData {
   experiences: string;
   strengths: string;
   goals: string;
-  transferType: '일반편입' | '학사편입';
+  transferType: '일반편입' | '학사편입' | '기타전형';
+  transferSubType?: string;
 }
 
 export interface TransferRecommendation {
@@ -14,7 +15,7 @@ export interface TransferRecommendation {
   name: string;
   department: string;
   matchScore: number;
-  transferType: '일반편입' | '학사편입';
+  transferType: '일반편입' | '학사편입' | '기타전형';
   competitionRate: string;
   successRate: string;
   tuitionPerSemester: string;
@@ -42,7 +43,7 @@ export const TRANSFER_CONFIG = {
   ],
   nextSteps: [
     { title: '릴레이 러너 매칭', description: '추천 대학에 합격한 선배들과 연결되어 실제 경험을 들어보세요' },
-    { title: 'AI 바통 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
+    { title: 'AI 학업계획서 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
     { title: '전략적 준비', description: '추천받은 정보를 바탕으로 체계적인 편입 준비를 시작하세요' },
   ],
 };
@@ -79,6 +80,22 @@ export const TRANSFER_RECOMMENDATIONS: TransferRecommendation[] = [
     strengths: ['글로벌 역량 보유', '학점 우수', '전공 다양성 확보', '실무 경험 풍부'],
     requirements: ['학업계획서 (800자)', '영어 에세이 (500단어)', 'TOEIC 900+ 또는 TOEFL 90+', '전적대 성적증명서'],
     recentTrends: '글로벌 경쟁력을 갖춘 인재 선호, 영어 능력 중요',
+  },
+  {
+    id: '5', name: '한양대학교', department: '경영학과', matchScore: 84,
+    transferType: '기타전형', competitionRate: '8:1', successRate: '78%',
+    tuitionPerSemester: '약 410만원/학기',
+    strengths: ['농어촌 전형 지원 가능', '경쟁률 상대적 낮음', '학점 경쟁력 우수', '전공 적합성 높음'],
+    requirements: ['농어촌 거주 증빙서류', '학업계획서 (800자)', '자기소개서 (1,000자)', '전적대 성적증명서'],
+    recentTrends: '농어촌 전형 지원자격 엄격 심사, 서류 충실성 중시',
+  },
+  {
+    id: '6', name: '중앙대학교', department: '경영학부', matchScore: 82,
+    transferType: '기타전형', competitionRate: '6:1', successRate: '81%',
+    tuitionPerSemester: '약 400만원/학기',
+    strengths: ['특성화고 전형 활용 가능', '낮은 경쟁률', '실무 경험 가산점', '전공 연계성 우수'],
+    requirements: ['특성화고 졸업증명서', '학업계획서 (800자)', '경력기술서', '전적대 성적증명서'],
+    recentTrends: '특성화고 출신 실무 경험자 우대, 전공 연계 활동 중시',
   },
 ];
 

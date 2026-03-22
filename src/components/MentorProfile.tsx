@@ -85,6 +85,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
   const [selectedTab, setSelectedTab] = useState('about');
   const [reviews, setReviews] = useState<Review[]>(mockReviewsFallback);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -459,27 +460,37 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                       <Card className="p-5">
                         <div className="font-semibold mb-3">{day.date}</div>
                         <div className="grid grid-cols-3 gap-2">
-                          {day.slots.map((slot) => (
-                            <Button
-                              key={slot}
-                              variant="outline"
-                              size="sm"
-                              className="hover:bg-emerald-50 hover:border-emerald-400"
-                            >
-                              {slot}
-                            </Button>
-                          ))}
+                          {day.slots.map((slot) => {
+                            const slotKey = `${day.date}-${slot}`;
+                            const isSelected = selectedTimeSlot === slotKey;
+                            return (
+                              <Button
+                                key={slot}
+                                variant={isSelected ? 'default' : 'outline'}
+                                size="sm"
+                                className={isSelected
+                                  ? 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'
+                                  : 'hover:bg-emerald-50 hover:border-emerald-400'}
+                                onClick={() => setSelectedTimeSlot(isSelected ? null : slotKey)}
+                              >
+                                {slot}
+                              </Button>
+                            );
+                          })}
                         </div>
                       </Card>
                     </motion.div>
                   ))}
 
                   <Button
-                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
+                    className={`w-full text-white ${selectedTimeSlot
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700'
+                      : 'bg-gray-300 cursor-not-allowed'}`}
                     size="lg"
+                    disabled={!selectedTimeSlot}
                     onClick={onBook}
                   >
-                    예약하기
+                    {selectedTimeSlot ? `예약하기 (${selectedTimeSlot.split('-').pop()})` : '시간을 선택해주세요'}
                   </Button>
                 </TabsContent>
               </Tabs>

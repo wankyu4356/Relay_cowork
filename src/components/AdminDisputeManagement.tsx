@@ -135,7 +135,7 @@ const mockDisputes: Dispute[] = [
     priority: 'medium',
     status: 'pending',
     title: '세션 품질 불만 신고',
-    description: '60분 세션을 예약했으나 러너가 30분만에 세션을 종료했습니다. 바통 피드백도 매우 피상적이었으며, 준비되지 않은 상태로 세션에 참여한 것으로 보입니다.',
+    description: '60분 세션을 예약했으나 러너가 30분만에 세션을 종료했습니다. 첨삭 피드백도 매우 피상적이었으며, 준비되지 않은 상태로 세션에 참여한 것으로 보입니다.',
     reporter: { name: '강유진', role: '멘티', avatar: '👩‍💼' },
     reported: { name: '윤태영', role: '러너', avatar: '👨‍💼' },
     sessionId: 'S-20250204-007',

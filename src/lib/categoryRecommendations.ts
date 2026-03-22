@@ -83,7 +83,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<Category, RecommendationConfig> = 
     alternativeTitle: '다른 학과 후보',
     nextSteps: [
       { title: '릴레이 러너 매칭', description: '추천 대학에 합격한 선배들과 연결되어 실제 경험을 들어보세요' },
-      { title: 'AI 바통 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
+      { title: 'AI 학업계획서 작성', description: 'AI의 도움을 받아 합격 가능성 높은 학업계획서를 작성하세요' },
       { title: '전략적 준비', description: '추천받은 정보를 바탕으로 체계적인 편입 준비를 시작하세요' },
     ],
     recommendations: [

@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react';
 import { logger } from '../utils/logger';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { 
-  ArrowLeft, 
-  Edit, 
-  Trash2, 
-  Download, 
-  Users, 
-  Plus, 
+  ArrowLeft,
+  Edit,
+  Trash2,
+  Download,
+  Users,
+  Plus,
   Sparkles,
   FileText,
   Calendar,
   Eye,
   Copy,
   Share2,
-  MoreVertical
+  MoreVertical,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { AIData, Screen } from '../App';
@@ -74,6 +75,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   const [drafts, setDrafts] = useState<Draft[]>(mockDrafts);
   const [selectedDraft, setSelectedDraft] = useState<string | null>(null);
   const [loadingDrafts, setLoadingDrafts] = useState(true);
+  const [showCreditInfoModal, setShowCreditInfoModal] = useState(false);
 
   // Load drafts from server on mount
   useEffect(() => {
@@ -110,9 +112,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   }, []);
 
   const handleDelete = async (draftId: string) => {
-    if (confirm('정말로 이 바통 초안을 삭제하시겠습니까?')) {
+    if (confirm('정말로 이 AI 초안을 삭제하시겠습니까?')) {
       setDrafts(prev => prev.filter(d => d.id !== draftId));
-      toast.success('바통 초안이 삭제되었습니다');
+      toast.success('AI 초안이 삭제되었습니다');
       // Also delete from server
       try {
         await apiClient.deleteDraft(draftId);
@@ -123,7 +125,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   };
 
   const handleDownloadPDF = (draft: Draft) => {
-    toast.success(`${draft.university} ${draft.major} 바통 초안 PDF 다운로드 시작`);
+    toast.success(`${draft.university} ${draft.major} AI 초안 PDF 다운로드 시작`);
     // In real app, this would trigger PDF generation and download
   };
 
@@ -137,7 +139,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
       hasSession: false,
     };
     setDrafts(prev => [newDraft, ...prev]);
-    toast.success('바통 초안이 복제되었습니다');
+    toast.success('AI 초안이 복제되었습니다');
   };
 
   const handleShare = (draft: Draft) => {
@@ -177,9 +179,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
             </motion.div>
             <div className="flex-1">
               <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                내 바통 초안
+                내 AI 초안
               </h1>
-              <p className="text-gray-600 mt-1">AI로 생성한 바통 초안을 관리하세요</p>
+              <p className="text-gray-600 mt-1">AI로 생성한 AI 초안을 관리하세요</p>
             </div>
             <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 px-4 py-2 shadow-lg">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -208,10 +210,10 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Sparkles className="w-8 h-8 text-white" />
-                    <h2 className="text-2xl font-bold text-white">새 바통 초안 만들기</h2>
+                    <h2 className="text-2xl font-bold text-white">새 AI 초안 만들기</h2>
                   </div>
                   <p className="text-white/90 mb-4">
-                    AI가 5분 만에 바통 초안을 만들어드립니다
+                    AI가 5분 만에 AI 초안을 만들어드립니다
                   </p>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
@@ -249,7 +251,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                       >
                         크레딧 구매
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="outline" onClick={() => setShowCreditInfoModal(true)}>
                         크레딧 받는 방법
                       </Button>
                     </div>
@@ -263,7 +265,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           <div>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <FileText className="w-5 h-5 text-violet-600" />
-              내 바통 초안 ({drafts.length})
+              내 AI 초안 ({drafts.length})
             </h2>
 
             {drafts.length === 0 ? (
@@ -271,16 +273,16 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText className="w-10 h-10 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">아직 바통 초안이 없어요</h3>
+                <h3 className="text-xl font-semibold mb-2">아직 AI 초안이 없어요</h3>
                 <p className="text-gray-600 mb-6">
-                  AI가 맞춤형 바통 초안을 만들어드립니다
+                  AI가 맞춤형 AI 초안을 만들어드립니다
                 </p>
                 <Button 
                   onClick={() => onNavigate?.('ai-experience')}
                   className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  첫 바통 초안 만들기
+                  첫 AI 초안 만들기
                 </Button>
               </Card>
             ) : (
@@ -461,16 +463,16 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           <Card className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200">
             <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-600" />
-              💡 바통 작성 팁
+              💡 작성 팁
             </h3>
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>AI 바통 초안을 받은 후 러너와 함께 첨삭하면 합격률이 2배 높아집니다</span>
+                <span>AI 초안을 받은 후 러너와 함께 첨삭하면 합격률이 2배 높아집니다</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>
-                <span>여러 학교의 바통 초안을 작성하고 비교해보세요</span>
+                <span>여러 학교의 AI 초안을 작성하고 비교해보세요</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">•</span>

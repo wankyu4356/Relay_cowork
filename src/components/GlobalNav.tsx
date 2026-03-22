@@ -265,7 +265,7 @@ export function GlobalNav({
               {currentRole === 'mentee' && (
                 <NavItem
                   icon={Sparkles}
-                  label="AI 바통"
+                  label="AI 초안"
                   active={currentScreen === 'ai-experience' || currentScreen === 'ai-management'}
                   onClick={() => onNavigate('ai-management')}
                   badge={2}
@@ -322,7 +322,7 @@ export function GlobalNav({
                   </div>
                   <div className="flex-1 text-left">
                     <div className="text-sm font-semibold">
-                      {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
+                      {currentRole === 'mentee' ? '경험 넘기기' : '경험 받기'}
                     </div>
                     <div className="text-xs text-gray-500">
                       {currentRole === 'mentee' ? '러너로 전환' : '멘티로 전환'}
@@ -366,7 +366,7 @@ export function GlobalNav({
           />
           <MobileNavItem
             icon={Sparkles}
-            label="AI 바통"
+            label="AI 초안"
             active={currentScreen === 'ai-experience' || currentScreen === 'ai-management'}
             onClick={() => onNavigate('ai-management')}
             badge={2}
@@ -521,7 +521,7 @@ export function GlobalNav({
                     </div>
                     <div className="flex-1 text-left">
                       <div className="text-sm font-semibold">
-                        {currentRole === 'mentee' ? '바통 넘기기' : '바통 받기'}
+                        {currentRole === 'mentee' ? '경험 넘기기' : '경험 받기'}
                       </div>
                       <div className="text-xs text-gray-500">
                         {currentRole === 'mentee' ? '러너로 전환' : '멘티로 전환'}

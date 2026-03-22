@@ -61,7 +61,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
       } else {
         clearInterval(typingInterval);
         setLoading(false);
-        toast.success('바통 초안이 완료되었습니다! ✨');
+        toast.success('AI 초안이 완료되었습니다! ✨');
       }
     }, 8);
 
@@ -88,7 +88,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         storyline,
         aiData,
       });
-      toast.success('바통 초안이 서버에 저장되었습니다!');
+      toast.success('AI 초안이 서버에 저장되었습니다!');
     } catch (e) {
       logger.error('Draft save error:', e);
       toast.success('저장되었습니다 (로컬)');
@@ -105,7 +105,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">✨ AI 바통 작성 초안</h1>
+                <h1 className="text-2xl font-bold">✨ AI 초안 작성</h1>
                 <p className="text-gray-600 mt-1">
                   {aiData.university} {aiData.major} · 스토리라인 {storyline.id}
                 </p>
@@ -116,7 +116,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 {wordCount} / {aiData.wordCount}자
               </Badge>
               <Button variant="outline" onClick={onManage}>
-                내 바통 관리
+                내 초안 관리
               </Button>
             </div>
           </div>
@@ -133,10 +133,10 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                   <Loader2 className="w-6 h-6 text-violet-600 animate-spin" />
                   <div>
                     <div className="font-semibold text-lg mb-1">
-                      릴레이 AI가 바통 초안을 생성하고 있습니다...
+                      릴레이 AI가 AI 초안을 생성하고 있습니다...
                     </div>
                     <div className="text-gray-600">
-                      선택하신 스토리라인으로 바통 초안을 작성 중입니다
+                      선택하신 스토리라인으로 AI 초안을 작성 중입니다
                     </div>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                   setWordCount(e.target.value.length);
                 }}
                 className="min-h-[700px] font-serif text-base leading-relaxed border-0 focus-visible:ring-0 p-0"
-                placeholder="릴레이 AI가 바통 초안을 생성하고 있습니다..."
+                placeholder="릴레이 AI가 AI 초안을 생성하고 있습니다..."
               />
             </Card>
 
@@ -253,7 +253,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                     이 학교 합격생<br />러너 3명 추천
                   </h3>
                   <p className="text-gray-600 mb-5 text-sm">
-                    AI 바통 초안을 실제 합격생이<br />
+                    AI 초안을 실제 합격생이<br />
                     1:1로 완성해드려요
                   </p>
                   <Button 
