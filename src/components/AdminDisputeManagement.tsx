@@ -622,7 +622,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                       <Flag className="w-3 h-3" /> 신고자
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-lg">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-lg">
                         {selectedDispute.reporter.avatar}
                       </div>
                       <div>

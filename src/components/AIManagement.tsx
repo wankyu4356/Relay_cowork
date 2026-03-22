@@ -482,6 +482,88 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           </Card>
         </div>
       </div>
+
+      {/* Credit Info Modal */}
+      <AnimatePresence>
+        {showCreditInfoModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowCreditInfoModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">크레딧 받는 방법</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowCreditInfoModal(false)}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <div className="space-y-4">
+                <Card className="p-4 bg-violet-50 border-violet-200">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">📝</span>
+                    <div>
+                      <div className="font-semibold mb-1">결과 보고 작성</div>
+                      <div className="text-sm text-gray-600">
+                        릴레이 세션 후 결과 보고를 작성하면 <span className="font-semibold text-violet-600">1 크레딧</span>을 받을 수 있어요
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-4 bg-blue-50 border-blue-200">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">👥</span>
+                    <div>
+                      <div className="font-semibold mb-1">친구 초대</div>
+                      <div className="text-sm text-gray-600">
+                        친구를 초대하고 가입하면 <span className="font-semibold text-blue-600">2 크레딧</span>을 받을 수 있어요
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-4 bg-green-50 border-green-200">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🎉</span>
+                    <div>
+                      <div className="font-semibold mb-1">프로모션 이벤트</div>
+                      <div className="text-sm text-gray-600">
+                        시즌별 이벤트에 참여하면 추가 크레딧을 받을 수 있어요
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-4 bg-amber-50 border-amber-200">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">⭐</span>
+                    <div>
+                      <div className="font-semibold mb-1">리뷰 작성</div>
+                      <div className="text-sm text-gray-600">
+                        러너 리뷰를 작성하면 <span className="font-semibold text-amber-600">1 크레딧</span>을 받을 수 있어요
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+              <div className="mt-6">
+                <Button
+                  className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+                  onClick={() => setShowCreditInfoModal(false)}
+                >
+                  확인
+                </Button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
