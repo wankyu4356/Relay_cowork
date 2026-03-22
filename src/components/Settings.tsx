@@ -128,7 +128,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                     {isMentorActive && (
                       <Badge className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0">
                         <Award className="w-3 h-3 mr-1" />
-                        멘토
+                        러너
                       </Badge>
                     )}
                   </div>

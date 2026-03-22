@@ -408,7 +408,7 @@ export function UnifiedHome({
                       <Users className="w-7 h-7 text-indigo-600" />
                     </div>
                     <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : mentorNetworkCount}</div>
-                    <div className="text-sm text-gray-600">내 인맥 멘토</div>
+                    <div className="text-sm text-gray-600">내 인맥 러너</div>
                   </Card>
                 </motion.div>
 
@@ -426,7 +426,7 @@ export function UnifiedHome({
               {/* Recommended Mentors */}
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold">⭐ 추천 멘토</h2>
+                  <h2 className="text-2xl font-bold">⭐ 추천 러너</h2>
                   <Button 
                     variant="ghost"
                     onClick={() => onNavigate('mentor-search')}
@@ -448,9 +448,9 @@ export function UnifiedHome({
 
                     const getBadgeName = (badge: string) => {
                       switch (badge) {
-                        case 'gold': return '골드 멘토';
-                        case 'silver': return '실버 멘토';
-                        case 'bronze': return '브론즈 멘토';
+                        case 'gold': return '골드 러너';
+                        case 'silver': return '실버 러너';
+                        case 'bronze': return '브론즈 러너';
                         default: return '';
                       }
                     };
@@ -588,7 +588,7 @@ export function UnifiedHome({
                         <Award className="w-10 h-10 text-white" />
                       </div>
                       <h2 className="text-3xl font-bold text-white mb-4">
-                        멘토가 되어보세요
+                        러너가 되어보세요
                       </h2>
                       <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
                         합격 경험을 공유하고 월 30~100만 원의 부수입을 얻으세요.<br />
@@ -616,7 +616,7 @@ export function UnifiedHome({
                         className="bg-white text-purple-600 hover:bg-gray-50"
                         onClick={handleStartMentorVerification}
                       >
-                        멘토 등록하기
+                        러너 등록하기
                         <ArrowRight className="w-5 h-5 ml-2" />
                       </Button>
                       <p className="text-white/70 text-sm mt-4">
@@ -696,7 +696,7 @@ export function UnifiedHome({
                   {/* Recent Requests */}
                   <Card className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold">최근 멘토링 요청</h3>
+                      <h3 className="font-semibold">최근 릴레이 요청</h3>
                       <Button variant="ghost" size="sm">전체보기</Button>
                     </div>
                     <div className="space-y-3">
@@ -879,7 +879,7 @@ export function UnifiedHome({
                     }}
                   >
                     <Search className="w-4 h-4 mr-2" />
-                    멘토 찾기
+                    러너 찾기
                   </Button>
                   <Button
                     variant="outline"
