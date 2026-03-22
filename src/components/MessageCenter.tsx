@@ -36,7 +36,7 @@ interface Conversation {
   userId: string;
   userName: string;
   userAvatar: string;
-  userRole: '멘토' | '멘티';
+  userRole: '러너' | '멘티';
   lastMessage: string;
   lastMessageTime: string;
   unreadCount: number;
@@ -49,7 +49,7 @@ const mockConversations: Conversation[] = [
     userId: '1',
     userName: '김서연',
     userAvatar: '👩‍🎓',
-    userRole: '멘토',
+    userRole: '러너',
     lastMessage: '학업계획서 초안 검토 완료했습니다.',
     lastMessageTime: '2분 전',
     unreadCount: 2,
@@ -60,7 +60,7 @@ const mockConversations: Conversation[] = [
     userId: '2',
     userName: '이준호',
     userAvatar: '👨‍🎓',
-    userRole: '멘토',
+    userRole: '러너',
     lastMessage: '다음 세션 일정 조율하고 싶어요',
     lastMessageTime: '1시간 전',
     unreadCount: 0,
@@ -71,7 +71,7 @@ const mockConversations: Conversation[] = [
     userId: '3',
     userName: '박지민',
     userAvatar: '👩‍💼',
-    userRole: '멘토',
+    userRole: '러너',
     lastMessage: '면접 준비 자료 보내드렸습니다',
     lastMessageTime: '3시간 전',
     unreadCount: 1,
@@ -155,7 +155,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
           userId: c.userId || c.id,
           userName: c.userName || c.name || '사용자',
           userAvatar: c.userAvatar || c.avatar || '👤',
-          userRole: (c.userRole === '멘토' || c.userRole === '멘티' ? c.userRole : '멘토') as '멘토' | '멘티',
+          userRole: (c.userRole === '러너' || c.userRole === '멘티' ? c.userRole : '러너') as '러너' | '멘티',
           lastMessage: c.lastMessage || '',
           lastMessageTime: c.lastMessageTime || '',
           unreadCount: c.unreadCount || 0,
