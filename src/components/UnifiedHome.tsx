@@ -26,7 +26,13 @@ import {
   GraduationCap,
   Target,
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  Compass,
+  FileEdit,
+  Wand2,
+  UserCheck,
+  Zap,
+  CheckCircle
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
 import type { Category } from './GlobalNav';
@@ -250,7 +256,7 @@ export function UnifiedHome({
                 />
               </div>
 
-              {/* AI Recommendation CTA - 최상단으로 이동 */}
+              {/* ═══ Card 1: AI 맞춤 컨설팅 - 프리미엄 다크 스타일 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -258,41 +264,61 @@ export function UnifiedHome({
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-recommendation')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 -translate-x-1/2"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-y-1/2 translate-x-1/2"></div>
-                  </div>
-                  <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Award className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">{content.aiConsultingTitle} <span className="text-lg">(무료)</span></h2>
-                        </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.aiConsultingDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.ctaBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
+                <Card className="relative overflow-hidden border-0 shadow-2xl rounded-3xl">
+                  {/* 다크 그라데이션 배경 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900"></div>
+                  {/* 도트 그리드 패턴 */}
+                  <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                  {/* 글로우 효과 */}
+                  <div className="absolute top-1/2 right-12 -translate-y-1/2 w-40 h-40 bg-purple-400/30 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl"></div>
+
+                  <div className="relative p-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+                    {/* 텍스트 영역 */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge className="bg-amber-400/90 text-amber-950 border-0 text-xs font-bold px-3 py-1">무료</Badge>
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 leading-tight">
+                        {content.aiConsultingTitle}
+                      </h2>
+                      <p className="text-white/70 text-base mb-5 leading-relaxed">
+                        {content.aiConsultingDescription}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {content.ctaBadges.map((badge) => (
+                          <span key={badge} className="px-3 py-1.5 text-xs font-medium text-white/90 border border-white/25 rounded-full backdrop-blur-sm bg-white/5">
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                      <Button
+                        size="lg"
+                        className="bg-white text-indigo-700 hover:bg-indigo-50 font-bold shadow-lg shadow-indigo-900/30 rounded-xl"
+                      >
+                        AI 추천 받기
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </div>
+
+                    {/* 오른쪽 아이콘 데코 */}
+                    <div className="hidden md:flex flex-col items-center justify-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-3xl blur-xl opacity-40 scale-110"></div>
+                        <div className="relative w-28 h-28 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 flex items-center justify-center">
+                          <Compass className="w-14 h-14 text-white" />
                         </div>
                       </div>
+                      <div className="flex items-center gap-1.5 mt-3">
+                        <Target className="w-4 h-4 text-purple-300" />
+                        <span className="text-purple-300 text-xs font-medium">맞춤 분석</span>
+                      </div>
                     </div>
-                    <Button 
-                      size="lg"
-                      className="bg-white text-indigo-600 hover:bg-indigo-50 w-full md:w-auto"
-                    >
-                      AI 추천 받기
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* AI CTA - AI 학업계획서 */}
+              {/* ═══ Card 2: AI 학업계획서 - 스텝 프로세스 스타일 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -301,45 +327,80 @@ export function UnifiedHome({
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-experience')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-500 to-blue-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
-                  </div>
+                <Card className="relative overflow-hidden border-0 shadow-xl rounded-3xl">
+                  {/* 밝은 그라데이션 배경 */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500"></div>
+                  {/* 점선 패턴 장식 */}
+                  <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 16px), repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 16px)', backgroundSize: '16px 16px' }}></div>
+                  {/* 배경 장식 */}
+                  <div className="absolute -top-8 -right-8 w-36 h-36 border-[3px] border-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-12 -right-4 w-52 h-52 border-[3px] border-white/10 rounded-full"></div>
+
                   <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Sparkles className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">{content.aiToolTitle}</h2>
-                        </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.aiToolDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.aiToolBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
-                        </div>
+                    {/* 상단 헤더 */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <Wand2 className="w-5 h-5 text-white" />
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-white">{content.aiToolTitle}</h2>
+                    </div>
+                    <p className="text-white/80 text-base mb-6 max-w-lg">
+                      {content.aiToolDescription}
+                    </p>
+
+                    {/* 스텝 프로세스 인디케이터 */}
+                    <div className="flex items-center gap-0 mb-6 max-w-md">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-sky-600 font-bold text-sm shadow-md">1</div>
+                        <span className="text-white text-xs font-medium hidden sm:inline">경험 입력</span>
+                      </div>
+                      <div className="flex-1 h-0.5 bg-white/30 mx-2"></div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm border border-white/40">2</div>
+                        <span className="text-white/80 text-xs font-medium hidden sm:inline">스토리라인</span>
+                      </div>
+                      <div className="flex-1 h-0.5 bg-white/30 mx-2"></div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm border border-white/40">3</div>
+                        <span className="text-white/80 text-xs font-medium hidden sm:inline">초안 완성</span>
                       </div>
                     </div>
-                    <Button 
-                      size="lg"
-                      className="bg-white text-sky-600 hover:bg-gray-50 w-full md:w-auto"
-                    >
-                      지금 시작하기
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                    <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
-                      <Sparkles className="w-4 h-4" />
-                      <span>남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
+
+                    {/* 피쳐 리스트 */}
+                    <div className="flex flex-wrap gap-4 mb-6">
+                      <div className="flex items-center gap-2 text-white">
+                        <Zap className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">5분 소요</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-white">
+                        <Sparkles className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">무료 1회</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-white">
+                        <FileEdit className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">맞춤 스토리라인</span>
+                      </div>
+                    </div>
+
+                    {/* 하단: 버튼 + 크레딧 */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <Button
+                        size="lg"
+                        className="bg-white text-sky-600 hover:bg-sky-50 font-bold shadow-lg shadow-sky-600/30 rounded-xl"
+                      >
+                        지금 시작하기
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                      <div className="flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm rounded-xl border border-white/20">
+                        <Sparkles className="w-4 h-4 text-yellow-300" />
+                        <span className="text-white text-sm font-medium">남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
+                      </div>
                     </div>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* 멘토 찾기 CTA 추가 */}
+              {/* ═══ Card 3: 러너 찾기 - 소셜 커넥트 스타일 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -348,33 +409,63 @@ export function UnifiedHome({
                 className="cursor-pointer mb-8"
                 onClick={() => onNavigate('mentor-search')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                <Card className="relative overflow-hidden border-0 shadow-xl rounded-3xl">
+                  {/* 에메랄드 그라데이션 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600"></div>
+                  {/* 연결선 네트워크 장식 */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <svg className="absolute top-0 right-0 w-full h-full opacity-[0.08]" viewBox="0 0 400 200" fill="none">
+                      <circle cx="320" cy="40" r="4" fill="white"/>
+                      <circle cx="360" cy="80" r="3" fill="white"/>
+                      <circle cx="290" cy="90" r="5" fill="white"/>
+                      <circle cx="350" cy="140" r="3" fill="white"/>
+                      <circle cx="280" cy="160" r="4" fill="white"/>
+                      <line x1="320" y1="40" x2="360" y2="80" stroke="white" strokeWidth="1"/>
+                      <line x1="320" y1="40" x2="290" y2="90" stroke="white" strokeWidth="1"/>
+                      <line x1="360" y1="80" x2="350" y2="140" stroke="white" strokeWidth="1"/>
+                      <line x1="290" y1="90" x2="280" y2="160" stroke="white" strokeWidth="1"/>
+                      <line x1="290" y1="90" x2="350" y2="140" stroke="white" strokeWidth="1"/>
+                    </svg>
                   </div>
+
                   <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Users className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">나에게 맞는 러너 찾기</h2>
-                        </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.mentorDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.mentorBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
-                        </div>
+                    {/* 상단: 스택 아바타 + 인원 수 */}
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="flex -space-x-3">
+                        <div className="w-11 h-11 bg-white/90 rounded-full flex items-center justify-center text-lg border-2 border-emerald-400 shadow-md">👩‍🎓</div>
+                        <div className="w-11 h-11 bg-white/90 rounded-full flex items-center justify-center text-lg border-2 border-emerald-400 shadow-md">👨‍🎓</div>
+                        <div className="w-11 h-11 bg-white/90 rounded-full flex items-center justify-center text-lg border-2 border-emerald-400 shadow-md">👩‍💼</div>
+                        <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white/30 shadow-md">+52</div>
+                      </div>
+                      <div>
+                        <div className="text-white font-bold text-lg">검증된 러너 55명</div>
+                        <div className="text-white/70 text-xs">지금 바로 매칭 가능</div>
                       </div>
                     </div>
-                    <Button 
+
+                    {/* 타이틀 */}
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">나에게 맞는 러너 찾기</h2>
+                    <p className="text-white/75 text-base mb-5 max-w-lg">
+                      {content.mentorDescription}
+                    </p>
+
+                    {/* 체크리스트 형식 배지 */}
+                    <div className="space-y-2.5 mb-6">
+                      {content.mentorBadges.map((badge) => (
+                        <div key={badge} className="flex items-center gap-2.5">
+                          <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <CheckCircle className="w-3.5 h-3.5 text-white" />
+                          </div>
+                          <span className="text-white/90 text-sm font-medium">{badge}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Button
                       size="lg"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 w-full md:w-auto"
+                      className="bg-white text-emerald-700 hover:bg-emerald-50 font-bold shadow-lg shadow-emerald-800/30 rounded-xl"
                     >
+                      <UserCheck className="w-5 h-5 mr-2" />
                       러너 찾아보기
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
