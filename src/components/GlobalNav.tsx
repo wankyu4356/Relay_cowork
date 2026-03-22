@@ -42,7 +42,7 @@ export type Category = 'transfer' | 'admission' | 'career' | 'certification' | '
 interface CategoryConfig {
   id: Category;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   color: string;
   bgColor: string;
   description: string;
@@ -521,7 +521,7 @@ export function GlobalNav({
 
 // Desktop Nav Item
 interface NavItemProps {
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   active?: boolean;
   onClick: () => void;

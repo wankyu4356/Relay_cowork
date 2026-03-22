@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -95,7 +96,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
           setReviews(data.reviews);
         }
       } catch (err) {
-        console.log('Failed to fetch reviews from API, using mock fallback:', err);
+        logger.log('Failed to fetch reviews from API, using mock fallback:', err);
         // Keep mockReviewsFallback (already set as default)
       } finally {
         if (!cancelled) setReviewsLoading(false);

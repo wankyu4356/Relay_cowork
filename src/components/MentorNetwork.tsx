@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -207,7 +208,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             <RelayChainVisualization 
               currentUserName="러너 #2847"
               onNodeClick={(node) => {
-                console.log('Node clicked:', node);
+                logger.log('Node clicked:', node);
               }}
               onStartMentoring={onStartMentoring}
             />

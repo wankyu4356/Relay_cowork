@@ -12,6 +12,7 @@ import { ArrowLeft, Calendar as CalendarIcon, Clock, CreditCard, FileText, Alert
 import { toast } from 'sonner';
 import type { Mentor } from '../App';
 import * as api from './api';
+import { logger } from '../utils/logger';
 
 interface SessionBookingProps {
   onBack: () => void;
@@ -70,7 +71,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
         topic: request,
       });
     } catch (e) {
-      console.log('Session booking to server failed:', e);
+      logger.log('Session booking to server failed:', e);
     }
 
     toast.success('예약이 완료되었습니다! 🎉');

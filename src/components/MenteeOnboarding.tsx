@@ -9,6 +9,7 @@ import { Progress } from './ui/progress';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
 import type { Category } from './GlobalNav';
 import { CATEGORY_CONTENT } from '../lib/categoryContent';
 
@@ -123,7 +124,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
         });
         toast.success('프로필이 저장되었습니다! 🎉');
       } catch (e) {
-        console.log('Profile save during onboarding failed (guest mode?):', e);
+        logger.log('Profile save during onboarding failed (guest mode?):', e);
         toast.success('환영합니다! 🎉');
       } finally {
         setSaving(false);

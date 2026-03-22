@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import * as api from '../components/api';
 import { fetchWithFallback } from './useDataService';
+import type { Storyline, AIData } from '../App';
 
 export interface Draft {
   id: string;
   university: string;
   major: string;
   content: string;
-  storyline?: any;
-  ai_data?: any;
+  storyline?: Storyline;
+  ai_data?: AIData;
   word_count: number;
   version: number;
   status: string;

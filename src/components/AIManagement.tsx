@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -100,7 +101,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           setCredits(creditsResult.balance);
         }
       } catch (e) {
-        console.log('Failed to load drafts from server, using mock data:', e);
+        logger.log('Failed to load drafts from server, using mock data:', e);
       } finally {
         setLoadingDrafts(false);
       }
@@ -116,7 +117,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
       try {
         await apiClient.deleteDraft(draftId);
       } catch (e) {
-        console.log('Server draft delete failed:', e);
+        logger.log('Server draft delete failed:', e);
       }
     }
   };

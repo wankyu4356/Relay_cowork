@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
 import type { AuthSession, ProfileData } from '../App';
 
 interface AuthScreenProps {
@@ -54,7 +55,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         onAuthSuccess(data.session, profile);
       }
     } catch (err: any) {
-      console.error('Auth error:', err);
+      logger.error('Auth error:', err);
       toast.error(err.message || '인증에 실패했습니다.');
     } finally {
       setLoading(false);

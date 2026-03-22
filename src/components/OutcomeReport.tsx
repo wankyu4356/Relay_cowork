@@ -7,6 +7,7 @@ import { Textarea } from './ui/textarea';
 import { PartyPopper, Frown, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
 import type { Mentor } from '../App';
 
 interface OutcomeReportProps {
@@ -48,7 +49,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
         toast.success('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
       }
     } catch (err) {
-      console.warn('API outcome submission failed, proceeding with local callback:', err);
+      logger.warn('API outcome submission failed, proceeding with local callback:', err);
       // Fallback: still call onSubmit so the UI updates
       onSubmit(outcome, detail);
 

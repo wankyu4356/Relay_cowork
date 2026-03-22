@@ -8,6 +8,7 @@ import { ArrowLeft, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Mentor } from '../App';
 import * as api from './api';
+import { logger } from '../utils/logger';
 
 interface ReviewWriteProps {
   onBack: () => void;
@@ -53,7 +54,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
         tags: selectedTags,
       });
     } catch (e) {
-      console.log('Review save to server failed:', e);
+      logger.log('Review save to server failed:', e);
     }
 
     toast.success('리뷰가 등록되었습니다! 🎉');

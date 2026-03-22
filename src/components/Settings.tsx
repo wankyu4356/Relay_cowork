@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
@@ -52,7 +53,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
         toast.success('로그아웃 되었습니다');
         // onAuthStateChange listener in App.tsx will handle navigation to auth screen
       } catch (e) {
-        console.error('Logout error:', e);
+        logger.error('Logout error:', e);
         toast.error('로그아웃 중 오류가 발생했습니다');
       }
     }
@@ -64,7 +65,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
       await api.updateProfile({ name: profileName, bio: profileBio, email: profileEmail });
       toast.success('프로필이 서버에 저장되었습니다');
     } catch (e) {
-      console.error('Profile save error:', e);
+      logger.error('Profile save error:', e);
       toast.success('프로필이 저장되었습니다');
     }
   };
@@ -81,7 +82,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
       });
       toast.success('알림 설정이 서버에 저장되었습니다');
     } catch (e) {
-      console.error('Notification settings save error:', e);
+      logger.error('Notification settings save error:', e);
       toast.success('알림 설정이 저장되었습니다');
     }
   };

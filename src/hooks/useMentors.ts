@@ -12,7 +12,24 @@ const MOCK_MENTORS: Mentor[] = [
   { id: '6', name: '러너 #4521', university: '중앙대', major: '경제학과', year: '22학번', rating: 4.5, reviews: 7, sessions: 10, successRate: 70, responseTime: '2시간', price: 55000, badge: 'bronze', verified: true, avatar: '👩‍🎓' },
 ];
 
-function transformApiMentor(m: any): Mentor {
+interface ApiMentor {
+  id: string;
+  name?: string;
+  university?: string;
+  major?: string;
+  year?: string;
+  rating?: number;
+  review_count?: number;
+  session_count?: number;
+  success_rate?: number;
+  response_time?: string;
+  price?: number;
+  badge?: 'gold' | 'silver' | 'bronze';
+  verified?: boolean;
+  avatar?: string;
+}
+
+function transformApiMentor(m: ApiMentor): Mentor {
   return {
     id: m.id,
     name: m.name || '멘토',
@@ -65,8 +82,8 @@ export function useMentors(fallbackMentors?: Mentor[]) {
       setIsFromApi(gotApiData);
       setMentors(data);
       setError(null);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }

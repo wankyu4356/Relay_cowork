@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import * as api from './api';
+import { logger } from '../utils/logger';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
@@ -125,7 +126,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
           expertise: ['학업계획서', '편입 상담'],
         });
       } catch (e) {
-        console.log('Mentor registration failed (may be guest):', e);
+        logger.log('Mentor registration failed (may be guest):', e);
       }
       
       setTimeout(() => {

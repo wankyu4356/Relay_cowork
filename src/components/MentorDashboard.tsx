@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -435,7 +436,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
             </div>
             <RelayChainVisualization 
               currentUserName="러너 #2847"
-              onNodeClick={(node) => console.log('Node clicked:', node)}
+              onNodeClick={(node) => logger.log('Node clicked:', node)}
             />
           </motion.div>
         </div>

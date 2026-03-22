@@ -4,6 +4,7 @@ import { AlertCircle, Wifi, WifiOff, RefreshCw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { getSupabase } from './api';
+import { logger } from '../utils/logger';
 
 interface SupabaseHealthCheckProps {
   onHealthy?: () => void;
@@ -19,7 +20,7 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
     setErrorMessage('');
 
     try {
-      console.log('Checking Supabase connection...');
+      logger.log('Checking Supabase connection...');
       const sb = getSupabase();
       
       // Try to get session (this will test the connection)
@@ -29,11 +30,11 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
         throw new Error('Supabase 서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
       }
       
-      console.log('Supabase connection successful');
+      logger.log('Supabase connection successful');
       setStatus('healthy');
       onHealthy?.();
     } catch (err: any) {
-      console.error('Supabase health check failed:', err);
+      logger.error('Supabase health check failed:', err);
       setStatus('error');
       setErrorMessage(err.message || '알 수 없는 오류가 발생했습니다.');
     }

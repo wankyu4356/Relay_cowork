@@ -8,6 +8,7 @@ import { ArrowLeft, Sparkles, Download, RefreshCw, Users, Loader2, Save } from '
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
+import { logger } from '../utils/logger';
 
 interface AIDraftEditorProps {
   onBack: () => void;
@@ -89,7 +90,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
       });
       toast.success('초안이 서버에 저장되었습니다!');
     } catch (e) {
-      console.error('Draft save error:', e);
+      logger.error('Draft save error:', e);
       toast.success('저장되었습니다 (로컬)');
     }
   };
