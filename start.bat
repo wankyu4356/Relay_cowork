@@ -65,27 +65,34 @@ goto INSTALL
 echo       Already inside project folder.
 echo       Pulling latest changes from GitHub...
 
+set "TARGET_BRANCH=claude/analyze-codebase-planning-YxlgY"
+
 :: Stash any local changes to prevent pull conflicts
 git stash --include-untracked >nul 2>&1
 
 :: Fetch all remote branches
 git fetch --all >nul 2>&1
 
-:: Get current branch
+:: Checkout target branch
+git checkout %TARGET_BRANCH% >nul 2>&1
+if %errorlevel% neq 0 (
+    git checkout -b %TARGET_BRANCH% origin/%TARGET_BRANCH% >nul 2>&1
+)
+
 for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
 echo       Current branch: %CURRENT_BRANCH%
 
 :: Reset to match remote (force update)
-git reset --hard origin/%CURRENT_BRANCH% >nul 2>&1
+git reset --hard origin/%TARGET_BRANCH% >nul 2>&1
 if %errorlevel% neq 0 (
     :: If reset fails, try normal pull
-    git pull origin %CURRENT_BRANCH%
+    git pull origin %TARGET_BRANCH%
     if %errorlevel% neq 0 (
         color 0E
         echo       [WARN] git pull failed. Running with local version.
     )
 ) else (
-    echo       Updated to latest version from origin/%CURRENT_BRANCH%
+    echo       Updated to latest version from origin/%TARGET_BRANCH%
 )
 
 :: Restore stashed changes (if any)
@@ -97,26 +104,33 @@ goto INSTALL
 echo       Updating existing repository...
 cd %REPO_DIR%
 
+set "TARGET_BRANCH=claude/analyze-codebase-planning-YxlgY"
+
 :: Stash any local changes to prevent pull conflicts
 git stash --include-untracked >nul 2>&1
 
 :: Fetch all remote branches
 git fetch --all >nul 2>&1
 
-:: Get current branch
+:: Checkout target branch
+git checkout %TARGET_BRANCH% >nul 2>&1
+if %errorlevel% neq 0 (
+    git checkout -b %TARGET_BRANCH% origin/%TARGET_BRANCH% >nul 2>&1
+)
+
 for /f "tokens=*" %%b in ('git rev-parse --abbrev-ref HEAD') do set "CURRENT_BRANCH=%%b"
 echo       Current branch: %CURRENT_BRANCH%
 
 :: Reset to match remote (force update)
-git reset --hard origin/%CURRENT_BRANCH% >nul 2>&1
+git reset --hard origin/%TARGET_BRANCH% >nul 2>&1
 if %errorlevel% neq 0 (
-    git pull origin %CURRENT_BRANCH%
+    git pull origin %TARGET_BRANCH%
     if %errorlevel% neq 0 (
         color 0E
         echo       [WARN] git pull failed. Running with local version.
     )
 ) else (
-    echo       Updated to latest version from origin/%CURRENT_BRANCH%
+    echo       Updated to latest version from origin/%TARGET_BRANCH%
 )
 
 :: Restore stashed changes (if any)

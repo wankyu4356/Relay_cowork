@@ -209,10 +209,10 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                     <Star className="w-4 h-4 mr-1" />
                     리뷰 작성
                   </Button>
-                  <Button 
+                  <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => toast.success('릴레이 기록을 확인합니다')}
+                    onClick={() => onSessionSelect(session)}
                   >
                     <FileText className="w-4 h-4 mr-1" />
                     기록 보기
@@ -224,7 +224,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             {/* Price Info */}
             <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-sm text-gray-600">결제 금액</span>
-              <span className="font-bold text-indigo-600">₩{(session.price / 1000).toFixed(0)}k</span>
+              <span className="font-bold text-indigo-600">{session.price.toLocaleString()}원</span>
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             >
               <Card className="p-4 text-center">
                 <div className="text-3xl font-bold text-green-600 mb-1">
-                  ₩{((completedSessions.reduce((sum, s) => sum + s.price, 0)) / 1000).toFixed(0)}k
+                  {completedSessions.reduce((sum, s) => sum + s.price, 0).toLocaleString()}원
                 </div>
                 <div className="text-sm text-gray-600">총 투자 금액</div>
               </Card>

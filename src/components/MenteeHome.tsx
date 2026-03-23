@@ -1,12 +1,13 @@
-import { motion } from 'motion/react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
-import { 
-  Sparkles, 
-  Search, 
-  Calendar, 
+import {
+  Sparkles,
+  Search,
+  Calendar,
   MessageSquare,
   Star,
   TrendingUp,
@@ -16,7 +17,8 @@ import {
   Settings as SettingsIcon,
   Home,
   FileText,
-  Network
+  Network,
+  X
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
 import { useMentors } from '../hooks/useMentors';
@@ -29,8 +31,11 @@ interface MenteeHomeProps {
 
 export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomeProps) {
   const { mentors: mockMentors } = useMentors();
+  const [showStatsModal, setShowStatsModal] = useState(false);
+  const [showSuccessStories, setShowSuccessStories] = useState(false);
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -40,6 +45,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -149,7 +155,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="p-6 text-center card-hover">
+              <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate('mentor-search')}>
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Users className="w-7 h-7 text-blue-600" />
                 </div>
@@ -159,7 +165,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <Card className="p-6 text-center card-hover">
+              <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => setShowStatsModal(true)}>
                 <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <TrendingUp className="w-7 h-7 text-green-600" />
                 </div>
@@ -227,11 +233,11 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div>
                         <div className="text-lg font-bold text-sky-600">
-                          ₩{(mentor.price / 1000).toFixed(0)}k
+                          {mentor.price.toLocaleString()}원
                         </div>
                         <div className="text-xs text-gray-500">60분 세션</div>
                       </div>
-                      <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white">
+                      <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white" onClick={() => onMentorSelect(mentor)}>
                         상세보기
                       </Button>
                     </div>
@@ -257,7 +263,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                   <p className="text-gray-700 mb-4">
                     릴레이를 통해 87명이 편입에 성공했어요
                   </p>
-                  <Button variant="outline" className="border-amber-300 hover:bg-amber-100">
+                  <Button variant="outline" className="border-amber-300 hover:bg-amber-100" onClick={() => setShowSuccessStories(true)}>
                     합격 후기 보기
                   </Button>
                 </div>
@@ -266,6 +272,115 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
           </motion.div>
         </div>
       </div>
+
+      {/* Stats Detail Modal */}
+      <AnimatePresence>
+        {showStatsModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowStatsModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">합격률 상세 통계</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowStatsModal(false)}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <div className="space-y-4">
+                <Card className="p-4 bg-green-50 border-green-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">전체 평균 합격률</span>
+                    <span className="text-2xl font-bold text-green-600">87%</span>
+                  </div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">상위 10개 대학 합격률</span>
+                    <span className="font-bold text-sky-600">82%</span>
+                  </div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">러너 세션 후 합격률</span>
+                    <span className="font-bold text-sky-600">91%</span>
+                  </div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">AI + 러너 병행 합격률</span>
+                    <span className="font-bold text-purple-600">94%</span>
+                  </div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">이번 달 합격자 수</span>
+                    <span className="font-bold text-amber-600">87명</span>
+                  </div>
+                </Card>
+              </div>
+              <p className="text-xs text-gray-400 mt-4 text-center">최근 6개월 기준 통계입니다</p>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Success Stories Modal */}
+      <AnimatePresence>
+        {showSuccessStories && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowSuccessStories(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-2xl shadow-2xl z-50 p-6 max-h-[80vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">합격 후기</h2>
+                <Button variant="ghost" size="icon" onClick={() => setShowSuccessStories(false)}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { name: '김OO', university: '연세대 경영학과', quote: '러너 선배의 첨삭 덕분에 학업계획서의 방향을 잡을 수 있었어요. 정말 감사합니다!' },
+                  { name: '이OO', university: '고려대 경제학과', quote: 'AI 초안으로 뼈대를 잡고, 러너와 함께 다듬으니 합격할 수 있었습니다.' },
+                  { name: '박OO', university: '서강대 컴퓨터공학과', quote: '면접 준비까지 도와주신 러너 덕분에 자신감 있게 면접에 임할 수 있었어요.' },
+                ].map((story, idx) => (
+                  <Card key={idx} className="p-5 bg-amber-50 border-amber-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge className="bg-amber-500 text-white border-0">{story.university}</Badge>
+                    </div>
+                    <p className="text-gray-700 mb-2">"{story.quote}"</p>
+                    <p className="text-sm text-gray-500 text-right">- {story.name}</p>
+                  </Card>
+                ))}
+              </div>
+              <div className="mt-4 text-center">
+                <Button onClick={() => { setShowSuccessStories(false); onNavigate('mentor-search'); }} className="bg-sky-500 hover:bg-sky-600 text-white">
+                  나도 시작하기
+                </Button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

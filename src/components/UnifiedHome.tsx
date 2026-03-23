@@ -26,7 +26,24 @@ import {
   GraduationCap,
   Target,
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  Compass,
+  FileEdit,
+  Wand2,
+  UserCheck,
+  Zap,
+  CheckCircle,
+  Briefcase,
+  MapPin,
+  PenTool,
+  FileText,
+  File,
+  ClipboardList,
+  Mic,
+  CalendarDays,
+  BookMarked,
+  Map,
+  Lightbulb,
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
 import type { Category } from './GlobalNav';
@@ -168,6 +185,7 @@ export function UnifiedHome({
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -177,6 +195,7 @@ export function UnifiedHome({
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -184,14 +203,30 @@ export function UnifiedHome({
     }
   };
 
+  // Icon maps for dynamic rendering
+  const consultingIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    Compass, Target, Briefcase, Award, MapPin,
+  };
+  const documentIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    FileEdit, PenTool, FileText, BookOpen, File,
+  };
+  const quickStatIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    BookOpen, Calendar, Users, TrendingUp, ClipboardList, BarChart3,
+    FileText, Target, Briefcase, Mic, CalendarDays, BookMarked,
+    Map, Lightbulb,
+  };
+
+  const ConsultingIcon = consultingIconMap[content.cardTheme.consultingIcon] || Compass;
+  const DocumentIcon = documentIconMap[content.cardTheme.documentIcon] || FileEdit;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
+    <div className={`min-h-screen bg-gradient-to-br ${content.theme.bgGradient} pb-20 md:pb-0`}>
       {/* Welcome Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
+              <h1 className={`text-3xl font-bold bg-gradient-to-r ${content.theme.headerGradient} bg-clip-text text-transparent mb-1`}>
                 안녕하세요 👋
               </h1>
               <p className="text-gray-600">
@@ -219,13 +254,13 @@ export function UnifiedHome({
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="w-full grid grid-cols-2 h-14 bg-gray-100/80 backdrop-blur-sm p-1">
               <TabsTrigger value="mentee" className="text-base font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md">
-                <span className="mr-2">🎯</span> 바통 받기
+                <span className="mr-2">🎯</span> 경험 받기
               </TabsTrigger>
               <TabsTrigger 
                 value="mentor" 
                 className="text-base font-semibold relative data-[state=active]:bg-white data-[state=active]:shadow-md"
               >
-                <span className="mr-2">⚡</span> 바통 넘기기
+                <span className="mr-2">⚡</span> 경험 넘기기
                 {!isMentorActive && (
                   <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs border-0 shadow-lg">
                     시작하기
@@ -248,7 +283,7 @@ export function UnifiedHome({
                 />
               </div>
 
-              {/* AI Recommendation CTA - 최상단으로 이동 */}
+              {/* ═══ Card 1: AI 맞춤 컨설팅 - 카테고리별 다크 스타일 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -256,41 +291,56 @@ export function UnifiedHome({
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-recommendation')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 -translate-x-1/2"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-y-1/2 translate-x-1/2"></div>
-                  </div>
-                  <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Award className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">{content.aiConsultingTitle} <span className="text-lg">(무료)</span></h2>
-                        </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.aiConsultingDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.ctaBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
+                <Card className="relative overflow-hidden border-0 shadow-2xl rounded-3xl">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${content.theme.cardGradient1}`}></div>
+                  <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                  <div className="absolute top-1/2 right-12 -translate-y-1/2 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+
+                  <div className="relative p-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge className="bg-amber-400/90 text-amber-950 border-0 text-xs font-bold px-3 py-1">무료</Badge>
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 leading-tight">
+                        {content.aiConsultingTitle}
+                      </h2>
+                      <p className="text-white/70 text-base mb-5 leading-relaxed">
+                        {content.aiConsultingDescription}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {content.ctaBadges.map((badge) => (
+                          <span key={badge} className="px-3 py-1.5 text-xs font-medium text-white/90 border border-white/25 rounded-full backdrop-blur-sm bg-white/5">
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                      <Button
+                        size="lg"
+                        className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
+                      >
+                        AI 추천 받기
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </div>
+
+                    <div className="hidden md:flex flex-col items-center justify-center">
+                      <div className="relative">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${content.theme.gradient} rounded-3xl blur-xl opacity-40 scale-110`}></div>
+                        <div className="relative w-28 h-28 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 flex items-center justify-center">
+                          <ConsultingIcon className="w-14 h-14 text-white" />
                         </div>
                       </div>
+                      <div className="flex items-center gap-1.5 mt-3">
+                        <Target className="w-4 h-4 text-white/60" />
+                        <span className="text-white/60 text-xs font-medium">맞춤 분석</span>
+                      </div>
                     </div>
-                    <Button 
-                      size="lg"
-                      className="bg-white text-indigo-600 hover:bg-indigo-50 w-full md:w-auto"
-                    >
-                      AI 추천 받기
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* AI CTA - AI 학업계획서 */}
+              {/* ═══ Card 2: AI 문서 작성 - 카테고리별 스텝 프로세스 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -299,45 +349,69 @@ export function UnifiedHome({
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-experience')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-500 to-blue-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
-                  </div>
+                <Card className="relative overflow-hidden border-0 shadow-xl rounded-3xl">
+                  <div className={`absolute inset-0 bg-gradient-to-r ${content.theme.cardGradient2}`}></div>
+                  <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'repeating-linear-gradient(90deg, white 0px, white 1px, transparent 1px, transparent 16px), repeating-linear-gradient(0deg, white 0px, white 1px, transparent 1px, transparent 16px)', backgroundSize: '16px 16px' }}></div>
+                  <div className="absolute -top-8 -right-8 w-36 h-36 border-[3px] border-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-12 -right-4 w-52 h-52 border-[3px] border-white/10 rounded-full"></div>
+
                   <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Sparkles className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">{content.aiToolTitle}</h2>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <DocumentIcon className="w-5 h-5 text-white" />
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-white">{content.aiToolTitle}</h2>
+                    </div>
+                    <p className="text-white/80 text-base mb-6 max-w-lg">
+                      {content.aiToolDescription}
+                    </p>
+
+                    {/* 카테고리별 스텝 프로세스 인디케이터 */}
+                    <div className="flex items-center gap-0 mb-6 max-w-md">
+                      {content.cardTheme.documentSteps.map((step, i) => (
+                        <div key={step} className="flex items-center gap-2 flex-1">
+                          {i > 0 && <div className="flex-1 h-0.5 bg-white/30 mx-2"></div>}
+                          <div className={`w-8 h-8 ${i === 0 ? 'bg-white' : 'bg-white/30 backdrop-blur-sm border border-white/40'} rounded-full flex items-center justify-center ${i === 0 ? content.theme.accentText : 'text-white'} font-bold text-sm ${i === 0 ? 'shadow-md' : ''}`}>
+                            {i + 1}
+                          </div>
+                          <span className={`${i === 0 ? 'text-white' : 'text-white/80'} text-xs font-medium hidden sm:inline`}>{step}</span>
                         </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.aiToolDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.aiToolBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
-                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex flex-wrap gap-4 mb-6">
+                      <div className="flex items-center gap-2 text-white">
+                        <Zap className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">5분 소요</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-white">
+                        <Sparkles className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">무료 1회</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-white">
+                        <DocumentIcon className="w-4 h-4 text-yellow-300" />
+                        <span className="text-sm font-medium">맞춤 스토리라인</span>
                       </div>
                     </div>
-                    <Button 
-                      size="lg"
-                      className="bg-white text-sky-600 hover:bg-gray-50 w-full md:w-auto"
-                    >
-                      지금 시작하기
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                    <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
-                      <Sparkles className="w-4 h-4" />
-                      <span>남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
+
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <Button
+                        size="lg"
+                        className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
+                      >
+                        지금 시작하기
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                      <div className="flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm rounded-xl border border-white/20">
+                        <Sparkles className="w-4 h-4 text-yellow-300" />
+                        <span className="text-white text-sm font-medium">남은 크레딧: {dashboardLoading ? '...' : `${creditBalance}회`}</span>
+                      </div>
                     </div>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* 멘토 찾기 CTA 추가 */}
+              {/* ═══ Card 3: 러너 찾기 - 카테고리별 소셜 커넥트 ═══ */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -346,81 +420,95 @@ export function UnifiedHome({
                 className="cursor-pointer mb-8"
                 onClick={() => onNavigate('mentor-search')}
               >
-                <Card className="relative overflow-hidden border-0 shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                <Card className="relative overflow-hidden border-0 shadow-xl rounded-3xl">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${content.theme.cardGradient3}`}></div>
+                  <div className="absolute inset-0 overflow-hidden">
+                    <svg className="absolute top-0 right-0 w-full h-full opacity-[0.08]" viewBox="0 0 400 200" fill="none">
+                      <circle cx="320" cy="40" r="4" fill="white"/>
+                      <circle cx="360" cy="80" r="3" fill="white"/>
+                      <circle cx="290" cy="90" r="5" fill="white"/>
+                      <circle cx="350" cy="140" r="3" fill="white"/>
+                      <circle cx="280" cy="160" r="4" fill="white"/>
+                      <line x1="320" y1="40" x2="360" y2="80" stroke="white" strokeWidth="1"/>
+                      <line x1="320" y1="40" x2="290" y2="90" stroke="white" strokeWidth="1"/>
+                      <line x1="360" y1="80" x2="350" y2="140" stroke="white" strokeWidth="1"/>
+                      <line x1="290" y1="90" x2="280" y2="160" stroke="white" strokeWidth="1"/>
+                      <line x1="290" y1="90" x2="350" y2="140" stroke="white" strokeWidth="1"/>
+                    </svg>
                   </div>
+
                   <div className="relative p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Users className="w-8 h-8 text-white" />
-                          <h2 className="text-2xl font-bold text-white">나에게 맞는 러너 찾기</h2>
-                        </div>
-                        <p className="text-white/90 text-lg mb-4">
-                          {content.mentorDescription}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {content.mentorBadges.map((badge) => (
-                            <Badge key={badge} className="bg-white/20 text-white border-0">{badge}</Badge>
-                          ))}
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="flex -space-x-3">
+                        {content.cardTheme.runnerAvatars.map((avatar, i) => (
+                          <div key={i} className="w-11 h-11 bg-white/90 rounded-full flex items-center justify-center text-lg border-2 border-white/60 shadow-md">
+                            {avatar}
+                          </div>
+                        ))}
+                        <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white/30 shadow-md">
+                          +{content.cardTheme.runnerCount - 3}
                         </div>
                       </div>
+                      <div>
+                        <div className="text-white font-bold text-lg">{content.cardTheme.runnerLabel} {content.cardTheme.runnerCount}명</div>
+                        <div className="text-white/70 text-xs">지금 바로 매칭 가능</div>
+                      </div>
                     </div>
-                    <Button 
+
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">{content.cardTheme.runnerTitle}</h2>
+                    <p className="text-white/75 text-base mb-5 max-w-lg">
+                      {content.mentorDescription}
+                    </p>
+
+                    <div className="space-y-2.5 mb-6">
+                      {content.mentorBadges.map((badge) => (
+                        <div key={badge} className="flex items-center gap-2.5">
+                          <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <CheckCircle className="w-3.5 h-3.5 text-white" />
+                          </div>
+                          <span className="text-white/90 text-sm font-medium">{badge}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Button
                       size="lg"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 w-full md:w-auto"
+                      className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
                     >
-                      러너 찾아보기
+                      <UserCheck className="w-5 h-5 mr-2" />
+                      {content.cardTheme.runnerTitle}
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </div>
                 </Card>
               </motion.div>
 
-              {/* Quick Stats */}
-              <div className="grid md:grid-cols-4 gap-4 mb-8">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate('ai-management')}>
-                    <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                      <BookOpen className="w-7 h-7 text-purple-600" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : draftCount}</div>
-                    <div className="text-sm text-gray-600">{content.docLabel}</div>
-                  </Card>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate('session-list')}>
-                    <div className="w-14 h-14 bg-gradient-to-br from-sky-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                      <Calendar className="w-7 h-7 text-sky-600" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : upcomingSessionCount}</div>
-                    <div className="text-sm text-gray-600">예정된 세션</div>
-                  </Card>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                  <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate('mentor-network')}>
-                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                      <Users className="w-7 h-7 text-indigo-600" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">{dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : mentorNetworkCount}</div>
-                    <div className="text-sm text-gray-600">내 인맥 러너</div>
-                  </Card>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                  <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => setShowSuccessRateModal(true)}>
-                    <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                      <TrendingUp className="w-7 h-7 text-green-600" />
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1">87%</div>
-                    <div className="text-sm text-gray-600">{content.successLabel}</div>
-                  </Card>
-                </motion.div>
+              {/* Quick Stats - category-specific */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                {content.quickStats.map((stat, index) => {
+                  const StatIcon = quickStatIconMap[stat.iconName] || BookOpen;
+                  const getStatValue = () => {
+                    switch (stat.valueKey) {
+                      case 'draftCount': return draftCount;
+                      case 'sessionCount': return upcomingSessionCount;
+                      case 'successRate': return `${stats.overallRate}%`;
+                      default: return '--';
+                    }
+                  };
+                  return (
+                    <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + index * 0.1 }}>
+                      <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate(stat.screen as Screen)}>
+                        <div className={`w-14 h-14 bg-gradient-to-br ${stat.bgGradient} rounded-2xl flex items-center justify-center mx-auto mb-3`}>
+                          <StatIcon className={`w-7 h-7 ${stat.iconColor}`} />
+                        </div>
+                        <div className="text-3xl font-bold text-gray-900 mb-1">
+                          {dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : getStatValue()}
+                        </div>
+                        <div className="text-sm text-gray-600">{stat.label}</div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {/* Recommended Mentors */}
@@ -439,6 +527,7 @@ export function UnifiedHome({
                   {recommendedMentors.slice(0, 4).map((mentor, index) => {
                     const getBadgeColor = (badge: string) => {
                       switch (badge) {
+                        case 'platinum': return 'from-purple-400 to-indigo-500';
                         case 'gold': return 'from-amber-400 to-yellow-500';
                         case 'silver': return 'from-gray-300 to-gray-400';
                         case 'bronze': return 'from-orange-400 to-orange-500';
@@ -448,6 +537,7 @@ export function UnifiedHome({
 
                     const getBadgeName = (badge: string) => {
                       switch (badge) {
+                        case 'platinum': return '플래티넘 러너';
                         case 'gold': return '골드 러너';
                         case 'silver': return '실버 러너';
                         case 'bronze': return '브론즈 러너';
@@ -467,6 +557,11 @@ export function UnifiedHome({
                           onClick={() => onMentorSelect(mentor)}
                         >
                           {/* Badge Ribbon */}
+                          {mentor.badge === 'platinum' && (
+                            <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
+                              TOP
+                            </div>
+                          )}
                           {mentor.badge === 'gold' && (
                             <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
                               BEST
@@ -511,7 +606,7 @@ export function UnifiedHome({
                               {/* Price */}
                               <div className="text-right">
                                 <div className="text-xl font-bold gradient-text">
-                                  ₩{(mentor.price / 1000).toFixed(0)}k
+                                  {mentor.price.toLocaleString()}원
                                 </div>
                                 <div className="text-xs text-gray-500">60분</div>
                               </div>
@@ -635,7 +730,7 @@ export function UnifiedHome({
                         <DollarSign className="w-5 h-5 text-green-600" />
                         <span className="text-sm text-gray-600">이번 달 수익</span>
                       </div>
-                      <div className="text-3xl font-bold">₩420k</div>
+                      <div className="text-3xl font-bold">420,000원</div>
                     </Card>
 
                     <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('session-list')}>
@@ -710,7 +805,7 @@ export function UnifiedHome({
                             <div className="text-sm text-gray-600">박지원 • 연세대 경영 지원</div>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-sky-600">₩80,000</div>
+                            <div className="font-bold text-sky-600">80,000원</div>
                             <div className="text-xs text-gray-500">2시간 전</div>
                           </div>
                         </div>

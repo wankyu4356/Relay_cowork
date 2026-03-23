@@ -85,6 +85,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
   const [selectedTab, setSelectedTab] = useState('about');
   const [reviews, setReviews] = useState<Review[]>(mockReviewsFallback);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -108,6 +109,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
   const getBadgeStyle = (badge: string) => {
     switch (badge) {
+      case 'platinum': return 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white';
       case 'gold': return 'badge-gold';
       case 'silver': return 'badge-silver';
       case 'bronze': return 'badge-bronze';
@@ -117,6 +119,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
+      case 'platinum': return '💎';
       case 'gold': return '🥇';
       case 'silver': return '🥈';
       case 'bronze': return '🥉';
@@ -157,7 +160,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-3xl font-bold">{mentor.name}</h2>
                       <Badge className={`${getBadgeStyle(mentor.badge)} border-0`}>
-                        {getBadgeIcon(mentor.badge)} {mentor.badge.toUpperCase()}
+                        {getBadgeIcon(mentor.badge)} {mentor.badge === 'platinum' ? '플래티넘' : mentor.badge === 'gold' ? '골드' : mentor.badge === 'silver' ? '실버' : '브론즈'}
                       </Badge>
                       {mentor.verified && (
                         <Badge className="bg-blue-500 text-white">
@@ -459,27 +462,37 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                       <Card className="p-5">
                         <div className="font-semibold mb-3">{day.date}</div>
                         <div className="grid grid-cols-3 gap-2">
-                          {day.slots.map((slot) => (
-                            <Button
-                              key={slot}
-                              variant="outline"
-                              size="sm"
-                              className="hover:bg-emerald-50 hover:border-emerald-400"
-                            >
-                              {slot}
-                            </Button>
-                          ))}
+                          {day.slots.map((slot) => {
+                            const slotKey = `${day.date}-${slot}`;
+                            const isSelected = selectedTimeSlot === slotKey;
+                            return (
+                              <Button
+                                key={slot}
+                                variant={isSelected ? 'default' : 'outline'}
+                                size="sm"
+                                className={isSelected
+                                  ? 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'
+                                  : 'hover:bg-emerald-50 hover:border-emerald-400'}
+                                onClick={() => setSelectedTimeSlot(isSelected ? null : slotKey)}
+                              >
+                                {slot}
+                              </Button>
+                            );
+                          })}
                         </div>
                       </Card>
                     </motion.div>
                   ))}
 
                   <Button
-                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
+                    className={`w-full text-white ${selectedTimeSlot
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700'
+                      : 'bg-gray-300 cursor-not-allowed'}`}
                     size="lg"
+                    disabled={!selectedTimeSlot}
                     onClick={onBook}
                   >
-                    예약하기
+                    {selectedTimeSlot ? `예약하기 (${selectedTimeSlot.split('-').pop()})` : '시간을 선택해주세요'}
                   </Button>
                 </TabsContent>
               </Tabs>
@@ -493,7 +506,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
               <div className="text-center mb-6">
                 <div className="text-sm text-gray-600 mb-2">60분 세션</div>
                 <div className="text-4xl font-bold text-emerald-600 mb-1">
-                  ₩{mentor.price.toLocaleString()}
+                  {mentor.price.toLocaleString()}원
                 </div>
                 <div className="text-sm text-gray-500">VAT 포함</div>
               </div>

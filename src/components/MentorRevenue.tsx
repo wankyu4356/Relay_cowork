@@ -22,10 +22,10 @@ const monthlyData = [
 ];
 
 const recentTransactions = [
-  { id: '1', date: '2025.02.15', mentee: '박지원', amount: 80000, status: 'completed' },
-  { id: '2', date: '2025.02.12', mentee: '김민준', amount: 50000, status: 'completed' },
-  { id: '3', date: '2025.02.10', mentee: '이서연', amount: 80000, status: 'pending' },
-  { id: '4', date: '2025.02.08', mentee: '최준호', amount: 80000, status: 'completed' },
+  { id: '1', date: '2025.02.15', mentee: '박지원', amount: 65000, status: 'completed' },
+  { id: '2', date: '2025.02.12', mentee: '김민준', amount: 45000, status: 'completed' },
+  { id: '3', date: '2025.02.10', mentee: '이서연', amount: 65000, status: 'pending' },
+  { id: '4', date: '2025.02.08', mentee: '최준호', amount: 65000, status: 'completed' },
 ];
 
 export function MentorRevenue({ onBack }: MentorRevenueProps) {
@@ -44,10 +44,10 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
 
   const handleWithdraw = () => {
     if (availableBalance < 10000) {
-      toast.error('출금 가능 금액은 최소 ₩10,000 이상이어야 합니다');
+      toast.error('출금 가능 금액은 최소 10,000원 이상이어야 합니다');
       return;
     }
-    if (confirm(`₩${availableBalance.toLocaleString()}을 출금 신청하시겠습니까?`)) {
+    if (confirm(`${availableBalance.toLocaleString()}원을 출금 신청하시겠습니까?`)) {
       toast.success('출금 신청이 완료되었습니다! 영업일 기준 3~5일 내 입금됩니다.');
     }
   };
@@ -84,7 +84,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                   </div>
                   <div>
                     <div className="text-sm opacity-90">총 수익</div>
-                    <div className="text-3xl font-bold">₩3.67M</div>
+                    <div className="text-3xl font-bold">3,670,000원</div>
                   </div>
                 </div>
                 <div className="text-sm opacity-75">전체 누적 수익</div>
@@ -99,7 +99,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">출금 가능</div>
-                    <div className="text-3xl font-bold text-emerald-600">₩640k</div>
+                    <div className="text-3xl font-bold text-emerald-600">640,000원</div>
                   </div>
                 </div>
                 <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white" onClick={handleWithdraw}>출금 신청</Button>
@@ -114,7 +114,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                   </div>
                   <div>
                     <div className="text-sm text-gray-600">정산 대기</div>
-                    <div className="text-3xl font-bold">₩210k</div>
+                    <div className="text-3xl font-bold">210,000원</div>
                   </div>
                 </div>
                 <div className="text-sm text-gray-500">세션 완료 후 정산</div>
@@ -131,7 +131,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value: number) => `₩${value.toLocaleString()}`}
+                  formatter={(value: number) => `${value.toLocaleString()}원`}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
                 />
                 <Bar dataKey="revenue" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
@@ -168,7 +168,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                       <div className="text-sm text-gray-600">{tx.date}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold text-lg">₩{tx.amount.toLocaleString()}</div>
+                      <div className="font-semibold text-lg">{tx.amount.toLocaleString()}원</div>
                       <Badge className={tx.status === 'completed' ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}>
                         {tx.status === 'completed' ? '정산완료' : '대기중'}
                       </Badge>
@@ -179,22 +179,49 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
             </div>
           </Card>
 
-          {/* Fee Info */}
-          <Card className="p-6 bg-emerald-50 border-emerald-200">
-            <h3 className="font-semibold mb-3">💰 수수료 안내</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>🥉 Bronze (0-10건)</span>
-                <span className="font-semibold">25%</span>
+          {/* Dynamic Pricing Tier Info */}
+          <Card className="p-6 bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
+            <h3 className="font-semibold mb-4">💰 다이나믹 프라이싱 등급</h3>
+            <p className="text-sm text-gray-600 mb-4">실적이 쌓일수록 더 높은 가격을 설정할 수 있습니다</p>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between items-center p-2 rounded-lg">
+                <div>
+                  <span>🥉 브론즈 (0-10건)</span>
+                  <div className="text-xs text-gray-500">15,000~30,000원</div>
+                </div>
+                <span className="font-semibold">수수료 25%</span>
               </div>
-              <div className="flex justify-between">
-                <span>🥈 Silver (11-30건)</span>
-                <span className="font-semibold">22%</span>
+              <div className="flex justify-between items-center p-2 rounded-lg">
+                <div>
+                  <span>🥈 실버 (11-30건)</span>
+                  <div className="text-xs text-gray-500">30,000~50,000원</div>
+                </div>
+                <span className="font-semibold">수수료 22%</span>
               </div>
-              <div className="flex justify-between text-emerald-600">
-                <span>🥇 Gold (31건+) - 현재 등급</span>
-                <span className="font-semibold">18%</span>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-100 border border-emerald-200">
+                <div>
+                  <span className="text-emerald-700 font-semibold">🥇 골드 (31-60건) - 현재 등급</span>
+                  <div className="text-xs text-emerald-600">50,000~80,000원</div>
+                </div>
+                <span className="font-semibold text-emerald-700">수수료 18%</span>
               </div>
+              <div className="flex justify-between items-center p-2 rounded-lg">
+                <div>
+                  <span>💎 플래티넘 (61건+)</span>
+                  <div className="text-xs text-gray-500">80,000~120,000원</div>
+                </div>
+                <span className="font-semibold">수수료 15%</span>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-white rounded-lg border border-emerald-200">
+              <div className="text-sm font-semibold text-gray-700 mb-2">다음 등급까지</div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-emerald-400 to-green-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+                </div>
+                <span className="text-xs text-gray-600 whitespace-nowrap">💎 플래티넘</span>
+              </div>
+              <div className="text-xs text-gray-500">세션 19건 더 / 리뷰 8건 더 필요</div>
             </div>
           </Card>
         </div>

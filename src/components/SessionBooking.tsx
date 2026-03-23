@@ -111,8 +111,12 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-xl font-bold">{mentor.name}</h3>
-                      <Badge className={mentor.badge === 'gold' ? 'badge-gold border-0' : ''}>
-                        🥇 GOLD
+                      <Badge className={
+                        mentor.badge === 'platinum' ? 'bg-gradient-to-r from-purple-400 to-indigo-500 text-white border-0' :
+                        mentor.badge === 'gold' ? 'badge-gold border-0' :
+                        mentor.badge === 'silver' ? 'badge-silver border-0' : 'badge-bronze border-0'
+                      }>
+                        {mentor.badge === 'platinum' ? '💎 플래티넘' : mentor.badge === 'gold' ? '🥇 골드' : mentor.badge === 'silver' ? '🥈 실버' : '🥉 브론즈'}
                       </Badge>
                     </div>
                     <p className="text-gray-600">
@@ -121,7 +125,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-indigo-600">
-                      ₩{(getPrice() / 1000).toFixed(0)}k
+                      {getPrice().toLocaleString()}원
                     </div>
                     <div className="text-sm text-gray-600">{duration}분</div>
                   </div>
@@ -170,7 +174,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                         <label htmlFor="30min" className="cursor-pointer flex-1">
                           <div className="font-semibold">30분</div>
                           <div className="text-sm text-gray-600">
-                            ₩{((mentor.price * 0.65) / 1000).toFixed(0)}k
+                            {Math.round(mentor.price * 0.65).toLocaleString()}원
                           </div>
                         </label>
                       </div>
@@ -188,7 +192,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                         <label htmlFor="60min" className="cursor-pointer flex-1">
                           <div className="font-semibold">60분 (권장)</div>
                           <div className="text-sm text-gray-600">
-                            ₩{(mentor.price / 1000).toFixed(0)}k
+                            {mentor.price.toLocaleString()}원
                           </div>
                         </label>
                       </div>
@@ -344,15 +348,15 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
               <div className="space-y-2 mb-6 pt-4 border-t">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">세션 비용</span>
-                  <span>₩{getPrice().toLocaleString()}</span>
+                  <span>{getPrice().toLocaleString()}원</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">플랫폼 수수료</span>
-                  <span>₩0</span>
+                  <span>0원</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold pt-3 border-t">
                   <span>총 결제금액</span>
-                  <span className="text-indigo-600">₩{getPrice().toLocaleString()}</span>
+                  <span className="text-indigo-600">{getPrice().toLocaleString()}원</span>
                 </div>
               </div>
 
@@ -362,7 +366,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 onClick={handleConfirm}
                 disabled={!selectedDate || !selectedTime || !agreedToTerms}
               >
-                ₩{getPrice().toLocaleString()} 결제하기
+                {getPrice().toLocaleString()}원 결제하기
               </Button>
 
               <Card className="p-4 bg-green-50 border-green-200">

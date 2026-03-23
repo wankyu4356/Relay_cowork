@@ -55,7 +55,7 @@ const mockMentees: Mentee[] = [
     sessions: 8,
     lastSession: '2025.02.18',
     rating: 5.0,
-    totalPaid: 640000,
+    totalPaid: 520000,
     joinedDate: '2025.01.10',
     goal: '연세대 경영학과 편입',
   },
@@ -69,7 +69,7 @@ const mockMentees: Mentee[] = [
     sessions: 5,
     lastSession: '2025.02.15',
     rating: 4.8,
-    totalPaid: 400000,
+    totalPaid: 325000,
     joinedDate: '2025.01.20',
     goal: '고려대 경제학과 편입',
   },
@@ -82,7 +82,7 @@ const mockMentees: Mentee[] = [
     status: 'scheduled',
     sessions: 2,
     lastSession: '2025.02.10',
-    totalPaid: 160000,
+    totalPaid: 130000,
     joinedDate: '2025.02.01',
     goal: '서강대 경영학과 편입',
   },
@@ -97,7 +97,7 @@ const mockMentees: Mentee[] = [
     lastSession: '2024.12.20',
     successRate: 100,
     rating: 5.0,
-    totalPaid: 960000,
+    totalPaid: 780000,
     joinedDate: '2024.09.15',
     goal: '성균관대 글로벌경영 편입',
   },
@@ -111,7 +111,7 @@ const mockMentees: Mentee[] = [
     sessions: 6,
     lastSession: '2025.02.16',
     rating: 4.9,
-    totalPaid: 480000,
+    totalPaid: 390000,
     joinedDate: '2025.01.25',
     goal: '한양대 경영학과 편입',
   },
@@ -126,7 +126,7 @@ const mockMentees: Mentee[] = [
     lastSession: '2024.12.15',
     successRate: 100,
     rating: 5.0,
-    totalPaid: 800000,
+    totalPaid: 650000,
     joinedDate: '2024.10.01',
     goal: '중앙대 경제학과 편입',
   },
@@ -264,7 +264,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
               <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
               </div>
-              <div className="text-2xl font-bold gradient-text mb-1">₩{(stats.totalRevenue / 1000).toFixed(0)}k</div>
+              <div className="text-2xl font-bold gradient-text mb-1">{stats.totalRevenue.toLocaleString()}원</div>
               <div className="text-sm text-gray-600">총 수익</div>
             </Card>
           </motion.div>
@@ -363,7 +363,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                       </div>
                     )}
                     <div className="text-center">
-                      <div className="text-lg font-bold gradient-text">₩{(mentee.totalPaid / 1000).toFixed(0)}k</div>
+                      <div className="text-lg font-bold gradient-text">{mentee.totalPaid.toLocaleString()}원</div>
                       <div className="text-xs text-gray-600">총 결제</div>
                     </div>
                   </div>

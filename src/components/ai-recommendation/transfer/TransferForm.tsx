@@ -50,7 +50,11 @@ export function TransferForm({ onSubmit }: TransferFormProps) {
           <Tabs
             value={formData.transferType}
             onValueChange={(value) =>
-              setFormData({ ...formData, transferType: value as '일반편입' | '학사편입' })
+              setFormData({
+                ...formData,
+                transferType: value as '일반편입' | '학사편입' | '기타전형',
+                transferSubType: value !== '기타전형' ? undefined : formData.transferSubType,
+              })
             }
           >
             <TabsList className="w-full">
@@ -60,8 +64,60 @@ export function TransferForm({ onSubmit }: TransferFormProps) {
               <TabsTrigger value="학사편입" className="flex-1">
                 학사편입
               </TabsTrigger>
+              <TabsTrigger value="기타전형" className="flex-1">
+                기타전형
+              </TabsTrigger>
             </TabsList>
           </Tabs>
+
+          {/* 기타전형 세부 유형 선택 */}
+          {formData.transferType === '기타전형' && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                기타전형 세부 유형
+              </label>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {['군위탁', '농어촌 전형', '특성화고 전형', '재외국민 전형'].map((subType) => (
+                  <button
+                    key={subType}
+                    type="button"
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      formData.transferSubType === subType
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:border-indigo-400 hover:text-indigo-600'
+                    }`}
+                    onClick={() => setFormData({ ...formData, transferSubType: subType })}
+                  >
+                    {subType}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    formData.transferSubType !== undefined &&
+                    !['군위탁', '농어촌 전형', '특성화고 전형', '재외국민 전형'].includes(formData.transferSubType)
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:border-indigo-400 hover:text-indigo-600'
+                  }`}
+                  onClick={() => setFormData({ ...formData, transferSubType: '' })}
+                >
+                  기타 (직접 입력)
+                </button>
+                {formData.transferSubType !== undefined &&
+                  !['군위탁', '농어촌 전형', '특성화고 전형', '재외국민 전형'].includes(formData.transferSubType) && (
+                  <input
+                    type="text"
+                    placeholder="전형 유형을 입력하세요"
+                    className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors text-sm"
+                    value={formData.transferSubType}
+                    onChange={(e) => setFormData({ ...formData, transferSubType: e.target.value })}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 기본 정보 */}

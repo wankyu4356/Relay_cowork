@@ -210,11 +210,11 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                     <div className="mb-4">
                       <div className="flex items-end gap-2">
                         <div className="text-2xl font-bold text-sky-600">
-                          ₩{(pkg.price / 1000).toFixed(0)}k
+                          {pkg.price.toLocaleString()}원
                         </div>
                         {pkg.originalPrice && (
                           <div className="text-gray-400 line-through text-sm mb-1">
-                            ₩{(pkg.originalPrice / 1000).toFixed(0)}k
+                            {pkg.originalPrice.toLocaleString()}원
                           </div>
                         )}
                       </div>
@@ -227,7 +227,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
 
                     {/* Per Credit Price */}
                     <div className="text-sm text-gray-600">
-                      크레딧당 ₩{Math.round(pkg.price / (pkg.credits + (pkg.bonus || 0)) / 1000)}k
+                      크레딧당 {Math.round(pkg.price / (pkg.credits + (pkg.bonus || 0))).toLocaleString()}원
                     </div>
 
                     {/* Selected Indicator */}
@@ -355,7 +355,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                   <div className="border-t border-gray-200 pt-3 flex justify-between">
                     <span className="font-bold text-lg">총 결제 금액</span>
                     <span className="font-bold text-2xl text-sky-600">
-                      ₩{selectedPkg.price.toLocaleString()}
+                      {selectedPkg.price.toLocaleString()}원
                     </span>
                   </div>
                 </div>
@@ -377,7 +377,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
             ) : (
               <>
                 <CreditCard className="w-5 h-5 mr-2" />
-                ₩{selectedPkg?.price.toLocaleString()} 결제하기
+                {selectedPkg?.price.toLocaleString()}원 결제하기
               </>
             )}
           </Button>

@@ -86,8 +86,8 @@ describe('OutcomeReport', () => {
     render(<OutcomeReport {...defaultProps} />);
     expect(screen.getByText('합격했어요!')).toBeInTheDocument();
     expect(screen.getByText('아쉽게 탈락')).toBeInTheDocument();
-    expect(screen.getByText('+₩10,000 크레딧')).toBeInTheDocument();
-    expect(screen.getByText('+₩15,000 크레딧')).toBeInTheDocument();
+    expect(screen.getByText('+10,000원 크레딧')).toBeInTheDocument();
+    expect(screen.getByText('+15,000원 크레딧')).toBeInTheDocument();
   });
 
   it('calls onBack when back button is clicked', async () => {
@@ -149,7 +149,7 @@ describe('OutcomeReport', () => {
     });
 
     expect(mockOnSubmit).toHaveBeenCalledWith('success', detailText);
-    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
   });
 
   it('submits fail outcome with valid data', async () => {
@@ -175,7 +175,7 @@ describe('OutcomeReport', () => {
     });
 
     expect(mockOnSubmit).toHaveBeenCalledWith('fail', detailText);
-    expect(toast.success).toHaveBeenCalledWith('재도전 크레딧 ₩15,000이 지급되었습니다. 다시 도전하세요!');
+    expect(toast.success).toHaveBeenCalledWith('재도전 크레딧 15,000원이 지급되었습니다. 다시 도전하세요!');
   });
 
   it('falls back gracefully when API fails', async () => {
@@ -195,7 +195,7 @@ describe('OutcomeReport', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith('success', detailText);
     });
 
-    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 ₩10,000이 지급되었습니다');
+    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
   });
 
   it('calls onBack via "나중에 하기" button', async () => {
