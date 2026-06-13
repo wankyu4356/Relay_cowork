@@ -165,9 +165,9 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
   const currentStepIndex = steps.findIndex(s => s.id === currentStep);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4 mb-6">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -176,10 +176,10 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 러너 인증
               </h1>
-              <p className="text-gray-600 mt-1">편입 합격을 인증하고 러너로 활동하세요</p>
+              <p className="text-zinc-600 mt-1">편입 합격을 인증하고 러너로 활동하세요</p>
             </div>
           </div>
 
@@ -196,10 +196,10 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     <motion.div
                       className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all ${
                         isCompleted
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                          ? 'bg-iris-600 text-white'
                           : isActive
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg'
-                          : 'bg-gray-200 text-gray-500'
+                          ? 'bg-iris-600 text-white shadow-md'
+                          : 'bg-zinc-200 text-zinc-500'
                       }`}
                       animate={isActive ? { scale: [1, 1.1, 1] } : {}}
                       transition={{ duration: 0.5 }}
@@ -210,13 +210,13 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                         <Icon className="w-6 h-6" />
                       )}
                     </motion.div>
-                    <span className={`text-xs font-medium text-center ${isActive ? 'text-emerald-600' : 'text-gray-600'}`}>
+                    <span className={`text-xs font-medium text-center ${isActive ? 'text-iris-600' : 'text-zinc-600'}`}>
                       {step.label}
                     </span>
                   </div>
                   {index < steps.length - 1 && (
                     <div className={`h-0.5 flex-1 mx-2 mb-8 transition-all ${
-                      isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                      isCompleted ? 'bg-iris-600' : 'bg-zinc-200'
                     }`}></div>
                   )}
                 </div>
@@ -238,12 +238,12 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <Card className="p-6 bg-emerald-50/50 border-emerald-200">
+                <Card className="p-6 bg-iris-50 border-iris-100">
                   <div className="flex gap-3">
-                    <Info className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <Info className="w-5 h-5 text-iris-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-emerald-900 mb-1">학생 인증이란?</h3>
-                      <p className="text-sm text-emerald-700">
+                      <h3 className="font-semibold text-iris-900 mb-1">학생 인증이란?</h3>
+                      <p className="text-sm text-iris-700">
                         현재 재학 중인 대학의 학생증 또는 재학증명서를 통해 신원을 확인합니다.
                       </p>
                     </div>
@@ -251,14 +251,14 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 </Card>
 
                 <Card className="p-6">
-                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-emerald-600" />
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900 mb-6 flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-iris-600" />
                     학생 정보
                   </h2>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         대학교 <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -270,7 +270,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         학과 <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -282,7 +282,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         학번 <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -294,7 +294,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         학생증 또는 재학증명서 <span className="text-red-500">*</span>
                       </label>
                       
@@ -307,17 +307,17 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                             className="hidden"
                             disabled={uploadStatus === 'uploading'}
                           />
-                          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all group">
+                          <div className="border-2 border-dashed border-zinc-300 rounded-2xl p-8 text-center cursor-pointer hover:border-iris-400 hover:bg-iris-50 transition-all group">
                             {uploadStatus === 'uploading' ? (
                               <div className="flex flex-col items-center gap-3">
-                                <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
-                                <p className="text-sm text-gray-600">업로드 중...</p>
+                                <Loader2 className="w-12 h-12 text-iris-500 animate-spin" />
+                                <p className="text-sm text-zinc-600">업로드 중...</p>
                               </div>
                             ) : (
                               <>
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3 group-hover:text-emerald-500 transition-colors" />
-                                <p className="font-medium text-gray-700 mb-1">파일을 선택하거나 드래그하세요</p>
-                                <p className="text-sm text-gray-500">JPG, PNG, PDF (최대 5MB)</p>
+                                <Upload className="w-12 h-12 text-zinc-400 mx-auto mb-3 group-hover:text-iris-500 transition-colors" />
+                                <p className="font-medium text-zinc-700 mb-1">파일을 선택하거나 드래그하세요</p>
+                                <p className="text-sm text-zinc-400">JPG, PNG, PDF (최대 5MB)</p>
                               </>
                             )}
                           </div>
@@ -326,7 +326,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                         <motion.div
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="border border-gray-200 rounded-2xl p-4 bg-gray-50"
+                          className="border border-zinc-200/80 rounded-2xl p-4 bg-zinc-50"
                         >
                           <div className="flex items-start gap-4">
                             {studentIdFile.preview ? (
@@ -336,15 +336,15 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                                 className="w-20 h-20 rounded-xl object-cover"
                               />
                             ) : (
-                              <div className="w-20 h-20 bg-emerald-100 rounded-xl flex items-center justify-center">
-                                <FileText className="w-10 h-10 text-emerald-600" />
+                              <div className="w-20 h-20 bg-iris-100 rounded-xl flex items-center justify-center">
+                                <FileText className="w-10 h-10 text-iris-600" />
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
                                 <div>
-                                  <p className="font-medium text-gray-900 truncate">{studentIdFile.name}</p>
-                                  <p className="text-sm text-gray-500">{formatFileSize(studentIdFile.size)}</p>
+                                  <p className="font-medium text-zinc-900 truncate">{studentIdFile.name}</p>
+                                  <p className="text-sm text-zinc-400">{formatFileSize(studentIdFile.size)}</p>
                                 </div>
                                 <Button
                                   variant="ghost"
@@ -356,8 +356,8 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                                 </Button>
                               </div>
                               <div className="flex items-center gap-1 mt-2">
-                                <CheckCircle2 className="w-4 h-4 text-green-600" />
-                                <span className="text-sm text-green-600">업로드 완료</span>
+                                <CheckCircle2 className="w-4 h-4 text-iris-600" />
+                                <span className="text-sm text-iris-600">업로드 완료</span>
                               </div>
                             </div>
                           </div>
@@ -377,7 +377,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
+                    className="flex-1"
                     disabled={!studentIdFile || !studentId || !university || !major}
                   >
                     다음
@@ -395,12 +395,12 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <Card className="p-6 bg-purple-50/50 border-purple-200">
+                <Card className="p-6 bg-iris-50 border-iris-100">
                   <div className="flex gap-3">
-                    <Info className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <Info className="w-5 h-5 text-iris-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-purple-900 mb-1">합격증 인증이란?</h3>
-                      <p className="text-sm text-purple-700">
+                      <h3 className="font-semibold text-iris-900 mb-1">합격증 인증이란?</h3>
+                      <p className="text-sm text-iris-700">
                         편입 합격증 또는 입학 허가서를 통해 편입 합격을 증명합니다.
                       </p>
                     </div>
@@ -408,14 +408,14 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 </Card>
 
                 <Card className="p-6">
-                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-purple-600" />
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900 mb-6 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-iris-600" />
                     편입 정보
                   </h2>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         편입 연도 <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -428,7 +428,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         전적대학교 <span className="text-red-500">*</span>
                       </label>
                       <Input
@@ -440,7 +440,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <label className="text-sm font-semibold text-zinc-700 mb-2 block">
                         합격증 또는 입학 허가서 <span className="text-red-500">*</span>
                       </label>
                       
@@ -453,17 +453,17 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                             className="hidden"
                             disabled={uploadStatus === 'uploading'}
                           />
-                          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-purple-400 hover:bg-purple-50/50 transition-all group">
+                          <div className="border-2 border-dashed border-zinc-300 rounded-2xl p-8 text-center cursor-pointer hover:border-iris-400 hover:bg-iris-50 transition-all group">
                             {uploadStatus === 'uploading' ? (
                               <div className="flex flex-col items-center gap-3">
-                                <Loader2 className="w-12 h-12 text-purple-500 animate-spin" />
-                                <p className="text-sm text-gray-600">업로드 중...</p>
+                                <Loader2 className="w-12 h-12 text-iris-500 animate-spin" />
+                                <p className="text-sm text-zinc-600">업로드 중...</p>
                               </div>
                             ) : (
                               <>
-                                <Camera className="w-12 h-12 text-gray-400 mx-auto mb-3 group-hover:text-purple-500 transition-colors" />
-                                <p className="font-medium text-gray-700 mb-1">합격증 사진 업로드</p>
-                                <p className="text-sm text-gray-500">JPG, PNG, PDF (최대 5MB)</p>
+                                <Camera className="w-12 h-12 text-zinc-400 mx-auto mb-3 group-hover:text-iris-500 transition-colors" />
+                                <p className="font-medium text-zinc-700 mb-1">합격증 사진 업로드</p>
+                                <p className="text-sm text-zinc-400">JPG, PNG, PDF (최대 5MB)</p>
                               </>
                             )}
                           </div>
@@ -472,7 +472,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                         <motion.div
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="border border-gray-200 rounded-2xl p-4 bg-gray-50"
+                          className="border border-zinc-200/80 rounded-2xl p-4 bg-zinc-50"
                         >
                           <div className="flex items-start gap-4">
                             {admissionFile.preview ? (
@@ -482,15 +482,15 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                                 className="w-20 h-20 rounded-xl object-cover"
                               />
                             ) : (
-                              <div className="w-20 h-20 bg-purple-100 rounded-xl flex items-center justify-center">
-                                <FileText className="w-10 h-10 text-purple-600" />
+                              <div className="w-20 h-20 bg-iris-100 rounded-xl flex items-center justify-center">
+                                <FileText className="w-10 h-10 text-iris-600" />
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
                                 <div>
-                                  <p className="font-medium text-gray-900 truncate">{admissionFile.name}</p>
-                                  <p className="text-sm text-gray-500">{formatFileSize(admissionFile.size)}</p>
+                                  <p className="font-medium text-zinc-900 truncate">{admissionFile.name}</p>
+                                  <p className="text-sm text-zinc-400">{formatFileSize(admissionFile.size)}</p>
                                 </div>
                                 <Button
                                   variant="ghost"
@@ -502,8 +502,8 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                                 </Button>
                               </div>
                               <div className="flex items-center gap-1 mt-2">
-                                <CheckCircle2 className="w-4 h-4 text-green-600" />
-                                <span className="text-sm text-green-600">업로드 완료</span>
+                                <CheckCircle2 className="w-4 h-4 text-iris-600" />
+                                <span className="text-sm text-iris-600">업로드 완료</span>
                               </div>
                             </div>
                           </div>
@@ -523,7 +523,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
+                    className="flex-1"
                     disabled={!admissionFile || !admissionYear || !previousUniversity}
                   >
                     다음
@@ -541,12 +541,12 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <Card className="p-6 bg-green-50/50 border-green-200">
+                <Card className="p-6 bg-iris-50 border-iris-100">
                   <div className="flex gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-iris-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-green-900 mb-1">제출 전 확인</h3>
-                      <p className="text-sm text-green-700">
+                      <h3 className="font-semibold text-iris-900 mb-1">제출 전 확인</h3>
+                      <p className="text-sm text-iris-700">
                         입력하신 정보를 다시 한번 확인해주세요.
                       </p>
                     </div>
@@ -554,8 +554,8 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                 </Card>
 
                 <Card className="p-6">
-                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-green-600" />
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900 mb-6 flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-iris-600" />
                     제출 내용 확인
                   </h2>
 
@@ -563,25 +563,25 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     {/* Student Info */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <GraduationCap className="w-5 h-5 text-emerald-600" />
+                        <GraduationCap className="w-5 h-5 text-iris-600" />
                         <h3 className="font-semibold">학생 정보</h3>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                      <div className="bg-zinc-50 rounded-xl p-4 space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">대학교</span>
+                          <span className="text-sm text-zinc-600">대학교</span>
                           <span className="font-medium">{university}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">학과</span>
+                          <span className="text-sm text-zinc-600">학과</span>
                           <span className="font-medium">{major}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">학번</span>
+                          <span className="text-sm text-zinc-600">학번</span>
                           <span className="font-medium">{studentId}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">학생증</span>
-                          <span className="font-medium text-green-600 flex items-center gap-1">
+                          <span className="text-sm text-zinc-600">학생증</span>
+                          <span className="font-medium text-iris-600 flex items-center gap-1">
                             <CheckCircle2 className="w-4 h-4" />
                             제출완료
                           </span>
@@ -592,21 +592,21 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                     {/* Admission Info */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <Award className="w-5 h-5 text-purple-600" />
+                        <Award className="w-5 h-5 text-iris-600" />
                         <h3 className="font-semibold">편입 정보</h3>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                      <div className="bg-zinc-50 rounded-xl p-4 space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">편입 연도</span>
+                          <span className="text-sm text-zinc-600">편입 연도</span>
                           <span className="font-medium">{admissionYear}년</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">전적대</span>
+                          <span className="text-sm text-zinc-600">전적대</span>
                           <span className="font-medium">{previousUniversity}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">합격증</span>
-                          <span className="font-medium text-green-600 flex items-center gap-1">
+                          <span className="text-sm text-zinc-600">합격증</span>
+                          <span className="font-medium text-iris-600 flex items-center gap-1">
                             <CheckCircle2 className="w-4 h-4" />
                             제출완료
                           </span>
@@ -640,7 +640,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                    className="flex-1"
                   >
                     제출하기
                   </Button>

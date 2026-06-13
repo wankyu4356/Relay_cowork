@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { logger } from '../utils/logger';
-import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import { RelayChainVisualization } from './RelayChainVisualization';
 import { 
   ArrowLeft, 
@@ -114,13 +114,13 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
   const getConnectionTypeColor = (type: string) => {
     switch (type) {
       case 'mentor':
-        return 'from-purple-400 to-indigo-500';
+        return 'from-iris-500 to-iris-700';
       case 'peer':
-        return 'from-blue-400 to-green-500';
+        return 'from-zinc-700 to-zinc-900';
       case 'mentee':
-        return 'from-green-400 to-emerald-500';
+        return 'from-iris-400 to-iris-600';
       default:
-        return 'from-gray-400 to-gray-500';
+        return 'from-zinc-400 to-zinc-500';
     }
   };
 
@@ -129,70 +129,70 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
   const menteeConnections = connectedRunners.filter(r => r.connectionType === 'mentee');
 
   return (
-    <div className="min-h-screen gradient-mesh pb-20">
+    <div className="min-h-screen bg-zinc-50 pb-20">
       <div className="container-web py-8">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
+        <FadeIn className="flex items-center gap-4 mb-8">
+          <Button
+            variant="ghost"
             size="icon"
             onClick={onBack}
-            className="hover:bg-white/50 rounded-xl"
+            className="rounded-xl"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-4xl font-bold gradient-text mb-2">릴레이 네트워크</h1>
-            <p className="text-gray-600">경험으로 연결된 러너들의 관계를 확인하세요</p>
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2">릴레이 네트워크</h1>
+            <p className="text-zinc-600">경험으로 연결된 러너들의 관계를 확인하세요</p>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Stats Overview */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Network className="w-6 h-6 text-purple-600" />
+        <Stagger className="grid md:grid-cols-4 gap-4 mb-8">
+          <Stagger.Item>
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Network className="w-6 h-6 text-iris-600" />
               </div>
-              <div className="text-3xl font-bold gradient-text mb-1">{connectedRunners.length}</div>
-              <div className="text-sm text-gray-600">연결된 러너</div>
+              <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={connectedRunners.length} /></div>
+              <div className="text-sm text-zinc-600">연결된 러너</div>
             </Card>
-          </motion.div>
+          </Stagger.Item>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-purple-600" />
+          <Stagger.Item>
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Users className="w-6 h-6 text-iris-600" />
               </div>
-              <div className="text-3xl font-bold text-purple-700 mb-1">{mentorConnections.length}</div>
-              <div className="text-sm text-gray-600">선배 러너</div>
+              <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={mentorConnections.length} /></div>
+              <div className="text-sm text-zinc-600">선배 러너</div>
             </Card>
-          </motion.div>
+          </Stagger.Item>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Award className="w-6 h-6 text-green-600" />
+          <Stagger.Item>
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Award className="w-6 h-6 text-iris-600" />
               </div>
-              <div className="text-3xl font-bold text-green-700 mb-1">{menteeConnections.length}</div>
-              <div className="text-sm text-gray-600">후배 러너</div>
+              <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={menteeConnections.length} /></div>
+              <div className="text-sm text-zinc-600">후배 러너</div>
             </Card>
-          </motion.div>
+          </Stagger.Item>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <Card className="p-6 text-center card-modern">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="w-6 h-6 text-blue-600" />
+          <Stagger.Item>
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="w-6 h-6 text-zinc-700" />
               </div>
-              <div className="text-3xl font-bold text-blue-700 mb-1">{peerConnections.length}</div>
-              <div className="text-sm text-gray-600">동료 러너</div>
+              <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={peerConnections.length} /></div>
+              <div className="text-sm text-zinc-600">동료 러너</div>
             </Card>
-          </motion.div>
-        </div>
+          </Stagger.Item>
+        </Stagger>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)} className="space-y-6">
-          <TabsList className="grid grid-cols-2 h-14 bg-white/50 backdrop-blur-sm shadow-sm">
+          <TabsList className="grid grid-cols-2 h-14 bg-zinc-100 shadow-sm">
             <TabsTrigger value="chain" className="data-[state=active]:bg-white text-base font-semibold">
               <Zap className="w-4 h-4 mr-2" />
               릴레이 체인
@@ -219,7 +219,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             {/* Mentors Section */}
             {mentorConnections.length > 0 && (
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg flex items-center justify-center">
                     <Users className="w-4 h-4 text-purple-600" />
                   </div>
@@ -227,56 +227,52 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {mentorConnections.map((runner, index) => (
-                    <motion.div
-                      key={runner.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <Card className="p-6 card-modern hover-lift cursor-pointer">
+                    <Stagger.Item key={runner.id}>
+                      <Press>
+                      <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
                           <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
                             {runner.avatar}
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-gray-900">러너 #{runner.id}</h4>
+                              <h4 className="font-semibold text-zinc-900">러너 #{runner.id}</h4>
                               <Badge className={`bg-gradient-to-r ${getConnectionTypeColor(runner.connectionType)} text-white border-0 text-xs`}>
                                 {getConnectionTypeText(runner.connectionType)}
                               </Badge>
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-zinc-600">
                               {runner.university} • {runner.major}
                             </div>
                           </div>
                         </div>
 
                         {/* Connection Path */}
-                        <div className="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
-                          <div className="text-xs text-gray-600 mb-1">경험 연결 경로</div>
-                          <div className="flex items-center gap-2 text-sm font-medium text-indigo-700">
+                        <div className="mb-4 p-3 bg-iris-50 rounded-xl">
+                          <div className="text-xs text-zinc-600 mb-1">경험 연결 경로</div>
+                          <div className="flex items-center gap-2 text-sm font-medium text-iris-700">
                             {runner.connectionPath.map((name, i) => (
                               <div key={i} className="flex items-center gap-2">
                                 <span>{name}</span>
                                 {i < runner.connectionPath.length - 1 && (
-                                  <Zap className="w-3 h-3 text-purple-500" />
+                                  <Zap className="w-3 h-3 text-iris-500" />
                                 )}
                               </div>
                             ))}
                           </div>
-                          <div className="text-xs text-purple-600 mt-1">
+                          <div className="text-xs text-iris-600 mt-1">
                             {runner.distance}단계 연결
                           </div>
                         </div>
 
                         {/* Shared Experiences */}
                         <div className="mb-4">
-                          <div className="text-xs text-gray-600 mb-2">공유된 경험</div>
+                          <div className="text-xs text-zinc-600 mb-2">공유된 경험</div>
                           <div className="flex flex-wrap gap-2">
                             {runner.sharedExperiences.map((exp, i) => (
                               <Badge
                                 key={i}
-                                className="bg-white border border-indigo-200 text-indigo-700 text-xs"
+                                className="bg-white border border-iris-200 text-iris-700 text-xs"
                               >
                                 {exp}
                               </Badge>
@@ -287,25 +283,25 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                         {/* Stats */}
                         {runner.sessions && (
                           <div className="grid grid-cols-3 gap-2 mb-4">
-                            <div className="text-center p-2 bg-yellow-50 rounded-lg">
+                            <div className="text-center p-2 bg-amber-50 rounded-lg">
                               <div className="flex items-center justify-center gap-1 mb-1">
-                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm font-bold">{runner.rating}</span>
+                                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                <span className="text-sm font-semibold tnum">{runner.rating}</span>
                               </div>
-                              <div className="text-xs text-gray-600">평점</div>
+                              <div className="text-xs text-zinc-600">평점</div>
                             </div>
-                            <div className="text-center p-2 bg-green-50 rounded-lg">
-                              <div className="text-sm font-bold text-green-700">{runner.successRate}%</div>
-                              <div className="text-xs text-gray-600">성공률</div>
+                            <div className="text-center p-2 bg-iris-50 rounded-lg">
+                              <div className="text-sm font-semibold text-iris-700 tnum">{runner.successRate}%</div>
+                              <div className="text-xs text-zinc-600">성공률</div>
                             </div>
-                            <div className="text-center p-2 bg-blue-50 rounded-lg">
-                              <div className="text-sm font-bold text-blue-700">{runner.sessions}</div>
-                              <div className="text-xs text-gray-600">전달</div>
+                            <div className="text-center p-2 bg-zinc-50 rounded-lg">
+                              <div className="text-sm font-semibold text-zinc-700 tnum">{runner.sessions}</div>
+                              <div className="text-xs text-zinc-600">전달</div>
                             </div>
                           </div>
                         )}
 
-                        <Button className="w-full btn-primary rounded-xl" size="sm">
+                        <Button className="w-full rounded-xl" size="sm">
                           <Calendar className="w-4 h-4 mr-2" />
                           릴레이 세션 예약
                         </Button>
@@ -319,64 +315,60 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             {/* Peers Section */}
             {peerConnections.length > 0 && (
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-4 h-4 text-blue-600" />
+                <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center">
+                    <Users className="w-4 h-4 text-zinc-700" />
                   </div>
                   동료 러너 ({peerConnections.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {peerConnections.map((runner, index) => (
-                    <motion.div
-                      key={runner.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <Card className="p-6 card-modern hover-lift cursor-pointer">
+                    <Stagger.Item key={runner.id}>
+                      <Press>
+                      <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
                           <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
                             {runner.avatar}
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-gray-900">러너 #{runner.id}</h4>
+                              <h4 className="font-semibold text-zinc-900">러너 #{runner.id}</h4>
                               <Badge className={`bg-gradient-to-r ${getConnectionTypeColor(runner.connectionType)} text-white border-0 text-xs`}>
                                 {getConnectionTypeText(runner.connectionType)}
                               </Badge>
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-zinc-600">
                               {runner.university} • {runner.major}
                             </div>
                           </div>
                         </div>
 
                         {/* Connection Path */}
-                        <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl">
-                          <div className="text-xs text-gray-600 mb-1">경험 연결 경로</div>
-                          <div className="flex items-center gap-2 text-sm font-medium text-blue-700">
+                        <div className="mb-4 p-3 bg-zinc-50 rounded-xl">
+                          <div className="text-xs text-zinc-600 mb-1">경험 연결 경로</div>
+                          <div className="flex items-center gap-2 text-sm font-medium text-zinc-700">
                             {runner.connectionPath.map((name, i) => (
                               <div key={i} className="flex items-center gap-2">
                                 <span className="truncate max-w-[80px]">{name}</span>
                                 {i < runner.connectionPath.length - 1 && (
-                                  <Zap className="w-3 h-3 text-green-500" />
+                                  <Zap className="w-3 h-3 text-zinc-400" />
                                 )}
                               </div>
                             ))}
                           </div>
-                          <div className="text-xs text-green-600 mt-1">
+                          <div className="text-xs text-zinc-500 mt-1">
                             {runner.distance}단계 연결
                           </div>
                         </div>
 
                         {/* Shared Experiences */}
                         <div className="mb-4">
-                          <div className="text-xs text-gray-600 mb-2">공유된 경험</div>
+                          <div className="text-xs text-zinc-600 mb-2">공유된 경험</div>
                           <div className="flex flex-wrap gap-2">
                             {runner.sharedExperiences.map((exp, i) => (
                               <Badge
                                 key={i}
-                                className="bg-white border border-blue-200 text-blue-700 text-xs"
+                                className="bg-white border border-zinc-200 text-zinc-700 text-xs"
                               >
                                 {exp}
                               </Badge>
@@ -386,25 +378,25 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
 
                         {runner.sessions && (
                           <div className="grid grid-cols-3 gap-2 mb-4">
-                            <div className="text-center p-2 bg-yellow-50 rounded-lg">
+                            <div className="text-center p-2 bg-amber-50 rounded-lg">
                               <div className="flex items-center justify-center gap-1 mb-1">
-                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm font-bold">{runner.rating}</span>
+                                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                <span className="text-sm font-semibold tnum">{runner.rating}</span>
                               </div>
-                              <div className="text-xs text-gray-600">평점</div>
+                              <div className="text-xs text-zinc-600">평점</div>
                             </div>
-                            <div className="text-center p-2 bg-green-50 rounded-lg">
-                              <div className="text-sm font-bold text-green-700">{runner.successRate}%</div>
-                              <div className="text-xs text-gray-600">성공률</div>
+                            <div className="text-center p-2 bg-iris-50 rounded-lg">
+                              <div className="text-sm font-semibold text-iris-700 tnum">{runner.successRate}%</div>
+                              <div className="text-xs text-zinc-600">성공률</div>
                             </div>
-                            <div className="text-center p-2 bg-blue-50 rounded-lg">
-                              <div className="text-sm font-bold text-blue-700">{runner.sessions}</div>
-                              <div className="text-xs text-gray-600">전달</div>
+                            <div className="text-center p-2 bg-zinc-50 rounded-lg">
+                              <div className="text-sm font-semibold text-zinc-700 tnum">{runner.sessions}</div>
+                              <div className="text-xs text-zinc-600">전달</div>
                             </div>
                           </div>
                         )}
 
-                        <Button className="w-full btn-secondary rounded-xl" size="sm">
+                        <Button variant="outline" className="w-full rounded-xl" size="sm">
                           <Network className="w-4 h-4 mr-2" />
                           정보 교류하기
                         </Button>
@@ -418,21 +410,17 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             {/* Mentees Section */}
             {menteeConnections.length > 0 && (
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg flex items-center justify-center">
-                    <Award className="w-4 h-4 text-green-600" />
+                <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-iris-50 rounded-lg flex items-center justify-center">
+                    <Award className="w-4 h-4 text-iris-600" />
                   </div>
                   후배 러너 ({menteeConnections.length})
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {menteeConnections.map((runner, index) => (
-                    <motion.div
-                      key={runner.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <Card className="p-6 card-modern hover-lift cursor-pointer">
+                    <Stagger.Item key={runner.id}>
+                      <Press>
+                      <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
                           <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
                             {runner.avatar}
@@ -444,43 +432,43 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-gray-900">{runner.name}</h4>
+                              <h4 className="font-semibold text-zinc-900">{runner.name}</h4>
                               <Badge className={`bg-gradient-to-r ${getConnectionTypeColor(runner.connectionType)} text-white border-0 text-xs`}>
                                 {getConnectionTypeText(runner.connectionType)}
                               </Badge>
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-zinc-600">
                               {runner.university} • {runner.major}
                             </div>
                           </div>
                         </div>
 
                         {/* Connection Path */}
-                        <div className="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl">
-                          <div className="text-xs text-gray-600 mb-1">경험 전달 경로</div>
-                          <div className="flex items-center gap-2 text-sm font-medium text-green-700">
+                        <div className="mb-4 p-3 bg-iris-50 rounded-xl">
+                          <div className="text-xs text-zinc-600 mb-1">경험 전달 경로</div>
+                          <div className="flex items-center gap-2 text-sm font-medium text-iris-700">
                             {runner.connectionPath.map((name, i) => (
                               <div key={i} className="flex items-center gap-2">
                                 <span>{name}</span>
                                 {i < runner.connectionPath.length - 1 && (
-                                  <Zap className="w-3 h-3 text-emerald-500" />
+                                  <Zap className="w-3 h-3 text-iris-500" />
                                 )}
                               </div>
                             ))}
                           </div>
-                          <div className="text-xs text-emerald-600 mt-1">
+                          <div className="text-xs text-iris-600 mt-1">
                             내가 직접 전달
                           </div>
                         </div>
 
                         {/* Shared Experiences */}
                         <div className="mb-4">
-                          <div className="text-xs text-gray-600 mb-2">전달한 경험</div>
+                          <div className="text-xs text-zinc-600 mb-2">전달한 경험</div>
                           <div className="flex flex-wrap gap-2">
                             {runner.sharedExperiences.map((exp, i) => (
                               <Badge
                                 key={i}
-                                className="bg-white border border-green-200 text-green-700 text-xs"
+                                className="bg-white border border-iris-200 text-iris-700 text-xs"
                               >
                                 {exp}
                               </Badge>
@@ -490,9 +478,9 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
 
                         {/* Success Badge */}
                         {runner.successRate === 100 && (
-                          <div className="mb-4 p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl text-white text-center">
+                          <div className="mb-4 p-3 bg-iris-600 rounded-xl text-white text-center">
                             <Award className="w-6 h-6 mx-auto mb-1" />
-                            <div className="text-sm font-bold">합격 완료! 🎉</div>
+                            <div className="text-sm font-semibold">합격 완료! 🎉</div>
                             <div className="text-xs opacity-90">릴레이 성공</div>
                           </div>
                         )}

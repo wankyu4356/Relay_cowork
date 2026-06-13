@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import {
   ArrowLeft,
   Star,
@@ -183,8 +184,8 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
             key={star}
             className={`w-4 h-4 ${
               star <= rating
-                ? 'fill-yellow-400 text-yellow-400'
-                : 'fill-gray-200 text-gray-200'
+                ? 'fill-amber-400 text-amber-400'
+                : 'fill-zinc-200 text-zinc-200'
             }`}
           />
         ))}
@@ -193,24 +194,25 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
   };
 
   return (
-    <div className="min-h-screen gradient-mesh pb-20">
+    <div className="min-h-screen bg-zinc-50 pb-20">
       <div className="container-web py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">내 리뷰 & 평점</h1>
-          <p className="text-gray-600">러너들이 남긴 솔직한 후기를 확인하세요</p>
-        </div>
+        <FadeIn className="mb-8">
+          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2">내 리뷰 & 평점</h1>
+          <p className="text-zinc-600">러너들이 남긴 솔직한 후기를 확인하세요</p>
+        </FadeIn>
 
         {/* Overview Stats */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Rating Summary */}
-          <Card className="p-8 card-modern">
+          <FadeIn>
+          <Card className="p-8">
             <div className="text-center mb-6">
-              <div className="text-6xl font-bold gradient-text mb-3">{averageRating}</div>
+              <div className="text-6xl font-semibold tracking-tight text-zinc-900 mb-3"><CountUp value={parseFloat(averageRating)} /></div>
               <div className="flex justify-center mb-2">
                 {renderStars(parseFloat(averageRating))}
               </div>
-              <div className="text-gray-600">총 {totalReviews}개의 리뷰</div>
+              <div className="text-zinc-600">총 {totalReviews}개의 리뷰</div>
             </div>
 
             {/* Rating Distribution */}
@@ -220,78 +222,81 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                 const percentage = (count / totalReviews) * 100;
                 return (
                   <div key={rating} className="flex items-center gap-3">
-                    <div className="w-12 text-sm text-gray-600 flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    <div className="w-12 text-sm text-zinc-600 flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                       {rating}
                     </div>
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full transition-all"
-                        style={{ width: `${percentage}%` }}
+                    <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-iris-600 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                       />
                     </div>
-                    <div className="w-12 text-sm text-gray-600 text-right">{count}</div>
+                    <div className="w-12 text-sm text-zinc-600 text-right tnum">{count}</div>
                   </div>
                 );
               })}
             </div>
           </Card>
+          </FadeIn>
 
           {/* Additional Stats */}
-          <div className="grid grid-cols-2 gap-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <Award className="w-7 h-7 text-green-600" />
+          <Stagger className="grid grid-cols-2 gap-4">
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Award className="w-7 h-7 text-iris-600" />
                 </div>
-                <div className="text-3xl font-bold text-green-700 mb-1">{passedReviews}</div>
-                <div className="text-sm text-gray-600">합격 러너</div>
+                <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={passedReviews} /></div>
+                <div className="text-sm text-zinc-600">합격 러너</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <ThumbsUp className="w-7 h-7 text-emerald-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <ThumbsUp className="w-7 h-7 text-iris-600" />
                 </div>
-                <div className="text-3xl font-bold text-emerald-700 mb-1">{totalHelpful}</div>
-                <div className="text-sm text-gray-600">도움됨 수</div>
+                <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={totalHelpful} /></div>
+                <div className="text-sm text-zinc-600">도움됨 수</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <TrendingUp className="w-7 h-7 text-purple-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-iris-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <TrendingUp className="w-7 h-7 text-iris-600" />
                 </div>
-                <div className="text-3xl font-bold text-purple-700 mb-1">100%</div>
-                <div className="text-sm text-gray-600">추천률</div>
+                <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1 tnum">100%</div>
+                <div className="text-sm text-zinc-600">추천률</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <Star className="w-7 h-7 text-amber-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Star className="w-7 h-7 text-amber-500" />
                 </div>
-                <div className="text-3xl font-bold text-amber-700 mb-1">{ratingDistribution[5]}</div>
-                <div className="text-sm text-gray-600">5점 리뷰</div>
+                <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={ratingDistribution[5]} /></div>
+                <div className="text-sm text-zinc-600">5점 리뷰</div>
               </Card>
-            </motion.div>
-          </div>
+            </Stagger.Item>
+          </Stagger>
         </div>
 
         {/* Top Tags */}
-        <Card className="p-6 mb-8 card-modern">
-          <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-indigo-600" />
+        <Card className="p-6 mb-8">
+          <h3 className="font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-iris-600" />
             자주 받는 칭찬
           </h3>
           <div className="flex flex-wrap gap-2">
             {topTags.map(([tag, count]) => (
               <Badge
                 key={tag}
-                className="bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200 px-4 py-2 text-sm"
+                className="bg-iris-50 text-iris-700 border border-iris-100 px-4 py-2 text-sm"
               >
                 {tag} ({count})
               </Badge>
@@ -304,82 +309,72 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
           <Button
             variant={filterSuccess === 'all' ? 'default' : 'outline'}
             onClick={() => setFilterSuccess('all')}
-            className={filterSuccess === 'all' ? 'btn-primary' : 'btn-secondary'}
           >
             전체 ({reviews.length})
           </Button>
           <Button
             variant={filterSuccess === 'passed' ? 'default' : 'outline'}
             onClick={() => setFilterSuccess('passed')}
-            className={filterSuccess === 'passed' ? 'btn-primary' : 'btn-secondary'}
           >
             합격 ({passedReviews})
           </Button>
           <Button
             variant={filterSuccess === 'pending' ? 'default' : 'outline'}
             onClick={() => setFilterSuccess('pending')}
-            className={filterSuccess === 'pending' ? 'btn-primary' : 'btn-secondary'}
           >
             준비중 ({reviews.length - passedReviews})
           </Button>
-          <div className="h-8 w-px bg-gray-300 mx-2" />
+          <div className="h-8 w-px bg-zinc-200/80 mx-2" />
           <Button
             variant={filterRating === 'all' ? 'default' : 'outline'}
             onClick={() => setFilterRating('all')}
-            className={filterRating === 'all' ? 'btn-primary' : 'btn-secondary'}
           >
             전체 평점
           </Button>
           <Button
             variant={filterRating === 5 ? 'default' : 'outline'}
             onClick={() => setFilterRating(5)}
-            className={filterRating === 5 ? 'btn-primary' : 'btn-secondary'}
           >
             ⭐ 5점
           </Button>
           <Button
             variant={filterRating === 4 ? 'default' : 'outline'}
             onClick={() => setFilterRating(4)}
-            className={filterRating === 4 ? 'btn-primary' : 'btn-secondary'}
           >
             ⭐ 4점 이상
           </Button>
         </div>
 
         {/* Reviews List */}
-        <div className="space-y-4">
-          {filteredReviews.map((review, index) => (
-            <motion.div
-              key={review.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card className="p-6 card-modern hover-lift">
+        <Stagger className="space-y-4">
+          {filteredReviews.map((review) => (
+            <Stagger.Item key={review.id}>
+              <Press lift={false}>
+              <Card className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">
+                    <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center text-2xl">
                       {review.menteeAvatar}
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <h4 className="font-bold text-gray-900">{review.menteeName}</h4>
+                        <h4 className="font-semibold text-zinc-900">{review.menteeName}</h4>
                         {review.successStatus === 'passed' && (
-                          <Badge className="bg-green-500 text-white">
+                          <Badge className="bg-iris-600 text-white">
                             <Award className="w-3 h-3 mr-1" />
                             합격
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <div className="flex items-center gap-3 text-sm text-zinc-600">
                         <div className="flex items-center gap-1">
                           {renderStars(review.rating)}
-                          <span className="ml-1 font-semibold">{review.rating}</span>
+                          <span className="ml-1 font-semibold tnum">{review.rating}</span>
                         </div>
-                        <span className="text-gray-400">•</span>
+                        <span className="text-zinc-400">•</span>
                         <span>{review.university}</span>
-                        <span className="text-gray-400">•</span>
+                        <span className="text-zinc-400">•</span>
                         <span>{review.date}</span>
                       </div>
                     </div>
@@ -387,7 +382,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                 </div>
 
                 {/* Content */}
-                <p className="text-gray-700 leading-relaxed mb-4 pl-16">
+                <p className="text-zinc-700 leading-relaxed mb-4 pl-16">
                   {review.content}
                 </p>
 
@@ -396,7 +391,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                   {review.tags.map((tag) => (
                     <Badge
                       key={tag}
-                      className="bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      className="bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                     >
                       {tag}
                     </Badge>
@@ -404,35 +399,32 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pl-16 pt-4 border-t border-gray-100">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center justify-between pl-16 pt-4 border-t border-zinc-200/80">
+                  <div className="flex items-center gap-2 text-sm text-zinc-600">
                     <ThumbsUp className="w-4 h-4" />
                     <span>{review.helpful}명이 도움됨</span>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50">
+                  <Button variant="ghost" size="sm" className="text-iris-600 hover:text-iris-700 hover:bg-iris-50">
                     답글 작성
                   </Button>
                 </div>
               </Card>
-            </motion.div>
+              </Press>
+            </Stagger.Item>
           ))}
-        </div>
+        </Stagger>
 
         {/* Empty State */}
         {filteredReviews.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="empty-state"
-          >
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Star className="w-12 h-12 text-gray-300" />
+          <FadeIn className="empty-state">
+            <div className="w-24 h-24 bg-zinc-100 rounded-full flex items-center justify-center mb-6">
+              <Star className="w-12 h-12 text-zinc-300" />
             </div>
             <h3 className="empty-state-title">해당하는 리뷰가 없습니다</h3>
             <p className="empty-state-description">
               다른 필터를 선택해보세요
             </p>
-          </motion.div>
+          </FadeIn>
         )}
       </div>
     </div>

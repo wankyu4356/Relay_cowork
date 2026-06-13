@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import { ArrowLeft, DollarSign, TrendingUp, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
@@ -57,16 +58,16 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-zinc-50">
+      <div className="bg-white border-b border-zinc-200/80">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold">수익 & 정산</h1>
-              <p className="text-gray-600 mt-1">릴레이 수익을 확인하고 출금하세요</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">수익 & 정산</h1>
+              <p className="text-zinc-600 mt-1">릴레이 수익을 확인하고 출금하세요</p>
             </div>
           </div>
         </div>
@@ -75,155 +76,156 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
       <div className="container-web py-8">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Summary Cards */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-6 bg-gradient-to-br from-emerald-500 to-green-600 text-white">
+          <Stagger className="grid md:grid-cols-3 gap-6">
+            <Stagger.Item>
+              <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center">
                     <DollarSign className="w-6 h-6" />
                   </div>
                   <div>
                     <div className="text-sm opacity-90">총 수익</div>
-                    <div className="text-3xl font-bold">3,670,000원</div>
+                    <div className="text-3xl font-semibold tracking-tight"><CountUp value={3670000} />원</div>
                   </div>
                 </div>
                 <div className="text-sm opacity-75">전체 누적 수익</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-6 border-2 border-emerald-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-600">출금 가능</div>
-                    <div className="text-3xl font-bold text-emerald-600">640,000원</div>
-                  </div>
-                </div>
-                <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white" onClick={handleWithdraw}>출금 신청</Button>
-              </Card>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <Stagger.Item>
               <Card className="p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-gray-600" />
+                  <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-iris-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-600">정산 대기</div>
-                    <div className="text-3xl font-bold">210,000원</div>
+                    <div className="text-sm text-zinc-600">출금 가능</div>
+                    <div className="text-3xl font-semibold tracking-tight text-iris-600"><CountUp value={640000} />원</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">세션 완료 후 정산</div>
+                <Button className="w-full" onClick={handleWithdraw}>출금 신청</Button>
               </Card>
-            </motion.div>
-          </div>
+            </Stagger.Item>
+
+            <Stagger.Item>
+              <Card className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-zinc-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-zinc-600">정산 대기</div>
+                    <div className="text-3xl font-semibold tracking-tight text-zinc-900"><CountUp value={210000} />원</div>
+                  </div>
+                </div>
+                <div className="text-sm text-zinc-400">세션 완료 후 정산</div>
+              </Card>
+            </Stagger.Item>
+          </Stagger>
 
           {/* Chart */}
+          <FadeIn>
           <Card className="p-6">
-            <h3 className="font-semibold text-lg mb-4">월별 수익 추이</h3>
+            <h3 className="font-semibold text-lg text-zinc-900 mb-4">월별 수익 추이</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number) => `${value.toLocaleString()}원`}
-                  contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid #e4e4e7' }}
                 />
                 <Bar dataKey="revenue" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10B981" />
-                    <stop offset="100%" stopColor="#34D399" />
+                    <stop offset="0%" stopColor="#4f46e5" />
+                    <stop offset="100%" stopColor="#818cf8" />
                   </linearGradient>
                 </defs>
               </BarChart>
             </ResponsiveContainer>
           </Card>
+          </FadeIn>
 
           {/* Transactions */}
+          <FadeIn>
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-lg">최근 거래 내역</h3>
+              <h3 className="font-semibold text-lg text-zinc-900">최근 거래 내역</h3>
               <Button variant="outline" size="sm" onClick={handleDownload}>
                 <Download className="w-4 h-4 mr-2" />
                 내역 다운로드
               </Button>
             </div>
-            <div className="space-y-3">
-              {transactions.map((tx, index) => (
-                <motion.div
-                  key={tx.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition-colors">
+            <Stagger className="space-y-3">
+              {transactions.map((tx) => (
+                <Stagger.Item key={tx.id}>
+                  <div className="flex items-center justify-between p-4 bg-zinc-50 rounded-lg hover:bg-iris-50 transition-colors">
                     <div className="flex-1">
-                      <div className="font-semibold">{tx.mentee}</div>
-                      <div className="text-sm text-gray-600">{tx.date}</div>
+                      <div className="font-semibold text-zinc-900">{tx.mentee}</div>
+                      <div className="text-sm text-zinc-600 tnum">{tx.date}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold text-lg">{tx.amount.toLocaleString()}원</div>
-                      <Badge className={tx.status === 'completed' ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}>
+                      <div className="font-semibold text-lg text-zinc-900 tnum">{tx.amount.toLocaleString()}원</div>
+                      <Badge className={tx.status === 'completed' ? 'bg-iris-600 text-white' : 'bg-zinc-400 text-white'}>
                         {tx.status === 'completed' ? '정산완료' : '대기중'}
                       </Badge>
                     </div>
                   </div>
-                </motion.div>
+                </Stagger.Item>
               ))}
-            </div>
+            </Stagger>
           </Card>
+          </FadeIn>
 
           {/* Dynamic Pricing Tier Info */}
-          <Card className="p-6 bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
-            <h3 className="font-semibold mb-4">💰 다이나믹 프라이싱 등급</h3>
-            <p className="text-sm text-gray-600 mb-4">실적이 쌓일수록 더 높은 가격을 설정할 수 있습니다</p>
+          <FadeIn>
+          <Card className="p-6 bg-iris-50 border-iris-100">
+            <h3 className="font-semibold text-zinc-900 mb-4">💰 다이나믹 프라이싱 등급</h3>
+            <p className="text-sm text-zinc-600 mb-4">실적이 쌓일수록 더 높은 가격을 설정할 수 있습니다</p>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
                   <span>🥉 브론즈 (0-10건)</span>
-                  <div className="text-xs text-gray-500">15,000~30,000원</div>
+                  <div className="text-xs text-zinc-400 tnum">15,000~30,000원</div>
                 </div>
-                <span className="font-semibold">수수료 25%</span>
+                <span className="font-semibold tnum">수수료 25%</span>
               </div>
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
                   <span>🥈 실버 (11-30건)</span>
-                  <div className="text-xs text-gray-500">30,000~50,000원</div>
+                  <div className="text-xs text-zinc-400 tnum">30,000~50,000원</div>
                 </div>
-                <span className="font-semibold">수수료 22%</span>
+                <span className="font-semibold tnum">수수료 22%</span>
               </div>
-              <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-100 border border-emerald-200">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white border border-iris-200">
                 <div>
-                  <span className="text-emerald-700 font-semibold">🥇 골드 (31-60건) - 현재 등급</span>
-                  <div className="text-xs text-emerald-600">50,000~80,000원</div>
+                  <span className="text-iris-700 font-semibold">🥇 골드 (31-60건) - 현재 등급</span>
+                  <div className="text-xs text-iris-600 tnum">50,000~80,000원</div>
                 </div>
-                <span className="font-semibold text-emerald-700">수수료 18%</span>
+                <span className="font-semibold text-iris-700 tnum">수수료 18%</span>
               </div>
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
                   <span>💎 플래티넘 (61건+)</span>
-                  <div className="text-xs text-gray-500">80,000~120,000원</div>
+                  <div className="text-xs text-zinc-400 tnum">80,000~120,000원</div>
                 </div>
-                <span className="font-semibold">수수료 15%</span>
+                <span className="font-semibold tnum">수수료 15%</span>
               </div>
             </div>
-            <div className="mt-4 p-3 bg-white rounded-lg border border-emerald-200">
-              <div className="text-sm font-semibold text-gray-700 mb-2">다음 등급까지</div>
+            <div className="mt-4 p-3 bg-white rounded-lg border border-iris-100">
+              <div className="text-sm font-semibold text-zinc-700 mb-2">다음 등급까지</div>
               <div className="flex items-center gap-2 mb-1">
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-emerald-400 to-green-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+                <div className="flex-1 bg-zinc-200 rounded-full h-2">
+                  <motion.div className="bg-iris-600 h-2 rounded-full" initial={{ width: 0 }} animate={{ width: '70%' }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}></motion.div>
                 </div>
-                <span className="text-xs text-gray-600 whitespace-nowrap">💎 플래티넘</span>
+                <span className="text-xs text-zinc-600 whitespace-nowrap">💎 플래티넘</span>
               </div>
-              <div className="text-xs text-gray-500">세션 19건 더 / 리뷰 8건 더 필요</div>
+              <div className="text-xs text-zinc-400">세션 19건 더 / 리뷰 8건 더 필요</div>
             </div>
           </Card>
+          </FadeIn>
         </div>
       </div>
     </div>

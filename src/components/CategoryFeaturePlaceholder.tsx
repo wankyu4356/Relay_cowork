@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { FadeIn, Stagger, Press } from './ui/motion';
 import {
   ArrowLeft,
   ClipboardList,
@@ -103,92 +103,74 @@ export function CategoryFeaturePlaceholder({ screen, selectedCategory, onBack }:
   const Icon = config.icon;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${content.theme.bgGradient} pb-20 md:pb-0`}>
+    <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
       <div className="container-web py-6">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
+        <FadeIn className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="icon" onClick={onBack} className="rounded-xl">
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className={`text-2xl font-bold bg-gradient-to-r ${content.theme.headerGradient} bg-clip-text text-transparent`}>
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
               {config.title}
             </h1>
-            <p className="text-sm text-gray-500">{content.label} 전용 기능</p>
+            <p className="text-sm text-zinc-400">{content.label} 전용 기능</p>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Main Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <Card className="relative overflow-hidden border-0 shadow-2xl rounded-3xl mb-8">
-            <div className={`absolute inset-0 bg-gradient-to-br ${content.theme.cardGradient1}`}></div>
-            <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+        <FadeIn delay={0.05}>
+          <Card className="relative overflow-hidden border border-zinc-200/80 shadow-md rounded-2xl mb-8">
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-iris-800"></div>
+            <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
             <div className="relative p-12 text-center">
               <div className="relative inline-block mb-6">
-                <div className={`absolute inset-0 bg-gradient-to-br ${content.theme.gradient} rounded-3xl blur-xl opacity-40 scale-110`}></div>
-                <div className="relative w-24 h-24 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 flex items-center justify-center mx-auto">
+                <div className="relative w-24 h-24 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center mx-auto">
                   <Icon className="w-12 h-12 text-white" />
                 </div>
               </div>
 
-              <h2 className="text-3xl font-bold text-white mb-3">{config.title}</h2>
-              <p className="text-white/80 text-lg mb-6 max-w-md mx-auto">{config.description}</p>
+              <h2 className="text-3xl font-semibold tracking-tight text-white mb-3">{config.title}</h2>
+              <p className="text-white/70 text-lg mb-6 max-w-md mx-auto">{config.description}</p>
 
               <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/15 backdrop-blur-sm rounded-full border border-white/20 mb-8">
-                <Construction className="w-5 h-5 text-yellow-300" />
+                <Construction className="w-5 h-5 text-amber-300" />
                 <span className="text-white font-medium">곧 출시 예정</span>
-                <Sparkles className="w-4 h-4 text-yellow-300" />
+                <Sparkles className="w-4 h-4 text-amber-300" />
               </div>
             </div>
           </Card>
-        </motion.div>
+        </FadeIn>
 
         {/* Features Preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <h3 className="text-xl font-bold text-gray-900 mb-4">예정된 기능</h3>
-          <div className="grid md:grid-cols-2 gap-4">
+        <FadeIn delay={0.1}>
+          <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4">예정된 기능</h3>
+          <Stagger className="grid md:grid-cols-2 gap-4">
             {config.features.map((feature, index) => (
-              <motion.div
-                key={feature}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
-              >
-                <Card className="p-5 border border-gray-200/50 rounded-2xl hover:shadow-md transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 bg-gradient-to-br ${content.theme.gradient} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                      <span className="text-white font-bold text-sm">{index + 1}</span>
+              <Stagger.Item key={feature}>
+                <Press>
+                  <Card className="p-5 border border-zinc-200/80 rounded-2xl hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <span className="text-iris-600 font-semibold text-sm tnum">{index + 1}</span>
+                      </div>
+                      <span className="text-zinc-700 font-medium">{feature}</span>
                     </div>
-                    <span className="text-gray-800 font-medium">{feature}</span>
-                  </div>
-                </Card>
-              </motion.div>
+                  </Card>
+                </Press>
+              </Stagger.Item>
             ))}
-          </div>
-        </motion.div>
+          </Stagger>
+        </FadeIn>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-8 text-center"
-        >
-          <p className="text-gray-500 mb-4">출시 알림을 받으시겠어요?</p>
-          <Button
-            className={`bg-gradient-to-r ${content.theme.gradient} text-white font-bold rounded-xl px-8 py-3 shadow-lg`}
-          >
+        <FadeIn delay={0.2} className="mt-8 text-center">
+          <p className="text-zinc-400 mb-4">출시 알림을 받으시겠어요?</p>
+          <Button className="rounded-xl px-8 py-3">
             알림 신청하기
           </Button>
-        </motion.div>
+        </FadeIn>
       </div>
     </div>
   );

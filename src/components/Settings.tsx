@@ -10,6 +10,7 @@ import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { FadeIn, Press } from './ui/motion';
 import {
   Dialog,
   DialogContent,
@@ -131,21 +132,21 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-slate-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Press lift={false}>
               <Button variant="ghost" size="icon" onClick={onBack}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-            </motion.div>
+            </Press>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
                 릴레이 설정
               </h1>
-              <p className="text-gray-600 mt-1">계정 및 앱 설정을 관리하세요</p>
+              <p className="text-zinc-600 mt-1">계정 및 앱 설정을 관리하세요</p>
             </div>
           </div>
         </div>
@@ -154,63 +155,63 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
       <div className="container-web py-8 pb-24">
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Profile Summary Card */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <Card className="p-6">
+          <FadeIn>
+            <Card className="p-6 rounded-2xl">
               <div className="flex items-start gap-4">
                 <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center text-3xl">
+                  <div className="w-20 h-20 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center text-3xl shadow-sm">
                     👨‍🎓
                   </div>
-                  <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                    <Camera className="w-4 h-4 text-gray-600" />
+                  <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-md border-2 border-zinc-200/80 flex items-center justify-center hover:bg-zinc-50 transition-colors">
+                    <Camera className="w-4 h-4 text-zinc-600" />
                   </button>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-xl font-bold">{profileName}</h2>
+                    <h2 className="text-xl text-zinc-900 font-semibold tracking-tight">{profileName}</h2>
                     {isMentorActive && (
-                      <Badge className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0">
+                      <Badge className="bg-iris-600 text-white border-0">
                         <Award className="w-3 h-3 mr-1" />
                         러너
                       </Badge>
                     )}
                   </div>
-                  <p className="text-gray-600 mb-3">{profileBio}</p>
+                  <p className="text-zinc-600 mb-3">{profileBio}</p>
                   <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1 text-gray-600">
+                    <div className="flex items-center gap-1 text-zinc-600">
                       <Wallet className="w-4 h-4" />
-                      <span className="font-semibold">{credits} 크레딧</span>
+                      <span className="font-semibold tnum">{credits} 크레딧</span>
                     </div>
-                    <span className="text-gray-300">•</span>
-                    <div className="text-gray-600">{profileEmail}</div>
+                    <span className="text-zinc-300">•</span>
+                    <div className="text-zinc-600">{profileEmail}</div>
                   </div>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Account Section */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-gray-600" />
+          <FadeIn delay={0.1}>
+            <h2 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4 flex items-center gap-2">
+              <User className="w-5 h-5 text-zinc-600" />
               계정 정보
             </h2>
-            <Card className="divide-y">
-              <div 
-                className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group"
+            <Card className="divide-y divide-zinc-200/80 rounded-2xl">
+              <div
+                className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group"
                 onClick={() => setActiveSection(activeSection === 'profile' ? null : 'profile')}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <Edit2 className="w-5 h-5 text-gray-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <Edit2 className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">프로필 수정</div>
-                      <div className="text-sm text-gray-600">사진, 닉네임, 소개 변경</div>
+                      <div className="font-medium text-zinc-900">프로필 수정</div>
+                      <div className="text-sm text-zinc-600">사진, 닉네임, 소개 변경</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
 
                 {activeSection === 'profile' && (
@@ -221,7 +222,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                     className="mt-4 pt-4 border-t space-y-4"
                   >
                     <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">이름</label>
+                      <label className="text-sm font-medium text-zinc-700 mb-2 block">이름</label>
                       <Input
                         value={profileName}
                         onChange={(e) => setProfileName(e.target.value)}
@@ -229,7 +230,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">소개</label>
+                      <label className="text-sm font-medium text-zinc-700 mb-2 block">소개</label>
                       <Input
                         value={profileBio}
                         onChange={(e) => setProfileBio(e.target.value)}
@@ -237,7 +238,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">이메일</label>
+                      <label className="text-sm font-medium text-zinc-700 mb-2 block">이메일</label>
                       <Input
                         value={profileEmail}
                         onChange={(e) => setProfileEmail(e.target.value)}
@@ -245,9 +246,9 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                         type="email"
                       />
                     </div>
-                    <Button 
+                    <Button
                       onClick={handleSaveProfile}
-                      className="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-700 hover:to-gray-600"
+                      className="w-full"
                     >
                       <Check className="w-4 h-4 mr-2" />
                       저장하기
@@ -256,255 +257,255 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 )}
               </div>
 
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowSchoolDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowSchoolDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <Award className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center group-hover:bg-iris-100 transition-colors">
+                      <Award className="w-5 h-5 text-iris-600" />
                     </div>
                     <div>
-                      <div className="font-medium">학교 정보</div>
-                      <div className="text-sm text-gray-600">전적대 및 지원 대학 정보</div>
+                      <div className="font-medium text-zinc-900">학교 정보</div>
+                      <div className="text-sm text-zinc-600">전적대 및 지원 대학 정보</div>
                     </div>
                   </div>
                   <Badge variant="outline">{targetSchool} {targetMajor}</Badge>
                 </div>
               </div>
 
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowVerificationDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowVerificationDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <Shield className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <Shield className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">인증 정보</div>
-                      <div className="text-sm text-gray-600">학생 인증, 합격증 인증</div>
+                      <div className="font-medium text-zinc-900">인증 정보</div>
+                      <div className="text-sm text-zinc-600">학생 인증, 합격증 인증</div>
                     </div>
                   </div>
-                  <Badge className="bg-green-500 text-white border-0">
+                  <Badge className="bg-zinc-900 text-white border-0">
                     <Check className="w-3 h-3 mr-1" />
                     인증완료
                   </Badge>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Notifications */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-gray-600" />
+          <FadeIn delay={0.2}>
+            <h2 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-zinc-600" />
               알림 설정
             </h2>
-            <Card className="divide-y">
+            <Card className="divide-y divide-zinc-200/80 rounded-2xl">
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <Bell className="w-5 h-5 text-gray-600" />
+                  <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center">
+                    <Bell className="w-5 h-5 text-zinc-600" />
                   </div>
                   <div>
-                    <div className="font-medium">세션 리마인더</div>
-                    <div className="text-sm text-gray-600">세션 1시간 전 알림</div>
+                    <div className="font-medium text-zinc-900">세션 리마인더</div>
+                    <div className="text-sm text-zinc-600">세션 1시간 전 알림</div>
                   </div>
                 </div>
                 <Switch checked={sessionReminder} onCheckedChange={setSessionReminder} />
               </div>
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-iris-600" />
                   </div>
                   <div>
-                    <div className="font-medium">메시지 알림</div>
-                    <div className="text-sm text-gray-600">새 메시지 도착 시 알림</div>
+                    <div className="font-medium text-zinc-900">메시지 알림</div>
+                    <div className="text-sm text-zinc-600">새 메시지 도착 시 알림</div>
                   </div>
                 </div>
                 <Switch checked={messageNotif} onCheckedChange={setMessageNotif} />
               </div>
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                    <Smartphone className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 bg-iris-100 rounded-xl flex items-center justify-center">
+                    <Smartphone className="w-5 h-5 text-iris-600" />
                   </div>
                   <div>
-                    <div className="font-medium">AI 완료 알림</div>
-                    <div className="text-sm text-gray-600">AI 초안 생성 완료 알림</div>
+                    <div className="font-medium text-zinc-900">AI 완료 알림</div>
+                    <div className="text-sm text-zinc-600">AI 초안 생성 완료 알림</div>
                   </div>
                 </div>
                 <Switch checked={aiNotif} onCheckedChange={setAINotif} />
               </div>
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                    <Award className="w-5 h-5 text-orange-600" />
+                  <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center">
+                    <Award className="w-5 h-5 text-zinc-600" />
                   </div>
                   <div>
-                    <div className="font-medium">마케팅 알림</div>
-                    <div className="text-sm text-gray-600">이벤트 및 혜택 정보</div>
+                    <div className="font-medium text-zinc-900">마케팅 알림</div>
+                    <div className="text-sm text-zinc-600">이벤트 및 혜택 정보</div>
                   </div>
                 </div>
                 <Switch checked={marketingNotif} onCheckedChange={setMarketingNotif} />
               </div>
               <div className="p-4">
-                <Button 
+                <Button
                   onClick={handleSaveNotifications}
-                  className="w-full bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-700 hover:to-gray-600"
+                  className="w-full"
                 >
                   알림 설정 저장
                 </Button>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Payment & Credits */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Wallet className="w-5 h-5 text-gray-600" />
+          <FadeIn delay={0.3}>
+            <h2 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4 flex items-center gap-2">
+              <Wallet className="w-5 h-5 text-zinc-600" />
               결제 및 크레딧
             </h2>
-            <Card className="divide-y">
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => toast.info('크레딧 충전은 현재 준비 중입니다. 1크레딧 = 1,000원, 5크레딧 = 4,500원, 10크레딧 = 8,000원으로 곧 제공됩니다.')}>
+            <Card className="divide-y divide-zinc-200/80 rounded-2xl">
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => toast.info('크레딧 충전은 현재 준비 중입니다. 1크레딧 = 1,000원, 5크레딧 = 4,500원, 10크레딧 = 8,000원으로 곧 제공됩니다.')}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <Wallet className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center group-hover:bg-iris-100 transition-colors">
+                      <Wallet className="w-5 h-5 text-iris-600" />
                     </div>
                     <div>
-                      <div className="font-medium">크레딧 충전</div>
-                      <div className="text-sm text-gray-600">AI 초안 작성 크레딧</div>
+                      <div className="font-medium text-zinc-900">크레딧 충전</div>
+                      <div className="text-sm text-zinc-600">AI 초안 작성 크레딧</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-gray-600">{credits}회</div>
-                    <div className="text-xs text-gray-500">보유</div>
+                    <div className="font-bold text-zinc-900 tnum">{credits}회</div>
+                    <div className="text-xs text-zinc-400">보유</div>
                   </div>
                 </div>
               </div>
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowPaymentMethodDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowPaymentMethodDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                      <CreditCard className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <CreditCard className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">결제 수단</div>
-                      <div className="text-sm text-gray-600">카드 및 결제 정보 관리</div>
+                      <div className="font-medium text-zinc-900">결제 수단</div>
+                      <div className="text-sm text-zinc-600">카드 및 결제 정보 관리</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowPaymentHistoryDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowPaymentHistoryDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <FileText className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <FileText className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">결제 내역</div>
-                      <div className="text-sm text-gray-600">구매 및 환불 내역</div>
+                      <div className="font-medium text-zinc-900">결제 내역</div>
+                      <div className="text-sm text-zinc-600">구매 및 환불 내역</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Security */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-gray-600" />
+          <FadeIn delay={0.4}>
+            <h2 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4 flex items-center gap-2">
+              <Lock className="w-5 h-5 text-zinc-600" />
               보안 및 개인정보
             </h2>
-            <Card className="divide-y">
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowPasswordDialog(true)}>
+            <Card className="divide-y divide-zinc-200/80 rounded-2xl">
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowPasswordDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center group-hover:bg-red-200 transition-colors">
-                      <Lock className="w-5 h-5 text-red-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <Lock className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">비밀번호 변경</div>
-                      <div className="text-sm text-gray-600">계정 비밀번호 수정</div>
+                      <div className="font-medium text-zinc-900">비밀번호 변경</div>
+                      <div className="text-sm text-zinc-600">계정 비밀번호 수정</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowPrivacyDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowPrivacyDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
-                      <Shield className="w-5 h-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <Shield className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">개인정보 처리방침</div>
-                      <div className="text-sm text-gray-600">개인정보 보호 정책</div>
+                      <div className="font-medium text-zinc-900">개인정보 처리방침</div>
+                      <div className="text-sm text-zinc-600">개인정보 보호 정책</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Support */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-gray-600" />
+          <FadeIn delay={0.5}>
+            <h2 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4 flex items-center gap-2">
+              <HelpCircle className="w-5 h-5 text-zinc-600" />
               고객 지원
             </h2>
-            <Card className="divide-y">
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowFAQDialog(true)}>
+            <Card className="divide-y divide-zinc-200/80 rounded-2xl">
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowFAQDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <HelpCircle className="w-5 h-5 text-gray-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <HelpCircle className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">FAQ</div>
-                      <div className="text-sm text-gray-600">자주 묻는 질문</div>
+                      <div className="font-medium text-zinc-900">FAQ</div>
+                      <div className="text-sm text-zinc-600">자주 묻는 질문</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowContactDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowContactDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                      <Mail className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center group-hover:bg-iris-100 transition-colors">
+                      <Mail className="w-5 h-5 text-iris-600" />
                     </div>
                     <div>
-                      <div className="font-medium">문의하기</div>
-                      <div className="text-sm text-gray-600">support@relay.com</div>
+                      <div className="font-medium text-zinc-900">문의하기</div>
+                      <div className="text-sm text-zinc-600">support@relay.com</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
-              <div className="p-4 hover:bg-gray-50/50 cursor-pointer transition-all group" onClick={() => setShowTermsDialog(true)}>
+              <div className="p-4 hover:bg-zinc-50/50 cursor-pointer transition-all group" onClick={() => setShowTermsDialog(true)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <FileText className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-zinc-100 rounded-xl flex items-center justify-center group-hover:bg-zinc-200 transition-colors">
+                      <FileText className="w-5 h-5 text-zinc-600" />
                     </div>
                     <div>
-                      <div className="font-medium">서비스 이용약관</div>
-                      <div className="text-sm text-gray-600">약관 및 정책</div>
+                      <div className="font-medium text-zinc-900">서비스 이용약관</div>
+                      <div className="text-sm text-zinc-600">약관 및 정책</div>
                     </div>
                   </div>
-                  <span className="text-gray-400 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="text-zinc-400 group-hover:text-zinc-600 transition-colors">→</span>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Logout */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-            <Card>
+          <FadeIn delay={0.6}>
+            <Card className="rounded-2xl">
               <button
                 onClick={handleLogout}
                 className="w-full p-4 flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 transition-colors rounded-2xl font-medium"
@@ -513,10 +514,10 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 로그아웃
               </button>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* App Version */}
-          <div className="text-center text-sm text-gray-500 pt-4">
+          <div className="text-center text-sm text-zinc-400 pt-4">
             Relay v1.0.0
           </div>
         </div>
@@ -582,9 +583,9 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 완료
               </Badge>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-zinc-200/80">
               <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-gray-500" />
+                <Mail className="w-5 h-5 text-zinc-400" />
                 <span className="font-medium">이메일 인증</span>
               </div>
               <Badge className="bg-green-500 text-white border-0">
@@ -592,7 +593,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 완료
               </Badge>
             </div>
-            <p className="text-sm text-gray-500">모든 인증이 완료되었습니다. 인증 갱신이 필요한 경우 support@relay.com으로 문의해주세요.</p>
+            <p className="text-sm text-zinc-400">모든 인증이 완료되었습니다. 인증 갱신이 필요한 경우 support@relay.com으로 문의해주세요.</p>
           </div>
           <DialogFooter>
             <Button onClick={() => setShowVerificationDialog(false)}>확인</Button>
@@ -608,22 +609,22 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
             <DialogDescription>등록된 결제 수단을 관리하세요.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-between p-3 bg-iris-50 rounded-lg border border-iris-200">
               <div className="flex items-center gap-3">
-                <CreditCard className="w-5 h-5 text-blue-600" />
+                <CreditCard className="w-5 h-5 text-iris-600" />
                 <div>
                   <div className="font-medium">신한카드 **** 1234</div>
-                  <div className="text-sm text-gray-500">기본 결제 수단</div>
+                  <div className="text-sm text-zinc-400">기본 결제 수단</div>
                 </div>
               </div>
-              <Badge className="bg-blue-500 text-white border-0">기본</Badge>
+              <Badge className="bg-iris-600 text-white border-0">기본</Badge>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-zinc-200/80">
               <div className="flex items-center gap-3">
-                <CreditCard className="w-5 h-5 text-gray-500" />
+                <CreditCard className="w-5 h-5 text-zinc-400" />
                 <div>
                   <div className="font-medium">카카오페이</div>
-                  <div className="text-sm text-gray-500">간편 결제</div>
+                  <div className="text-sm text-zinc-400">간편 결제</div>
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={() => toast.info('기본 결제 수단으로 변경되었습니다')}>기본 설정</Button>
@@ -653,13 +654,13 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               { date: '2026-02-10', desc: '크레딧 5회 충전', amount: '4,500원', status: '환불' },
               { date: '2026-01-25', desc: '크레딧 10회 충전', amount: '8,000원', status: '완료' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div key={i} className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-zinc-200/80">
                 <div>
                   <div className="font-medium text-sm">{item.desc}</div>
-                  <div className="text-xs text-gray-500">{item.date}</div>
+                  <div className="text-xs text-zinc-400 tnum">{item.date}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-semibold text-sm">{item.amount}</div>
+                  <div className="font-semibold text-sm tnum">{item.amount}</div>
                   <Badge variant={item.status === '환불' ? 'destructive' : 'outline'} className="text-xs">
                     {item.status}
                   </Badge>
@@ -726,7 +727,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
             <DialogTitle>개인정보 처리방침</DialogTitle>
             <DialogDescription>릴레이 서비스 개인정보 처리방침입니다.</DialogDescription>
           </DialogHeader>
-          <div className="max-h-96 overflow-y-auto text-sm text-gray-700 space-y-4 py-2 pr-2">
+          <div className="max-h-96 overflow-y-auto text-sm text-zinc-600 space-y-4 py-2 pr-2">
             <section>
               <h3 className="font-semibold text-base mb-2">제1조 (목적)</h3>
               <p>릴레이(이하 "회사")는 편입 준비생을 위한 자기소개서 작성 지원 서비스를 제공함에 있어 이용자의 개인정보를 중요시하며, 「개인정보 보호법」을 준수합니다. 본 방침은 이용자의 개인정보가 어떠한 목적과 방식으로 수집, 이용, 관리되고 있는지 안내합니다.</p>
@@ -761,7 +762,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               <h3 className="font-semibold text-base mb-2">제6조 (이용자의 권리)</h3>
               <p>이용자는 언제든지 자신의 개인정보 조회, 수정, 삭제, 처리 정지를 요청할 수 있으며, 회원 탈퇴를 통해 개인정보 처리에 대한 동의를 철회할 수 있습니다.</p>
             </section>
-            <p className="text-gray-500 text-xs">시행일: 2026년 1월 1일</p>
+            <p className="text-zinc-400 text-xs">시행일: 2026년 1월 1일</p>
           </div>
           <DialogFooter>
             <Button onClick={() => setShowPrivacyDialog(false)}>확인</Button>
@@ -781,37 +782,37 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               <AccordionItem value="faq-1">
                 <AccordionTrigger>크레딧은 어떻게 사용하나요?</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">크레딧 1회는 AI 자기소개서 초안 1건 생성에 사용됩니다. 작성된 초안을 바탕으로 멘토와 함께 수정 작업을 진행할 수 있습니다. 크레딧은 충전 후 6개월간 유효합니다.</p>
+                  <p className="text-zinc-600">크레딧 1회는 AI 자기소개서 초안 1건 생성에 사용됩니다. 작성된 초안을 바탕으로 멘토와 함께 수정 작업을 진행할 수 있습니다. 크레딧은 충전 후 6개월간 유효합니다.</p>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-2">
                 <AccordionTrigger>멘토 매칭은 어떻게 이루어지나요?</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">지원하시는 대학교와 학과를 기반으로 해당 학교 편입 합격 경험이 있는 멘토를 매칭해 드립니다. 멘토 프로필을 확인한 후 세션을 예약할 수 있습니다.</p>
+                  <p className="text-zinc-600">지원하시는 대학교와 학과를 기반으로 해당 학교 편입 합격 경험이 있는 멘토를 매칭해 드립니다. 멘토 프로필을 확인한 후 세션을 예약할 수 있습니다.</p>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-3">
                 <AccordionTrigger>환불 정책은 어떻게 되나요?</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">미사용 크레딧은 구매일로부터 7일 이내 전액 환불이 가능합니다. 일부 사용된 크레딧 패키지의 경우 잔여 크레딧에 대해 정가 기준으로 차감 후 환불됩니다. 자세한 내용은 고객지원으로 문의해주세요.</p>
+                  <p className="text-zinc-600">미사용 크레딧은 구매일로부터 7일 이내 전액 환불이 가능합니다. 일부 사용된 크레딧 패키지의 경우 잔여 크레딧에 대해 정가 기준으로 차감 후 환불됩니다. 자세한 내용은 고객지원으로 문의해주세요.</p>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-4">
                 <AccordionTrigger>AI 초안의 품질은 어떤가요?</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">AI 초안은 지원 대학교 및 학과의 특성, 편입 자기소개서 작성 가이드라인을 반영하여 생성됩니다. 초안은 참고용이며, 멘토와의 세션을 통해 개인 경험과 강점을 반영한 최종본으로 발전시키는 것을 권장합니다.</p>
+                  <p className="text-zinc-600">AI 초안은 지원 대학교 및 학과의 특성, 편입 자기소개서 작성 가이드라인을 반영하여 생성됩니다. 초안은 참고용이며, 멘토와의 세션을 통해 개인 경험과 강점을 반영한 최종본으로 발전시키는 것을 권장합니다.</p>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-5">
                 <AccordionTrigger>세션은 어떤 방식으로 진행되나요?</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">세션은 온라인 화상 또는 채팅으로 진행됩니다. 예약된 시간에 릴레이 앱 내에서 멘토와 1:1로 자기소개서를 검토하고 피드백을 받을 수 있습니다. 세션 시간은 보통 30분~1시간입니다.</p>
+                  <p className="text-zinc-600">세션은 온라인 화상 또는 채팅으로 진행됩니다. 예약된 시간에 릴레이 앱 내에서 멘토와 1:1로 자기소개서를 검토하고 피드백을 받을 수 있습니다. 세션 시간은 보통 30분~1시간입니다.</p>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="faq-6">
                 <AccordionTrigger>계정을 탈퇴하고 싶어요.</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-gray-600">계정 탈퇴는 support@relay.com으로 탈퇴 요청을 보내주시면 처리해 드립니다. 탈퇴 시 작성된 자기소개서 데이터 및 개인정보는 관련 법령에 따라 일정 기간 보관 후 완전히 삭제됩니다.</p>
+                  <p className="text-zinc-600">계정 탈퇴는 support@relay.com으로 탈퇴 요청을 보내주시면 처리해 드립니다. 탈퇴 시 작성된 자기소개서 데이터 및 개인정보는 관련 법령에 따라 일정 기간 보관 후 완전히 삭제됩니다.</p>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -843,8 +844,8 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
                 rows={5}
               />
             </div>
-            <div className="text-sm text-gray-500">
-              이메일로 직접 문의하실 수도 있습니다: <a href="mailto:support@relay.com" className="text-blue-600 underline">support@relay.com</a>
+            <div className="text-sm text-zinc-400">
+              이메일로 직접 문의하실 수도 있습니다: <a href="mailto:support@relay.com" className="text-iris-600 underline">support@relay.com</a>
             </div>
           </div>
           <DialogFooter>
@@ -870,7 +871,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
             <DialogTitle>서비스 이용약관</DialogTitle>
             <DialogDescription>릴레이 서비스 이용약관입니다.</DialogDescription>
           </DialogHeader>
-          <div className="max-h-96 overflow-y-auto text-sm text-gray-700 space-y-4 py-2 pr-2">
+          <div className="max-h-96 overflow-y-auto text-sm text-zinc-600 space-y-4 py-2 pr-2">
             <section>
               <h3 className="font-semibold text-base mb-2">제1조 (목적)</h3>
               <p>본 약관은 릴레이(이하 "회사")가 제공하는 편입 자기소개서 작성 지원 서비스(이하 "서비스")의 이용 조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
@@ -913,7 +914,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
               <h3 className="font-semibold text-base mb-2">제8조 (분쟁 해결)</h3>
               <p>본 약관과 관련된 분쟁은 대한민국 법률에 따르며, 관할 법원은 회사 소재지 법원으로 합니다.</p>
             </section>
-            <p className="text-gray-500 text-xs">시행일: 2026년 1월 1일</p>
+            <p className="text-zinc-400 text-xs">시행일: 2026년 1월 1일</p>
           </div>
           <DialogFooter>
             <Button onClick={() => setShowTermsDialog(false)}>확인</Button>

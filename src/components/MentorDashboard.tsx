@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import { RelayChainVisualization } from './RelayChainVisualization';
 import {
   Calendar,
@@ -135,38 +136,37 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-zinc-200/80">
         <div className="container-web py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl text-zinc-900 font-semibold tracking-tight">
                 러너 대시보드
               </h1>
-              <p className="text-gray-600 mt-2">환영합니다, 러너 #2847님 👋</p>
+              <p className="text-zinc-600 mt-2">환영합니다, 러너 #2847님 👋</p>
             </div>
             <div className="flex gap-2">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
+              <Press lift={false}>
+                <Button
                   variant="outline"
                   onClick={handleSwitchToMentee}
-                  className="hover:bg-emerald-50 hover:border-emerald-300"
                 >
                   <ArrowLeftRight className="w-4 h-4 mr-2" />
                   후배 러너로 전환
                 </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              </Press>
+              <Press lift={false}>
                 <Button variant="ghost" size="icon" onClick={() => onNavigate('notifications')}>
                   <Bell className="w-5 h-5" />
                 </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              </Press>
+              <Press lift={false}>
                 <Button variant="ghost" size="icon" onClick={() => onNavigate('settings')}>
                   <Settings className="w-5 h-5" />
                 </Button>
-              </motion.div>
+              </Press>
             </div>
           </div>
         </div>
@@ -175,83 +175,87 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
       <div className="container-web py-8">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Quick Stats */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('mentor-revenue')}>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center">
-                    <DollarSign className="w-7 h-7 text-green-600" />
+          <Stagger className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Stagger.Item>
+              <Press>
+                <Card className="p-6 cursor-pointer" onClick={() => onNavigate('mentor-revenue')}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-iris-50 rounded-xl flex items-center justify-center">
+                      <DollarSign className="w-7 h-7 text-iris-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-zinc-600">이번 달 수익</div>
+                      <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={stats.totalRevenue} />원</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-600">이번 달 수익</div>
-                    <div className="text-2xl font-bold">{stats.totalRevenue.toLocaleString()}원</div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
+                </Card>
+              </Press>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('session-list')}>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center">
-                    <Calendar className="w-7 h-7 text-emerald-600" />
+            <Stagger.Item>
+              <Press>
+                <Card className="p-6 cursor-pointer" onClick={() => onNavigate('session-list')}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-iris-50 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-7 h-7 text-iris-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-zinc-600">이번 주 세션</div>
+                      <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={stats.monthlySessions} />건</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-600">이번 주 세션</div>
-                    <div className="text-2xl font-bold">{stats.monthlySessions}건</div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
+                </Card>
+              </Press>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('mentor-mentee-list')}>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl flex items-center justify-center">
-                    <Users className="w-7 h-7 text-purple-600" />
+            <Stagger.Item>
+              <Press>
+                <Card className="p-6 cursor-pointer" onClick={() => onNavigate('mentor-mentee-list')}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-zinc-100 rounded-xl flex items-center justify-center">
+                      <Users className="w-7 h-7 text-zinc-700" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-zinc-600">총 러너</div>
+                      <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={stats.totalMentees} />명</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-600">총 러너</div>
-                    <div className="text-2xl font-bold">{stats.totalMentees}명</div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
+                </Card>
+              </Press>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="p-6 card-hover cursor-pointer" onClick={() => onNavigate('mentor-reviews')}>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-yellow-100 to-amber-100 rounded-2xl flex items-center justify-center">
-                    <Star className="w-7 h-7 text-yellow-600" />
+            <Stagger.Item>
+              <Press>
+                <Card className="p-6 cursor-pointer" onClick={() => onNavigate('mentor-reviews')}>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center">
+                      <Star className="w-7 h-7 text-amber-500" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-zinc-600">평균 평점</div>
+                      <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={stats.rating} /></div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-600">평균 평점</div>
-                    <div className="text-2xl font-bold">{stats.rating}</div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          </div>
+                </Card>
+              </Press>
+            </Stagger.Item>
+          </Stagger>
 
           {/* EA Status Banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-emerald-500 to-green-600 text-white">
+          <FadeIn delay={0.1}>
+            <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Award className="w-8 h-8" />
-                    <Badge className="bg-white/20 text-white border-0">🥇 골드 러너</Badge>
+                    <Badge className="bg-white/15 text-white border-0">🥇 골드 러너</Badge>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">골드 러너 - 세션 가격 50,000~80,000원</h3>
-                  <p className="text-white/90 mb-4">
+                  <h3 className="text-2xl font-semibold tracking-tight mb-2">골드 러너 - 세션 가격 50,000~80,000원</h3>
+                  <p className="text-white/80 mb-4">
                     실적이 쌓이면 더 높은 가격을 설정할 수 있어요! 플래티넘까지 세션 19건 남았습니다.
                   </p>
                   <Button
-                    className="bg-white text-emerald-600 hover:bg-gray-100"
+                    className="bg-white text-zinc-900 hover:bg-zinc-100"
                     onClick={() => onNavigate('mentor-ea-wizard')}
                   >
                     EA 수정하기
@@ -260,19 +264,15 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 <div className="text-8xl opacity-20">✨</div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Upcoming Sessions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
+            <FadeIn delay={0.15}>
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold flex items-center gap-2">
-                    <Calendar className="w-6 h-6 text-emerald-600" />
+                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
+                    <Calendar className="w-6 h-6 text-iris-600" />
                     다가오는 세션
                   </h2>
                   <Button 
@@ -284,176 +284,175 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                   </Button>
                 </div>
 
-                <div className="space-y-3">
-                  {dashboardSessions.map((session, index) => (
-                    <motion.div
-                      key={session.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.6 + index * 0.1 }}
-                    >
-                      <Card 
-                        className="p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200 hover:shadow-md transition-shadow cursor-pointer"
-                        onClick={() => onNavigate('session-detail')}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl flex items-center justify-center text-white text-xl">
-                              👤
-                            </div>
-                            <div>
-                              <div className="font-semibold">{session.mentee}</div>
-                              <div className="text-sm text-gray-600">
-                                {session.date} · {session.time} · {session.duration}분
+                <Stagger className="space-y-3" delay={0.1}>
+                  {dashboardSessions.map((session) => (
+                    <Stagger.Item key={session.id}>
+                      <Press>
+                        <Card
+                          className="p-4 bg-zinc-50 border-zinc-200/80 cursor-pointer"
+                          onClick={() => onNavigate('session-detail')}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center text-iris-700 text-xl">
+                                👤
+                              </div>
+                              <div>
+                                <div className="font-semibold text-zinc-900">{session.mentee}</div>
+                                <div className="text-sm text-zinc-600 tnum">
+                                  {session.date} · {session.time} · {session.duration}분
+                                </div>
                               </div>
                             </div>
+                            <div className="flex items-center gap-3">
+                              <Badge className={session.status === 'confirmed' ? 'bg-iris-600 text-white' : 'bg-amber-500 text-white'}>
+                                {session.status === 'confirmed' ? '확정' : '대기'}
+                              </Badge>
+                              <Button
+                                size="sm"
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                  e.stopPropagation();
+                                  onNavigate('session-detail');
+                                }}
+                              >
+                                세션 시작
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <Badge className={session.status === 'confirmed' ? 'bg-green-500 text-white' : 'bg-amber-500 text-white'}>
-                              {session.status === 'confirmed' ? '확정' : '대기'}
-                            </Badge>
-                            <Button
-                              size="sm"
-                              className="btn-primary"
-                              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                e.stopPropagation();
-                                onNavigate('session-detail');
-                              }}
-                            >
-                              세션 시작
-                            </Button>
-                          </div>
-                        </div>
-                      </Card>
-                    </motion.div>
+                        </Card>
+                      </Press>
+                    </Stagger.Item>
                   ))}
 
                   {dashboardSessions.length === 0 && (
-                    <div className="text-center py-12 text-gray-500">
+                    <div className="text-center py-12 text-zinc-400">
                       <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
                       <p>예정된 세션이 없습니다</p>
                     </div>
                   )}
-                </div>
+                </Stagger>
 
                 <Button
-                  className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600 text-white"
+                  className="w-full mt-4"
                   onClick={() => onNavigate('mentor-schedule')}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   가능 시간 추가하기
                 </Button>
               </Card>
-            </motion.div>
+            </FadeIn>
           </div>
 
           {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-          >
-            <h2 className="text-xl font-bold mb-4">빠른 액션</h2>
-            <div className="grid md:grid-cols-3 gap-4">
-              <Card 
-                className="p-6 card-hover cursor-pointer"
-                onClick={() => onNavigate('mentor-schedule')}
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Calendar className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <h3 className="font-semibold">일정 관리</h3>
-                </div>
-                <p className="text-sm text-gray-600">
-                  릴레이 가능한 시간을 설정하세요
-                </p>
-              </Card>
+          <FadeIn delay={0.2}>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4">빠른 액션</h2>
+            <Stagger className="grid md:grid-cols-3 gap-4">
+              <Stagger.Item>
+                <Press>
+                  <Card
+                    className="p-6 cursor-pointer"
+                    onClick={() => onNavigate('mentor-schedule')}
+                  >
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center">
+                        <Calendar className="w-6 h-6 text-iris-600" />
+                      </div>
+                      <h3 className="font-semibold text-zinc-900">일정 관리</h3>
+                    </div>
+                    <p className="text-sm text-zinc-600">
+                      릴레이 가능한 시간을 설정하세요
+                    </p>
+                  </Card>
+                </Press>
+              </Stagger.Item>
 
-              <Card 
-                className="p-6 card-hover cursor-pointer"
-                onClick={() => onNavigate('mentor-revenue')}
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-green-600" />
-                  </div>
-                  <h3 className="font-semibold">수익 관리</h3>
-                </div>
-                <p className="text-sm text-gray-600">
-                  수익 현황을 확인하고 출금하세요
-                </p>
-              </Card>
+              <Stagger.Item>
+                <Press>
+                  <Card
+                    className="p-6 cursor-pointer"
+                    onClick={() => onNavigate('mentor-revenue')}
+                  >
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center">
+                        <DollarSign className="w-6 h-6 text-iris-600" />
+                      </div>
+                      <h3 className="font-semibold text-zinc-900">수익 관리</h3>
+                    </div>
+                    <p className="text-sm text-zinc-600">
+                      수익 현황을 확인하고 출금하세요
+                    </p>
+                  </Card>
+                </Press>
+              </Stagger.Item>
 
-              <Card 
-                className="p-6 card-hover cursor-pointer"
-                onClick={() => onNavigate('mentor-ea-wizard')}
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                    <Award className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <h3 className="font-semibold">EA 관리</h3>
-                </div>
-                <p className="text-sm text-gray-600">
-                  합격 경험 자산을 수정하세요
-                </p>
-              </Card>
-            </div>
-          </motion.div>
+              <Stagger.Item>
+                <Press>
+                  <Card
+                    className="p-6 cursor-pointer"
+                    onClick={() => onNavigate('mentor-ea-wizard')}
+                  >
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center">
+                        <Award className="w-6 h-6 text-iris-600" />
+                      </div>
+                      <h3 className="font-semibold text-zinc-900">EA 관리</h3>
+                    </div>
+                    <p className="text-sm text-zinc-600">
+                      합격 경험 자산을 수정하세요
+                    </p>
+                  </Card>
+                </Press>
+              </Stagger.Item>
+            </Stagger>
+          </FadeIn>
 
           {/* Performance */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
+          <FadeIn delay={0.25}>
             <Card className="p-6">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-emerald-600" />
+              <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-6 flex items-center gap-2">
+                <TrendingUp className="w-6 h-6 text-iris-600" />
                 이번 달 성과
               </h2>
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-emerald-600 mb-1">{stats.monthlySessions}건</div>
-                  <div className="text-sm text-gray-600">완료한 세션</div>
+                  <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={stats.monthlySessions} />건</div>
+                  <div className="text-sm text-zinc-600">완료한 세션</div>
                 </div>
-                <div 
-                  className="text-center cursor-pointer hover:scale-105 transition-transform"
+                <motion.div
+                  className="text-center cursor-pointer"
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 28 }}
                   onClick={() => onNavigate('mentor-stats')}
                 >
-                  <div className="text-3xl font-bold text-green-600 mb-1">87%</div>
-                  <div className="text-sm text-gray-600">러너 합격률</div>
+                  <div className="text-3xl font-semibold tracking-tight text-iris-600 mb-1 tnum">87%</div>
+                  <div className="text-sm text-zinc-600">러너 합격률</div>
+                </motion.div>
+                <div className="text-center">
+                  <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1 tnum">2.5시간</div>
+                  <div className="text-sm text-zinc-600">평균 응답시간</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-1">2.5시간</div>
-                  <div className="text-sm text-gray-600">평균 응답시간</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600 mb-1">{stats.rating}</div>
-                  <div className="text-sm text-gray-600">평균 평점</div>
+                  <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={stats.rating} /></div>
+                  <div className="text-sm text-zinc-600">평균 평점</div>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Relay Network Visualization */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
-          >
+          <FadeIn delay={0.3}>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                <Network className="w-7 h-7 text-indigo-600" />
+              <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
+                <Network className="w-7 h-7 text-iris-600" />
                 나의 릴레이 네트워크
               </h2>
             </div>
-            <RelayChainVisualization 
+            <RelayChainVisualization
               currentUserName="러너 #2847"
               onNodeClick={(node) => logger.log('Node clicked:', node)}
             />
-          </motion.div>
+          </FadeIn>
         </div>
       </div>
     </div>

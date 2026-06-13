@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import {
   ArrowLeft,
   CheckCircle,
@@ -202,59 +203,55 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
   };
 
   const ApplicationCard = ({ app, index }: { app: MentorApplication; index: number }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-    >
-      <Card className="p-6 card-hover cursor-pointer" onClick={() => setSelectedApp(app)}>
+    <Stagger.Item>
+      <Press lift scale={0.99}>
+      <Card className="p-6 rounded-2xl shadow-sm cursor-pointer" onClick={() => setSelectedApp(app)}>
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-3xl flex-shrink-0 shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center text-3xl flex-shrink-0">
             👤
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-lg font-bold mb-1">{app.name}</h3>
-                <p className="text-gray-600 text-sm">{app.email}</p>
+                <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-1">{app.name}</h3>
+                <p className="text-zinc-600 text-sm">{app.email}</p>
               </div>
-              <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50">
+              <Badge variant="outline" className="text-amber-700 border-amber-200 bg-amber-50">
                 <Clock className="w-3 h-3 mr-1" />
                 대기중
               </Badge>
             </div>
 
             <div className="grid md:grid-cols-2 gap-3 mb-4">
-              <div className="bg-gray-50 rounded-xl p-3">
-                <div className="text-xs text-gray-600 mb-1">현재</div>
-                <div className="font-semibold">{app.university} {app.major}</div>
-                <div className="text-sm text-gray-600">{app.studentId}</div>
+              <div className="bg-zinc-50 rounded-xl p-3">
+                <div className="text-xs text-zinc-600 mb-1">현재</div>
+                <div className="font-semibold text-zinc-900">{app.university} {app.major}</div>
+                <div className="text-sm text-zinc-600 tnum">{app.studentId}</div>
               </div>
-              <div className="bg-gray-50 rounded-xl p-3">
-                <div className="text-xs text-gray-600 mb-1">편입</div>
-                <div className="font-semibold">{app.admissionYear}년 입학</div>
-                <div className="text-sm text-gray-600">{app.previousUniversity}</div>
+              <div className="bg-zinc-50 rounded-xl p-3">
+                <div className="text-xs text-zinc-600 mb-1">편입</div>
+                <div className="font-semibold text-zinc-900 tnum">{app.admissionYear}년 입학</div>
+                <div className="text-sm text-zinc-600">{app.previousUniversity}</div>
               </div>
             </div>
 
             <div className="flex items-center gap-2 mb-3">
-              <Badge className="bg-green-500 text-white border-0">
+              <Badge className="bg-emerald-50 text-emerald-700 border-0">
                 <FileText className="w-3 h-3 mr-1" />
                 학생증
               </Badge>
-              <Badge className="bg-purple-500 text-white border-0">
+              <Badge className="bg-iris-50 text-iris-700 border-0">
                 <Award className="w-3 h-3 mr-1" />
                 합격증
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-sm text-gray-600">제출일: {app.submittedAt}</span>
-              <Button 
+            <div className="flex items-center justify-between pt-3 border-t border-zinc-200/80">
+              <span className="text-sm text-zinc-600">제출일: {app.submittedAt}</span>
+              <Button
                 size="sm"
                 variant="outline"
-                className="text-slate-600 hover:bg-slate-50"
               >
                 <Eye className="w-4 h-4 mr-1" />
                 검토하기
@@ -263,28 +260,29 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
           </div>
         </div>
       </Card>
-    </motion.div>
+      </Press>
+    </Stagger.Item>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Press lift={false}>
               <Button variant="ghost" size="icon" onClick={onBack}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-            </motion.div>
+            </Press>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-slate-800 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 러너 승인 관리
               </h1>
-              <p className="text-gray-600 mt-1">신규 러너 신청을 검토하고 승인하세요</p>
+              <p className="text-zinc-600 mt-1">신규 러너 신청을 검토하고 승인하세요</p>
             </div>
             {pendingApps.length > 0 && (
-              <Badge className="bg-orange-500 text-white border-0 px-4 py-2">
+              <Badge className="bg-amber-50 text-amber-700 border-0 px-4 py-2 tnum">
                 {pendingApps.length}건 대기중
               </Badge>
             )}
@@ -296,116 +294,126 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
         <div className="max-w-5xl mx-auto">
           {loading && (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600" />
-              <span className="ml-3 text-gray-500">러너 신청 목록을 불러오는 중...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-700" />
+              <span className="ml-3 text-zinc-400">러너 신청 목록을 불러오는 중...</span>
             </div>
           )}
           {/* Stats */}
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <Card className="p-4 text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-1">{pendingApps.length}</div>
-              <div className="text-sm text-gray-600">승인 대기</div>
-            </Card>
-            <Card className="p-4 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-1">{approvedApps.length}</div>
-              <div className="text-sm text-gray-600">승인 완료</div>
-            </Card>
-            <Card className="p-4 text-center">
-              <div className="text-3xl font-bold text-red-600 mb-1">{rejectedApps.length}</div>
-              <div className="text-sm text-gray-600">반려</div>
-            </Card>
-          </div>
+          <Stagger className="grid md:grid-cols-3 gap-4 mb-8">
+            <Stagger.Item>
+              <Card className="p-4 text-center rounded-2xl shadow-sm">
+                <div className="text-3xl font-semibold tracking-tight text-amber-600 mb-1 tnum"><CountUp value={pendingApps.length} /></div>
+                <div className="text-sm text-zinc-600">승인 대기</div>
+              </Card>
+            </Stagger.Item>
+            <Stagger.Item>
+              <Card className="p-4 text-center rounded-2xl shadow-sm">
+                <div className="text-3xl font-semibold tracking-tight text-emerald-600 mb-1 tnum"><CountUp value={approvedApps.length} /></div>
+                <div className="text-sm text-zinc-600">승인 완료</div>
+              </Card>
+            </Stagger.Item>
+            <Stagger.Item>
+              <Card className="p-4 text-center rounded-2xl shadow-sm">
+                <div className="text-3xl font-semibold tracking-tight text-red-600 mb-1 tnum"><CountUp value={rejectedApps.length} /></div>
+                <div className="text-sm text-zinc-600">반려</div>
+              </Card>
+            </Stagger.Item>
+          </Stagger>
 
           {/* Tabs */}
           <Tabs value={tab} onValueChange={(v: string) => setTab(v as any)} className="w-full">
-            <TabsList className="w-full grid grid-cols-3 h-12 bg-gray-100/80 backdrop-blur-sm p-1 mb-6">
-              <TabsTrigger value="pending" className="data-[state=active]:bg-white data-[state=active]:shadow-md">
+            <TabsList className="w-full grid grid-cols-3 h-12 bg-zinc-100 p-1 mb-6">
+              <TabsTrigger value="pending" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
                 대기 ({pendingApps.length})
               </TabsTrigger>
-              <TabsTrigger value="approved" className="data-[state=active]:bg-white data-[state=active]:shadow-md">
+              <TabsTrigger value="approved" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
                 승인 ({approvedApps.length})
               </TabsTrigger>
-              <TabsTrigger value="rejected" className="data-[state=active]:bg-white data-[state=active]:shadow-md">
+              <TabsTrigger value="rejected" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
                 반려 ({rejectedApps.length})
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="pending" className="mt-0">
-              <div className="space-y-4">
+              <Stagger className="space-y-4">
                 {pendingApps.length === 0 ? (
-                  <Card className="p-12 text-center">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="w-10 h-10 text-gray-400" />
+                  <Card className="p-12 text-center rounded-2xl shadow-sm">
+                    <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-10 h-10 text-zinc-400" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">승인 대기중인 신청이 없습니다</h3>
-                    <p className="text-gray-600">새로운 러너 신청이 들어오면 여기에 표시됩니다</p>
+                    <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-2">승인 대기중인 신청이 없습니다</h3>
+                    <p className="text-zinc-600">새로운 러너 신청이 들어오면 여기에 표시됩니다</p>
                   </Card>
                 ) : (
                   pendingApps.map((app, index) => <ApplicationCard key={app.id} app={app} index={index} />)
                 )}
-              </div>
+              </Stagger>
             </TabsContent>
 
             <TabsContent value="approved" className="mt-0">
-              <div className="space-y-4">
+              <Stagger className="space-y-4">
                 {approvedApps.length === 0 ? (
-                  <Card className="p-12 text-center">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="w-10 h-10 text-gray-400" />
+                  <Card className="p-12 text-center rounded-2xl shadow-sm">
+                    <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-10 h-10 text-zinc-400" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">승인된 러너가 없습니다</h3>
+                    <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-2">승인된 러너가 없습니다</h3>
                   </Card>
                 ) : (
                   approvedApps.map((app, index) => (
-                    <Card key={app.id} className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-bold text-lg mb-1">{app.name}</h3>
-                          <p className="text-gray-600">{app.university} {app.major}</p>
+                    <Stagger.Item key={app.id}>
+                      <Card className="p-6 rounded-2xl shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-1">{app.name}</h3>
+                            <p className="text-zinc-600">{app.university} {app.major}</p>
+                          </div>
+                          <Badge className="bg-emerald-50 text-emerald-700 border-0">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            승인완료
+                          </Badge>
                         </div>
-                        <Badge className="bg-green-500 text-white border-0">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          승인완료
-                        </Badge>
-                      </div>
-                    </Card>
+                      </Card>
+                    </Stagger.Item>
                   ))
                 )}
-              </div>
+              </Stagger>
             </TabsContent>
 
             <TabsContent value="rejected" className="mt-0">
-              <div className="space-y-4">
+              <Stagger className="space-y-4">
                 {rejectedApps.length === 0 ? (
-                  <Card className="p-12 text-center">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <XCircle className="w-10 h-10 text-gray-400" />
+                  <Card className="p-12 text-center rounded-2xl shadow-sm">
+                    <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <XCircle className="w-10 h-10 text-zinc-400" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">반려된 신청이 없습니다</h3>
+                    <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-2">반려된 신청이 없습니다</h3>
                   </Card>
                 ) : (
                   rejectedApps.map((app, index) => (
-                    <Card key={app.id} className="p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h3 className="font-bold text-lg mb-1">{app.name}</h3>
-                          <p className="text-gray-600">{app.university} {app.major}</p>
+                    <Stagger.Item key={app.id}>
+                      <Card className="p-6 rounded-2xl shadow-sm">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-1">{app.name}</h3>
+                            <p className="text-zinc-600">{app.university} {app.major}</p>
+                          </div>
+                          <Badge className="bg-red-50 text-red-700 border-0">
+                            <XCircle className="w-3 h-3 mr-1" />
+                            반려
+                          </Badge>
                         </div>
-                        <Badge className="bg-red-500 text-white border-0">
-                          <XCircle className="w-3 h-3 mr-1" />
-                          반려
-                        </Badge>
-                      </div>
-                      {app.rejectionReason && (
-                        <div className="bg-red-50 rounded-xl p-3">
-                          <div className="text-sm font-semibold text-red-900 mb-1">반려 사유</div>
-                          <div className="text-sm text-red-700">{app.rejectionReason}</div>
-                        </div>
-                      )}
-                    </Card>
+                        {app.rejectionReason && (
+                          <div className="bg-red-50 rounded-xl p-3">
+                            <div className="text-sm font-semibold text-red-900 mb-1">반려 사유</div>
+                            <div className="text-sm text-red-700">{app.rejectionReason}</div>
+                          </div>
+                        )}
+                      </Card>
+                    </Stagger.Item>
                   ))
                 )}
-              </div>
+              </Stagger>
             </TabsContent>
           </Tabs>
         </div>
@@ -429,10 +437,10 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-3xl bg-white rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
             >
               {/* Modal Header */}
-              <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-gray-50">
+              <div className="p-6 border-b border-zinc-200/80 flex items-center justify-between bg-zinc-50">
                 <div>
-                  <h2 className="text-2xl font-bold mb-1">{selectedApp.name}</h2>
-                  <p className="text-gray-600">{selectedApp.email}</p>
+                  <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-1">{selectedApp.name}</h2>
+                  <p className="text-zinc-600">{selectedApp.email}</p>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setSelectedApp(null)}>
                   <X className="w-5 h-5" />
@@ -443,27 +451,27 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Student Info */}
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-slate-600" />
+                  <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-3 flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-zinc-700" />
                     학생 정보
                   </h3>
-                  <Card className="p-4 bg-gray-50">
+                  <Card className="p-4 bg-zinc-50 rounded-xl shadow-none">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">대학교</div>
-                        <div className="font-semibold">{selectedApp.university}</div>
+                        <div className="text-sm text-zinc-600 mb-1">대학교</div>
+                        <div className="font-semibold text-zinc-900">{selectedApp.university}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">학과</div>
-                        <div className="font-semibold">{selectedApp.major}</div>
+                        <div className="text-sm text-zinc-600 mb-1">학과</div>
+                        <div className="font-semibold text-zinc-900">{selectedApp.major}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">학번</div>
-                        <div className="font-semibold">{selectedApp.studentId}</div>
+                        <div className="text-sm text-zinc-600 mb-1">학번</div>
+                        <div className="font-semibold text-zinc-900 tnum">{selectedApp.studentId}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">제출일</div>
-                        <div className="font-semibold">{selectedApp.submittedAt}</div>
+                        <div className="text-sm text-zinc-600 mb-1">제출일</div>
+                        <div className="font-semibold text-zinc-900">{selectedApp.submittedAt}</div>
                       </div>
                     </div>
                   </Card>
@@ -471,19 +479,19 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
 
                 {/* Admission Info */}
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-purple-600" />
+                  <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-3 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-iris-600" />
                     편입 정보
                   </h3>
-                  <Card className="p-4 bg-gray-50">
+                  <Card className="p-4 bg-zinc-50 rounded-xl shadow-none">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">편입 연도</div>
-                        <div className="font-semibold">{selectedApp.admissionYear}년</div>
+                        <div className="text-sm text-zinc-600 mb-1">편입 연도</div>
+                        <div className="font-semibold text-zinc-900 tnum">{selectedApp.admissionYear}년</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600 mb-1">전적대학교</div>
-                        <div className="font-semibold">{selectedApp.previousUniversity}</div>
+                        <div className="text-sm text-zinc-600 mb-1">전적대학교</div>
+                        <div className="font-semibold text-zinc-900">{selectedApp.previousUniversity}</div>
                       </div>
                     </div>
                   </Card>
@@ -491,20 +499,20 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
 
                 {/* Files */}
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-green-600" />
+                  <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-3 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-emerald-600" />
                     제출 서류
                   </h3>
                   <div className="space-y-3">
-                    <Card className="p-4 bg-gray-50">
+                    <Card className="p-4 bg-zinc-50 rounded-xl shadow-none">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
-                            <GraduationCap className="w-6 h-6 text-slate-600" />
+                          <div className="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center">
+                            <GraduationCap className="w-6 h-6 text-zinc-700" />
                           </div>
                           <div>
-                            <div className="font-semibold">학생증/재학증명서</div>
-                            <div className="text-sm text-gray-600">{selectedApp.studentIdFile.name}</div>
+                            <div className="font-semibold text-zinc-900">학생증/재학증명서</div>
+                            <div className="text-sm text-zinc-600">{selectedApp.studentIdFile.name}</div>
                           </div>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => handleDownload(selectedApp.studentIdFile.name)}>
@@ -514,15 +522,15 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                       </div>
                     </Card>
 
-                    <Card className="p-4 bg-gray-50">
+                    <Card className="p-4 bg-zinc-50 rounded-xl shadow-none">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                            <Award className="w-6 h-6 text-purple-600" />
+                          <div className="w-12 h-12 bg-iris-50 rounded-xl flex items-center justify-center">
+                            <Award className="w-6 h-6 text-iris-600" />
                           </div>
                           <div>
-                            <div className="font-semibold">합격증/입학허가서</div>
-                            <div className="text-sm text-gray-600">{selectedApp.admissionFile.name}</div>
+                            <div className="font-semibold text-zinc-900">합격증/입학허가서</div>
+                            <div className="text-sm text-zinc-600">{selectedApp.admissionFile.name}</div>
                           </div>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => handleDownload(selectedApp.admissionFile.name)}>
@@ -534,10 +542,10 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                   </div>
                 </div>
 
-                <Card className="p-4 bg-yellow-50/50 border-yellow-200">
+                <Card className="p-4 bg-amber-50 border-amber-200 rounded-xl shadow-none">
                   <div className="flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-yellow-700">
+                    <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-amber-700">
                       <div className="font-semibold mb-1">검토 시 확인사항</div>
                       <div>• 학생증/재학증명서가 유효한지 확인</div>
                       <div>• 합격증/입학허가서가 진본인지 확인</div>
@@ -548,7 +556,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               </div>
 
               {/* Modal Actions */}
-              <div className="p-6 border-t border-gray-200 bg-gray-50 flex gap-3">
+              <div className="p-6 border-t border-zinc-200/80 bg-zinc-50 flex gap-3">
                 <Button
                   variant="outline"
                   className="flex-1 text-red-600 hover:bg-red-50"
@@ -560,7 +568,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                   반려하기
                 </Button>
                 <Button
-                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
                   onClick={() => handleApprove(selectedApp)}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
@@ -589,12 +597,12 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
               exit={{ opacity: 0, scale: 0.9 }}
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
             >
-              <h2 className="text-xl font-bold mb-4">반려 사유 입력</h2>
+              <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4">반려 사유 입력</h2>
               <textarea
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 placeholder="반려 사유를 입력해주세요..."
-                className="w-full h-32 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-slate-500"
+                className="w-full h-32 p-3 border border-zinc-200/80 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-zinc-900"
               />
               <div className="flex gap-3 mt-4">
                 <Button

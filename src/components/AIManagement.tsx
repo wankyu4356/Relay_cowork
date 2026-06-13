@@ -156,20 +156,20 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-green-500 text-white border-0">✓ 완료</Badge>;
+        return <Badge className="bg-zinc-900 text-white border-0">✓ 완료</Badge>;
       case 'with-mentor':
-        return <Badge className="bg-violet-500 text-white border-0">👤 러너 첨삭 중</Badge>;
+        return <Badge className="bg-iris-600 text-white border-0">👤 러너 첨삭 중</Badge>;
       case 'draft':
-        return <Badge variant="outline" className="text-gray-600">✏️ 편집 중</Badge>;
+        return <Badge variant="outline" className="text-zinc-600">✏️ 편집 중</Badge>;
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -178,12 +178,12 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </Button>
             </motion.div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 내 AI 초안
               </h1>
-              <p className="text-gray-600 mt-1">AI로 생성한 AI 초안을 관리하세요</p>
+              <p className="text-zinc-600 mt-1">AI로 생성한 AI 초안을 관리하세요</p>
             </div>
-            <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 px-4 py-2 shadow-lg">
+            <Badge className="bg-zinc-900 text-white border-0 px-4 py-2 shadow-sm tnum">
               <Sparkles className="w-4 h-4 mr-2" />
               {credits}회
             </Badge>
@@ -201,30 +201,27 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
             className="cursor-pointer"
             onClick={() => onNavigate?.('ai-experience')}
           >
-            <Card className="relative overflow-hidden border-0 shadow-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-600"></div>
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-              </div>
+            <Card className="relative overflow-hidden border-0 shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-iris-800"></div>
               <div className="relative p-8 flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <Sparkles className="w-8 h-8 text-white" />
-                    <h2 className="text-2xl font-bold text-white">새 AI 초안 만들기</h2>
+                    <h2 className="text-2xl font-semibold tracking-tight text-white">새 AI 초안 만들기</h2>
                   </div>
                   <p className="text-white/90 mb-4">
                     AI가 5분 만에 AI 초안을 만들어드립니다
                   </p>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
+                    <Badge className="bg-white/15 text-white border-0 backdrop-blur-sm tnum">
                       무료 {credits}회 남음
                     </Badge>
-                    <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
+                    <Badge className="bg-white/15 text-white border-0 backdrop-blur-sm">
                       5분 소요
                     </Badge>
                   </div>
                 </div>
-                <div className="hidden md:flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl backdrop-blur-sm">
+                <div className="hidden md:flex items-center justify-center w-16 h-16 bg-white/15 rounded-2xl backdrop-blur-sm">
                   <Plus className="w-8 h-8 text-white" />
                 </div>
               </div>
@@ -237,17 +234,17 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <Card className="p-6 bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
+              <Card className="p-6 bg-iris-50 border-iris-100">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2">💡 크레딧이 부족해요</h3>
-                    <p className="text-gray-600 mb-4">
+                    <h3 className="font-semibold text-lg mb-2 text-zinc-900 tracking-tight">💡 크레딧이 부족해요</h3>
+                    <p className="text-zinc-600 mb-4">
                       추가 크레딧을 구매하거나 릴레이 세션 결과 보고를 작성하여 크레딧을 받으세요
                     </p>
                     <div className="flex gap-2">
-                      <Button 
+                      <Button
                         onClick={handlePurchaseCredit}
-                        className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white"
+                        className="bg-zinc-900 hover:bg-zinc-800 text-white"
                       >
                         크레딧 구매
                       </Button>
@@ -263,23 +260,23 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
 
           {/* Drafts List */}
           <div>
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-violet-600" />
+            <h2 className="text-lg font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-iris-600" />
               내 AI 초안 ({drafts.length})
             </h2>
 
             {drafts.length === 0 ? (
               <Card className="p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-10 h-10 text-gray-400" />
+                <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-10 h-10 text-zinc-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">아직 AI 초안이 없어요</h3>
-                <p className="text-gray-600 mb-6">
+                <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-2">아직 AI 초안이 없어요</h3>
+                <p className="text-zinc-600 mb-6">
                   AI가 맞춤형 AI 초안을 만들어드립니다
                 </p>
-                <Button 
+                <Button
                   onClick={() => onNavigate?.('ai-experience')}
-                  className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   첫 AI 초안 만들기
@@ -296,14 +293,14 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                   >
                     <Card className="p-6 card-hover cursor-pointer relative">
                       {/* Menu Button */}
-                      <button 
-                        className="absolute top-4 right-4 w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
+                      <button
+                        className="absolute top-4 right-4 w-8 h-8 rounded-lg hover:bg-zinc-100 flex items-center justify-center transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedDraft(selectedDraft === draft.id ? null : draft.id);
                         }}
                       >
-                        <MoreVertical className="w-4 h-4 text-gray-500" />
+                        <MoreVertical className="w-4 h-4 text-zinc-400" />
                       </button>
 
                       {/* Dropdown Menu */}
@@ -311,7 +308,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                         <motion.div
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="absolute top-14 right-4 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-10 min-w-[160px]"
+                          className="absolute top-14 right-4 bg-white rounded-xl shadow-lg border border-zinc-200/80 py-2 z-10 min-w-[160px]"
                         >
                           <button
                             onClick={(e) => {
@@ -319,7 +316,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                               handleDuplicate(draft);
                               setSelectedDraft(null);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
+                            className="w-full px-4 py-2 text-left hover:bg-zinc-50 flex items-center gap-2 text-sm"
                           >
                             <Copy className="w-4 h-4" />
                             복제하기
@@ -330,7 +327,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                               handleShare(draft);
                               setSelectedDraft(null);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
+                            className="w-full px-4 py-2 text-left hover:bg-zinc-50 flex items-center gap-2 text-sm"
                           >
                             <Share2 className="w-4 h-4" />
                             공유하기
@@ -341,12 +338,12 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                               handleDownloadPDF(draft);
                               setSelectedDraft(null);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
+                            className="w-full px-4 py-2 text-left hover:bg-zinc-50 flex items-center gap-2 text-sm"
                           >
                             <Download className="w-4 h-4" />
                             PDF 다운로드
                           </button>
-                          <div className="border-t border-gray-100 my-1"></div>
+                          <div className="border-t border-zinc-100 my-1"></div>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -377,7 +374,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                         {/* Header */}
                         <div className="mb-4">
                           <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-bold text-lg">
+                            <h3 className="font-semibold tracking-tight text-zinc-900 text-lg">
                               {draft.university} {draft.major}
                             </h3>
                           </div>
@@ -385,34 +382,34 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                         </div>
 
                         {/* Stats */}
-                        <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+                        <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-zinc-50 rounded-xl border border-zinc-200/80">
                           <div className="text-center">
-                            <div className="text-sm text-gray-600 mb-1">글자수</div>
-                            <div className="font-semibold text-violet-600">{draft.wordCount}</div>
+                            <div className="text-sm text-zinc-600 mb-1">글자수</div>
+                            <div className="font-semibold text-iris-600 tnum">{draft.wordCount}</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-sm text-gray-600 mb-1">버전</div>
-                            <div className="font-semibold">v{draft.version}</div>
+                            <div className="text-sm text-zinc-600 mb-1">버전</div>
+                            <div className="font-semibold text-zinc-900 tnum">v{draft.version}</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-sm text-gray-600 mb-1">스토리</div>
-                            <div className="font-semibold">{draft.storyline}</div>
+                            <div className="text-sm text-zinc-600 mb-1">스토리</div>
+                            <div className="font-semibold text-zinc-900">{draft.storyline}</div>
                           </div>
                         </div>
 
                         {/* Mentor Info */}
                         {draft.hasSession && draft.mentorName && (
-                          <div className="mb-4 p-3 bg-violet-50 rounded-xl flex items-center gap-2">
-                            <Users className="w-4 h-4 text-violet-600" />
-                            <span className="text-sm text-gray-700">
-                              <span className="font-semibold">{draft.mentorName}</span> 러너와 첨삭 중
+                          <div className="mb-4 p-3 bg-iris-50 rounded-xl flex items-center gap-2">
+                            <Users className="w-4 h-4 text-iris-600" />
+                            <span className="text-sm text-zinc-600">
+                              <span className="font-semibold text-zinc-900">{draft.mentorName}</span> 러너와 첨삭 중
                             </span>
                           </div>
                         )}
 
                         {/* Footer */}
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
+                          <div className="flex items-center gap-1 text-sm text-zinc-400 tnum">
                             <Calendar className="w-4 h-4" />
                             {draft.lastModified}
                           </div>
@@ -443,7 +440,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                                   e.stopPropagation();
                                   onMentorConnect();
                                 }}
-                                className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+                                className="bg-zinc-900 hover:bg-zinc-800 text-white"
                               >
                                 <Users className="w-4 h-4 mr-1" />
                                 러너 찾기
@@ -460,22 +457,22 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           </div>
 
           {/* Tips Section */}
-          <Card className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200">
-            <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-600" />
+          <Card className="p-6 bg-iris-50 border-iris-100">
+            <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-zinc-900 tracking-tight">
+              <Sparkles className="w-5 h-5 text-iris-600" />
               💡 작성 팁
             </h3>
-            <ul className="space-y-2 text-sm text-gray-700">
+            <ul className="space-y-2 text-sm text-zinc-600">
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 font-bold">•</span>
+                <span className="text-iris-600 font-bold">•</span>
                 <span>AI 초안을 받은 후 러너와 함께 첨삭하면 합격률이 2배 높아집니다</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 font-bold">•</span>
+                <span className="text-iris-600 font-bold">•</span>
                 <span>여러 학교의 AI 초안을 작성하고 비교해보세요</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 font-bold">•</span>
+                <span className="text-iris-600 font-bold">•</span>
                 <span>결과 보고를 작성하면 AI 크레딧 1회를 무료로 받을 수 있어요</span>
               </li>
             </ul>
@@ -498,55 +495,55 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-lg border border-zinc-200/80 z-50 p-6"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">크레딧 받는 방법</h2>
+                <h2 className="text-xl font-semibold tracking-tight text-zinc-900">크레딧 받는 방법</h2>
                 <Button variant="ghost" size="icon" onClick={() => setShowCreditInfoModal(false)}>
                   <X className="w-5 h-5" />
                 </Button>
               </div>
               <div className="space-y-4">
-                <Card className="p-4 bg-violet-50 border-violet-200">
+                <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">📝</span>
                     <div>
-                      <div className="font-semibold mb-1">결과 보고 작성</div>
-                      <div className="text-sm text-gray-600">
-                        릴레이 세션 후 결과 보고를 작성하면 <span className="font-semibold text-violet-600">1 크레딧</span>을 받을 수 있어요
+                      <div className="font-semibold mb-1 text-zinc-900">결과 보고 작성</div>
+                      <div className="text-sm text-zinc-600">
+                        릴레이 세션 후 결과 보고를 작성하면 <span className="font-semibold text-iris-600">1 크레딧</span>을 받을 수 있어요
                       </div>
                     </div>
                   </div>
                 </Card>
-                <Card className="p-4 bg-blue-50 border-blue-200">
+                <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">👥</span>
                     <div>
-                      <div className="font-semibold mb-1">친구 초대</div>
-                      <div className="text-sm text-gray-600">
-                        친구를 초대하고 가입하면 <span className="font-semibold text-blue-600">2 크레딧</span>을 받을 수 있어요
+                      <div className="font-semibold mb-1 text-zinc-900">친구 초대</div>
+                      <div className="text-sm text-zinc-600">
+                        친구를 초대하고 가입하면 <span className="font-semibold text-iris-600">2 크레딧</span>을 받을 수 있어요
                       </div>
                     </div>
                   </div>
                 </Card>
-                <Card className="p-4 bg-green-50 border-green-200">
+                <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">🎉</span>
                     <div>
-                      <div className="font-semibold mb-1">프로모션 이벤트</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="font-semibold mb-1 text-zinc-900">프로모션 이벤트</div>
+                      <div className="text-sm text-zinc-600">
                         시즌별 이벤트에 참여하면 추가 크레딧을 받을 수 있어요
                       </div>
                     </div>
                   </div>
                 </Card>
-                <Card className="p-4 bg-amber-50 border-amber-200">
+                <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">⭐</span>
                     <div>
-                      <div className="font-semibold mb-1">리뷰 작성</div>
-                      <div className="text-sm text-gray-600">
-                        러너 리뷰를 작성하면 <span className="font-semibold text-amber-600">1 크레딧</span>을 받을 수 있어요
+                      <div className="font-semibold mb-1 text-zinc-900">리뷰 작성</div>
+                      <div className="text-sm text-zinc-600">
+                        러너 리뷰를 작성하면 <span className="font-semibold text-iris-600">1 크레딧</span>을 받을 수 있어요
                       </div>
                     </div>
                   </div>
@@ -554,7 +551,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </div>
               <div className="mt-6">
                 <Button
-                  className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+                  className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
                   onClick={() => setShowCreditInfoModal(false)}
                 >
                   확인

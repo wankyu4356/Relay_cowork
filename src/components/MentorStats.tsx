@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { FadeIn, Stagger, CountUp } from './ui/motion';
 import {
   ArrowLeft,
   TrendingUp,
@@ -182,17 +183,17 @@ export function MentorStats({ onBack }: MentorStatsProps) {
   const universities = [...new Set(mentees.filter(m => m.status === 'success').map(m => m.university))];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white border-b border-zinc-200/80 sticky top-0 z-10">
         <div className="container-web py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold gradient-text">릴레이 성과 분석</h1>
-              <p className="text-sm text-gray-600">전체 러너들의 합격 현황과 통계</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">릴레이 성과 분석</h1>
+              <p className="text-sm text-zinc-600">전체 러너들의 합격 현황과 통계</p>
             </div>
           </div>
         </div>
@@ -201,67 +202,67 @@ export function MentorStats({ onBack }: MentorStatsProps) {
       <div className="container-web py-8">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Overview Stats */}
-          <div className="grid md:grid-cols-4 gap-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-6 text-center bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-                <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+          <Stagger className="grid md:grid-cols-4 gap-4">
+            <Stagger.Item>
+              <Card className="p-6 text-center bg-iris-50 border-iris-100">
+                <div className="w-14 h-14 bg-iris-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Trophy className="w-7 h-7 text-white" />
                 </div>
-                <div className="text-4xl font-bold text-green-700 mb-1">{successRate}%</div>
-                <div className="text-sm text-gray-700 font-medium">평균 합격률</div>
-                <div className="text-xs text-gray-600 mt-1">{successCount}/{totalCompleted}명 합격</div>
+                <div className="text-4xl font-semibold tracking-tight text-iris-700 mb-1"><CountUp value={successRate} />%</div>
+                <div className="text-sm text-zinc-700 font-medium">평균 합격률</div>
+                <div className="text-xs text-zinc-600 mt-1 tnum">{successCount}/{totalCompleted}명 합격</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Users className="w-7 h-7 text-indigo-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Users className="w-7 h-7 text-iris-600" />
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-1">{mentees.length}</div>
-                <div className="text-sm text-gray-600">총 러너 수</div>
-                <div className="text-xs text-gray-500 mt-1">누적 릴레이</div>
+                <div className="text-4xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={mentees.length} /></div>
+                <div className="text-sm text-zinc-600">총 러너 수</div>
+                <div className="text-xs text-zinc-400 mt-1">누적 릴레이</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Calendar className="w-7 h-7 text-blue-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-zinc-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Calendar className="w-7 h-7 text-zinc-700" />
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-1">{avgSessions}</div>
-                <div className="text-sm text-gray-600">평균 세션 수</div>
-                <div className="text-xs text-gray-500 mt-1">러너당</div>
+                <div className="text-4xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={avgSessions} /></div>
+                <div className="text-sm text-zinc-600">평균 세션 수</div>
+                <div className="text-xs text-zinc-400 mt-1">러너당</div>
               </Card>
-            </motion.div>
+            </Stagger.Item>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="p-6 text-center card-modern">
-                <div className="w-14 h-14 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <Star className="w-7 h-7 text-amber-600" />
+            <Stagger.Item>
+              <Card className="p-6 text-center">
+                <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Star className="w-7 h-7 text-amber-500" />
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-1">{avgRating}</div>
-                <div className="text-sm text-gray-600">평균 평점</div>
-                <div className="text-xs text-gray-500 mt-1">5점 만점</div>
+                <div className="text-4xl font-semibold tracking-tight text-zinc-900 mb-1"><CountUp value={parseFloat(avgRating)} /></div>
+                <div className="text-sm text-zinc-600">평균 평점</div>
+                <div className="text-xs text-zinc-400 mt-1">5점 만점</div>
               </Card>
-            </motion.div>
-          </div>
+            </Stagger.Item>
+          </Stagger>
 
           {/* Success Universities */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <Card className="p-6 bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+          <FadeIn delay={0.1}>
+            <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center flex-shrink-0">
                   <Award className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">합격 대학 현황</h3>
-                  <p className="text-indigo-100 mb-4">
+                  <h3 className="text-xl font-semibold tracking-tight mb-2">합격 대학 현황</h3>
+                  <p className="text-white/80 mb-4">
                     러너들이 합격한 {universities.length}개 대학
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {universities.map((uni, i) => (
-                      <Badge key={i} className="bg-white/20 backdrop-blur-sm text-white border-0 px-4 py-2">
+                      <Badge key={i} className="bg-white/15 text-white border-0 px-4 py-2">
                         {uni}
                       </Badge>
                     ))}
@@ -269,45 +270,46 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
           {/* Success Timeline */}
+          <FadeIn delay={0.15}>
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-iris-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">러너별 성과 현황</h2>
-                <p className="text-sm text-gray-600">전체 릴레이 결과 한눈에 보기</p>
+                <h2 className="text-xl font-semibold tracking-tight text-zinc-900">러너별 성과 현황</h2>
+                <p className="text-sm text-zinc-600">전체 릴레이 결과 한눈에 보기</p>
               </div>
             </div>
 
-            <div className="space-y-3">
-              {mentees.map((mentee, index) => {
+            <Stagger className="space-y-3">
+              {mentees.map((mentee) => {
                 const statusConfig = {
                   success: {
-                    color: 'from-green-400 to-emerald-500',
-                    bgColor: 'from-green-50 to-emerald-50',
-                    borderColor: 'border-green-200',
+                    color: 'bg-iris-100 text-iris-700',
+                    bgColor: 'bg-iris-50',
+                    borderColor: 'border-iris-100',
                     icon: CheckCircle2,
-                    badge: 'bg-green-500 text-white',
+                    badge: 'bg-iris-600 text-white',
                     text: '합격',
                   },
                   'in-progress': {
-                    color: 'from-blue-400 to-green-500',
-                    bgColor: 'from-blue-50 to-green-50',
-                    borderColor: 'border-blue-200',
+                    color: 'bg-zinc-100 text-zinc-700',
+                    bgColor: 'bg-zinc-50',
+                    borderColor: 'border-zinc-200/80',
                     icon: Clock,
-                    badge: 'bg-blue-500 text-white',
+                    badge: 'bg-zinc-700 text-white',
                     text: '진행중',
                   },
                   failed: {
-                    color: 'from-gray-400 to-gray-500',
-                    bgColor: 'from-gray-50 to-gray-100',
-                    borderColor: 'border-gray-200',
+                    color: 'bg-zinc-100 text-zinc-500',
+                    bgColor: 'bg-zinc-50',
+                    borderColor: 'border-zinc-200/80',
                     icon: XCircle,
-                    badge: 'bg-gray-500 text-white',
+                    badge: 'bg-zinc-400 text-white',
                     text: '불합격',
                   },
                 };
@@ -316,32 +318,27 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 const StatusIcon = config.icon;
 
                 return (
-                  <motion.div
-                    key={mentee.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + index * 0.05 }}
-                  >
-                    <Card className={`p-5 bg-gradient-to-r ${config.bgColor} ${config.borderColor} border-2 hover:shadow-lg transition-shadow`}>
+                  <Stagger.Item key={mentee.id}>
+                    <Card className={`p-5 ${config.bgColor} ${config.borderColor} border`}>
                       <div className="flex items-center gap-4">
                         {/* Avatar */}
-                        <div className={`w-16 h-16 bg-gradient-to-br ${config.color} rounded-2xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0`}>
+                        <div className={`w-16 h-16 ${config.color} rounded-2xl flex items-center justify-center text-2xl flex-shrink-0`}>
                           {mentee.avatar}
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-bold text-gray-900">{mentee.name}</h3>
+                            <h3 className="font-semibold text-zinc-900">{mentee.name}</h3>
                             <Badge className={config.badge}>
                               <StatusIcon className="w-3 h-3 mr-1" />
                               {config.text}
                             </Badge>
                           </div>
-                          <div className="text-sm text-gray-700 font-medium mb-1">
+                          <div className="text-sm text-zinc-700 font-medium mb-1">
                             {mentee.university} · {mentee.major}
                           </div>
-                          <div className="flex items-center gap-4 text-xs text-gray-600">
+                          <div className="flex items-center gap-4 text-xs text-zinc-600">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               {mentee.period}
@@ -361,15 +358,15 @@ export function MentorStats({ onBack }: MentorStatsProps) {
 
                         {/* Result */}
                         <div className="text-right flex-shrink-0">
-                          <div className={`text-lg font-bold ${
-                            mentee.status === 'success' ? 'text-green-700' :
-                            mentee.status === 'in-progress' ? 'text-blue-700' :
-                            'text-gray-700'
+                          <div className={`text-lg font-semibold ${
+                            mentee.status === 'success' ? 'text-iris-700' :
+                            mentee.status === 'in-progress' ? 'text-zinc-700' :
+                            'text-zinc-500'
                           }`}>
                             {mentee.result}
                           </div>
                           {mentee.status === 'success' && (
-                            <div className="flex items-center gap-1 text-xs text-green-600 mt-1">
+                            <div className="flex items-center gap-1 text-xs text-iris-600 mt-1">
                               <Trophy className="w-3 h-3" />
                               성공
                             </div>
@@ -377,41 +374,43 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                         </div>
                       </div>
                     </Card>
-                  </motion.div>
+                  </Stagger.Item>
                 );
               })}
-            </div>
+            </Stagger>
           </Card>
+          </FadeIn>
 
           {/* Insights */}
-          <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+          <FadeIn delay={0.2}>
+          <Card className="p-6 bg-iris-50 border-iris-100">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 bg-iris-600 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-gray-900 mb-3 text-lg">💡 인사이트</h3>
-                <div className="space-y-2 text-sm text-gray-700">
+                <h3 className="font-semibold text-zinc-900 mb-3 text-lg">💡 인사이트</h3>
+                <div className="space-y-2 text-sm text-zinc-700">
                   <div className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-iris-600 mt-0.5 flex-shrink-0" />
                     <p>
                       <strong>높은 합격률:</strong> 전체 러너의 {successRate}%가 목표 대학에 합격했습니다.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Target className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" />
+                    <Target className="w-4 h-4 text-iris-600 mt-0.5 flex-shrink-0" />
                     <p>
                       <strong>평균 세션:</strong> 합격생들은 평균 {avgSessions}회의 세션을 진행했습니다.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Star className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <Star className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
                     <p>
                       <strong>만족도:</strong> 러너들의 평균 평점은 {avgRating}점으로 매우 높은 만족도를 보입니다.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Award className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <Award className="w-4 h-4 text-iris-600 mt-0.5 flex-shrink-0" />
                     <p>
                       <strong>주요 합격대학:</strong> {universities.slice(0, 3).join(', ')} 등 상위권 대학 합격률이 높습니다.
                     </p>
@@ -420,6 +419,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
               </div>
             </div>
           </Card>
+          </FadeIn>
         </div>
       </div>
     </div>

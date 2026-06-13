@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
+import { FadeIn, Stagger } from './ui/motion';
 import { PartyPopper, Frown, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
@@ -64,55 +65,48 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-zinc-200/80">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">릴레이 성과 보고</h1>
-              <p className="text-gray-600 mt-1">릴레이 세션 결과를 알려주세요</p>
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">릴레이 성과 보고</h1>
+              <p className="text-zinc-600 mt-1">릴레이 세션 결과를 알려주세요</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container-web py-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <Stagger className="max-w-3xl mx-auto space-y-6">
           {/* Mentor Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <Stagger.Item>
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-3xl">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-3xl">
                   {mentor.avatar}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-1">{mentor.name} 러너</h3>
-                  <p className="text-gray-600">
+                  <h3 className="text-xl text-zinc-900 font-semibold tracking-tight mb-1">{mentor.name} 러너</h3>
+                  <p className="text-zinc-600">
                     {mentor.university} {mentor.major}
                   </p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-zinc-400 mt-1">
                     목표: {purpose}
                   </p>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </Stagger.Item>
 
           {/* Outcome Selection */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+          <Stagger.Item>
             <Card className="p-8">
-              <h3 className="text-lg font-semibold mb-6 text-center">
+              <h3 className="text-lg text-zinc-900 font-semibold tracking-tight mb-6 text-center">
                 결과가 어떻게 되셨나요?
               </h3>
 
@@ -120,22 +114,22 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                 {/* Success */}
                 <motion.button
                   onClick={() => setOutcome('success')}
-                  className={`p-8 rounded-2xl border-2 transition-all ${
+                  className={`p-8 rounded-2xl border transition-all ${
                     outcome === 'success'
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-200 hover:border-green-300 bg-white'
+                      ? 'border-iris-500 bg-iris-50 shadow-sm'
+                      : 'border-zinc-200/80 hover:border-iris-300 bg-white'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <PartyPopper className={`w-16 h-16 mx-auto mb-4 ${
-                    outcome === 'success' ? 'text-green-600' : 'text-gray-400'
+                    outcome === 'success' ? 'text-iris-600' : 'text-zinc-400'
                   }`} />
-                  <div className="text-2xl font-bold mb-2">합격했어요!</div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <div className="text-2xl text-zinc-900 font-semibold tracking-tight mb-2">합격했어요!</div>
+                  <p className="text-sm text-zinc-600 mb-3">
                     축하합니다! 러너님의 성공률이 올라갑니다
                   </p>
-                  <Badge className="bg-green-500 text-white">
+                  <Badge className="bg-iris-600 text-white">
                     +10,000원 크레딧
                   </Badge>
                 </motion.button>
@@ -143,37 +137,34 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                 {/* Fail */}
                 <motion.button
                   onClick={() => setOutcome('fail')}
-                  className={`p-8 rounded-2xl border-2 transition-all ${
+                  className={`p-8 rounded-2xl border transition-all ${
                     outcome === 'fail'
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-300 bg-white'
+                      ? 'border-zinc-400 bg-zinc-50 shadow-sm'
+                      : 'border-zinc-200/80 hover:border-zinc-300 bg-white'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <Frown className={`w-16 h-16 mx-auto mb-4 ${
-                    outcome === 'fail' ? 'text-blue-600' : 'text-gray-400'
+                    outcome === 'fail' ? 'text-zinc-700' : 'text-zinc-400'
                   }`} />
-                  <div className="text-2xl font-bold mb-2">아쉽게 탈락</div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <div className="text-2xl text-zinc-900 font-semibold tracking-tight mb-2">아쉽게 탈락</div>
+                  <p className="text-sm text-zinc-600 mb-3">
                     다시 도전하세요! 재도전 지원 크레딧 지급
                   </p>
-                  <Badge className="bg-blue-500 text-white">
+                  <Badge className="bg-zinc-900 text-white">
                     +15,000원 크레딧
                   </Badge>
                 </motion.button>
               </div>
             </Card>
-          </motion.div>
+          </Stagger.Item>
 
           {/* Detail */}
           {outcome && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
+            <FadeIn>
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">
+                <h3 className="text-lg text-zinc-900 font-semibold tracking-tight mb-4">
                   {outcome === 'success' ? '합격 소감' : '아쉬운 점'}
                 </h3>
                 <Textarea
@@ -186,58 +177,62 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
                   onChange={(e) => setDetail(e.target.value)}
                   className="min-h-32 mb-2"
                 />
-                <div className="text-sm text-gray-600 text-right">
+                <div className="text-sm text-zinc-600 text-right tnum">
                   {detail.length}자
                 </div>
               </Card>
-            </motion.div>
+            </FadeIn>
           )}
 
           {/* Benefits */}
-          <Card className="p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200">
-            <h4 className="font-semibold mb-3">📌 릴레이 성과 보고 시 혜택</h4>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span>
-                  <strong>러너:</strong> 성공률 지표 업데이트, 프로필 강화
-                </span>
+          <Stagger.Item>
+            <Card className="p-6 bg-iris-50 border-iris-100">
+              <h4 className="text-zinc-900 font-semibold tracking-tight mb-3">📌 릴레이 성과 보고 시 혜택</h4>
+              <div className="space-y-2 text-sm text-zinc-600">
+                <div className="flex items-start gap-2">
+                  <span className="text-iris-600">✓</span>
+                  <span>
+                    <strong className="text-zinc-900">러너:</strong> 성공률 지표 업데이트, 프로필 강화
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-iris-600">✓</span>
+                  <span>
+                    <strong className="text-zinc-900">멘티:</strong> 크레딧 지급, 다음 릴레이 세션 할인
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-iris-600">✓</span>
+                  <span>
+                    <strong className="text-zinc-900">플랫폼:</strong> 데이터 축적으로 더 나은 매칭
+                  </span>
+                </div>
               </div>
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span>
-                  <strong>멘티:</strong> 크레딧 지급, 다음 릴레이 세션 할인
-                </span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span>
-                  <strong>플랫폼:</strong> 데이터 축적으로 더 나은 매칭
-                </span>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </Stagger.Item>
 
           {/* Submit */}
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              onClick={onBack}
-              className="flex-1"
-              size="lg"
-            >
-              나중에 하기
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white"
-              size="lg"
-              disabled={!outcome || detail.length < 10 || submitting}
-            >
-              {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />제출 중...</> : '보고 완료'}
-            </Button>
-          </div>
-        </div>
+          <Stagger.Item>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                onClick={onBack}
+                className="flex-1"
+                size="lg"
+              >
+                나중에 하기
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800"
+                size="lg"
+                disabled={!outcome || detail.length < 10 || submitting}
+              >
+                {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />제출 중...</> : '보고 완료'}
+              </Button>
+            </div>
+          </Stagger.Item>
+        </Stagger>
       </div>
     </div>
   );

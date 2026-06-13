@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FadeIn, Stagger, Press } from './ui/motion';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -84,9 +85,9 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-zinc-950">
       {/* Top Bar */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <FadeIn className="bg-zinc-900 border-b border-zinc-800">
         <div className="container-web py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -94,22 +95,23 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                 variant="ghost"
                 size="icon"
                 onClick={onBack}
-                className="text-white hover:bg-gray-700"
+                className="text-white hover:bg-zinc-800"
                 aria-label="뒤로 가기"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-white font-semibold">릴레이 진행 중</h1>
+                  <h1 className="text-white font-semibold tracking-tight">릴레이 진행 중</h1>
                   <Badge className="bg-red-500 text-white animate-pulse">● LIVE</Badge>
                 </div>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-zinc-400 text-sm mt-1 tnum">
                   {mentor.name} 러너 · 경과 시간 {sessionTime}
                 </p>
               </div>
             </div>
-            
+
+            <Press lift={false}>
             <Button
               onClick={handleEndSession}
               className="bg-red-600 hover:bg-red-700 text-white"
@@ -117,42 +119,46 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
             >
               릴레이 종료
             </Button>
+            </Press>
           </div>
         </div>
-      </div>
+      </FadeIn>
 
       <div className="container-web py-4">
         <div className="grid lg:grid-cols-[1fr,400px] gap-4 h-[calc(100vh-120px)]">
           {/* Main Area */}
           <div className="space-y-4 flex flex-col">
             {/* Video Area */}
-            <div className="grid grid-cols-2 gap-4">
+            <Stagger className="grid grid-cols-2 gap-4" stagger={0.06}>
               {/* Mentor Video */}
-              <Card className="bg-gray-800 border-gray-700 overflow-hidden relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-blue-900 flex items-center justify-center">
+              <Stagger.Item>
+              <Card className="bg-zinc-900 border-zinc-800 overflow-hidden relative aspect-video rounded-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-iris-950 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full flex items-center justify-center text-6xl mb-4 mx-auto">
+                    <div className="w-32 h-32 bg-gradient-to-br from-zinc-800 to-iris-800 rounded-full flex items-center justify-center text-6xl mb-4 mx-auto">
                       {mentor.avatar}
                     </div>
-                    <div className="text-white font-semibold text-lg">{mentor.name} 러너</div>
-                    <Badge className="bg-green-500 text-white mt-2">
+                    <div className="text-white font-semibold tracking-tight text-lg">{mentor.name} 러너</div>
+                    <Badge className="bg-emerald-500 text-white mt-2">
                       <Mic className="w-3 h-3 mr-1" />
                       말하는 중
                     </Badge>
                   </div>
                 </div>
               </Card>
+              </Stagger.Item>
 
               {/* My Video */}
-              <Card className="bg-gray-800 border-gray-700 overflow-hidden relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-pink-900 flex items-center justify-center">
+              <Stagger.Item>
+              <Card className="bg-zinc-900 border-zinc-800 overflow-hidden relative aspect-video rounded-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-800 flex items-center justify-center">
                   <div className="text-center">
                     {isCameraOn ? (
                       <>
-                        <div className="w-24 h-24 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-4xl mb-3 mx-auto">
+                        <div className="w-24 h-24 bg-gradient-to-br from-zinc-700 to-zinc-600 rounded-full flex items-center justify-center text-4xl mb-3 mx-auto">
                           👤
                         </div>
-                        <div className="text-white font-semibold">나</div>
+                        <div className="text-white font-semibold tracking-tight">나</div>
                       </>
                     ) : (
                       <>
@@ -163,10 +169,11 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   </div>
                 </div>
               </Card>
-            </div>
+              </Stagger.Item>
+            </Stagger>
 
             {/* Controls */}
-            <Card className="bg-gray-800 border-gray-700 p-4">
+            <Card className="bg-zinc-900 border-zinc-800 p-4 rounded-2xl">
               <div className="flex items-center justify-center gap-3">
                 <Button
                   variant={isMicOn ? 'default' : 'destructive'}
@@ -226,12 +233,12 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
 
             {/* Document Editor */}
             {showDocument && (
-              <Card className="bg-white flex-1 overflow-hidden flex flex-col">
-                <div className="p-4 border-b flex items-center justify-between bg-gray-50">
+              <Card className="bg-white flex-1 overflow-hidden flex flex-col rounded-2xl">
+                <div className="p-4 border-b border-zinc-200/80 flex items-center justify-between bg-zinc-50">
                   <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-indigo-600" />
-                    <h3 className="font-semibold">학업계획서 (공동 편집)</h3>
-                    <Badge className="bg-green-100 text-green-700">실시간 동기화</Badge>
+                    <FileText className="w-5 h-5 text-iris-600" />
+                    <h3 className="text-zinc-900 font-semibold tracking-tight">학업계획서 (공동 편집)</h3>
+                    <Badge className="bg-emerald-100 text-emerald-700">실시간 동기화</Badge>
                   </div>
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline">
@@ -260,17 +267,17 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
 
           {/* Chat Sidebar */}
           {showChat && (
-            <Card className="bg-gray-800 border-gray-700 flex flex-col">
-              <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-                <h3 className="text-white font-semibold flex items-center gap-2">
+            <Card className="bg-zinc-900 border-zinc-800 flex flex-col rounded-2xl">
+              <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+                <h3 className="text-white font-semibold tracking-tight flex items-center gap-2">
                   <MessageSquare className="w-5 h-5" />
                   채팅
                 </h3>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="ghost"
                   onClick={() => setShowChat(false)}
-                  className="text-white hover:bg-gray-700"
+                  className="text-white hover:bg-zinc-800"
                 >
                   <X className="w-4 h-4" />
                 </Button>
@@ -282,17 +289,18 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                     key={message.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     className={`flex ${message.sender === 'mentee' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[80%] ${message.sender === 'mentee' ? 'bg-indigo-600' : 'bg-gray-700'} text-white rounded-lg p-3`}>
+                    <div className={`max-w-[80%] ${message.sender === 'mentee' ? 'bg-iris-600' : 'bg-zinc-800'} text-white rounded-xl p-3`}>
                       <div className="text-sm">{message.text}</div>
-                      <div className="text-xs opacity-70 mt-1">{message.time}</div>
+                      <div className="text-xs opacity-70 mt-1 tnum">{message.time}</div>
                     </div>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="p-4 border-t border-gray-700">
+              <div className="p-4 border-t border-zinc-800">
                 <div className="flex gap-2">
                   <Textarea
                     placeholder="메시지 입력..."
@@ -304,16 +312,18 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                         handleSendMessage();
                       }
                     }}
-                    className="min-h-[60px] bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                    className="min-h-[60px] bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400"
                     aria-label="채팅 메시지 입력"
                   />
+                  <Press lift={false}>
                   <Button
                     onClick={handleSendMessage}
-                    className="bg-indigo-600 hover:bg-indigo-700"
+                    className="bg-iris-600 hover:bg-iris-700"
                     aria-label="메시지 보내기"
                   >
                     <Send className="w-5 h-5" />
                   </Button>
+                  </Press>
                 </div>
               </div>
             </Card>

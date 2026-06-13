@@ -1,4 +1,5 @@
 import { Home, FileText, Calendar, MessageSquare, User, Users } from 'lucide-react';
+import { motion } from 'motion/react';
 import type { Screen } from '../App';
 
 interface BottomNavProps {
@@ -19,29 +20,38 @@ export function BottomNav({ currentScreen, onNavigate, isMentorActive = false }:
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden safe-area-bottom" role="navigation" aria-label="메인 네비게이션">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-zinc-200/80 z-50 md:hidden safe-area-bottom" role="navigation" aria-label="메인 네비게이션">
       <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.screen);
 
           return (
-            <button
+            <motion.button
               key={item.screen}
               onClick={() => onNavigate(item.screen)}
               aria-current={active ? 'page' : undefined}
               aria-label={item.label}
-              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+              className={`relative flex flex-col items-center justify-center gap-1 transition-colors ${
                 active
-                  ? 'text-sky-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-iris-600'
+                  : 'text-zinc-400 hover:text-zinc-600'
               }`}
             >
-              <Icon className={`w-5 h-5 ${active ? 'fill-sky-100' : ''}`} />
+              {active && (
+                <motion.span
+                  layoutId="bottomNavActive"
+                  className="absolute top-0 h-0.5 w-8 rounded-full bg-iris-600"
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              <Icon className={`w-5 h-5 ${active ? 'fill-iris-100' : ''}`} />
               <span className={`text-xs ${active ? 'font-semibold' : ''}`}>
                 {item.label}
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

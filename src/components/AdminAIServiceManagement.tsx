@@ -6,6 +6,7 @@ import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Switch } from './ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
 import {
   ArrowLeft,
   Sparkles,
@@ -82,10 +83,10 @@ const usageChartData = [
 ];
 
 const usageByTypeData = [
-  { name: '학업계획서 초안', value: 45, color: '#0EA5E9' },
-  { name: '학업계획서 첨삭', value: 30, color: '#38BDF8' },
-  { name: '자기소개서', value: 15, color: '#7DD3FC' },
-  { name: '면접 준비', value: 10, color: '#BAE6FD' },
+  { name: '학업계획서 초안', value: 45, color: '#6366f1' },
+  { name: '학업계획서 첨삭', value: 30, color: '#818cf8' },
+  { name: '자기소개서', value: 15, color: '#a5b4fc' },
+  { name: '면접 준비', value: 10, color: '#c7d2fe' },
 ];
 
 const hourlyUsageData = [
@@ -306,26 +307,26 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
   const activeModels = aiModels.filter(m => m.active).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Press lift={false}>
               <Button variant="ghost" size="icon" onClick={onBack}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-            </motion.div>
+            </Press>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 AI 서비스 관리
               </h1>
-              <p className="text-gray-600 mt-1">크레딧 가격, 프로모션, AI 모델을 설정합니다</p>
+              <p className="text-zinc-600 mt-1">크레딧 가격, 프로모션, AI 모델을 설정합니다</p>
             </div>
             {hasUnsavedChanges && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
                 <Button
-                  className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white"
                   onClick={handleSave}
                 >
                   <Save className="w-4 h-4 mr-2" />
@@ -340,70 +341,70 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
       <div className="container-web py-8">
         <div className="space-y-6">
           {/* Stats Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card className="p-4 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+          <Stagger className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <Stagger.Item>
+              <Card className="p-4 rounded-2xl shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-iris-600 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500">월간 AI 이용</div>
-                    <div className="text-xl font-bold">{totalUsage}건</div>
+                    <div className="text-sm text-zinc-400">월간 AI 이용</div>
+                    <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum"><CountUp value={totalUsage} suffix="건" /></div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 mt-2 text-xs">
-                  <TrendingUp className="w-3 h-3 text-green-600" />
-                  <span className="text-green-600 font-medium">+23%</span>
-                  <span className="text-gray-500">전월 대비</span>
+                  <TrendingUp className="w-3 h-3 text-emerald-600" />
+                  <span className="text-emerald-700 font-medium tnum">+23%</span>
+                  <span className="text-zinc-400">전월 대비</span>
                 </div>
               </Card>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <Card className="p-4">
+            </Stagger.Item>
+            <Stagger.Item>
+              <Card className="p-4 rounded-2xl shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <DollarSign className="w-5 h-5 text-green-600" />
+                  <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500">크레딧 매출</div>
-                    <div className="text-xl font-bold">{(totalRevenue / 10000).toFixed(0)}만원</div>
+                    <div className="text-sm text-zinc-400">크레딧 매출</div>
+                    <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum">{(totalRevenue / 10000).toFixed(0)}만원</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 mt-2 text-xs">
-                  <TrendingUp className="w-3 h-3 text-green-600" />
-                  <span className="text-green-600 font-medium">+18%</span>
-                  <span className="text-gray-500">전월 대비</span>
+                  <TrendingUp className="w-3 h-3 text-emerald-600" />
+                  <span className="text-emerald-700 font-medium tnum">+18%</span>
+                  <span className="text-zinc-400">전월 대비</span>
                 </div>
               </Card>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card className="p-4">
+            </Stagger.Item>
+            <Stagger.Item>
+              <Card className="p-4 rounded-2xl shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-sky-600" />
+                  <div className="w-10 h-10 bg-iris-50 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-iris-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500">건당 평균 매출</div>
-                    <div className="text-xl font-bold">{avgRevenuePerUser.toLocaleString()}원</div>
+                    <div className="text-sm text-zinc-400">건당 평균 매출</div>
+                    <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum">{avgRevenuePerUser.toLocaleString()}원</div>
                   </div>
                 </div>
               </Card>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-              <Card className="p-4">
+            </Stagger.Item>
+            <Stagger.Item>
+              <Card className="p-4 rounded-2xl shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Cpu className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-iris-50 rounded-lg flex items-center justify-center">
+                    <Cpu className="w-5 h-5 text-iris-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500">활성 AI 모델</div>
-                    <div className="text-xl font-bold">{activeModels}개</div>
+                    <div className="text-sm text-zinc-400">활성 AI 모델</div>
+                    <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum"><CountUp value={activeModels} suffix="개" /></div>
                   </div>
                 </div>
               </Card>
-            </motion.div>
-          </div>
+            </Stagger.Item>
+          </Stagger>
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -429,14 +430,14 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
             {/* Credit Pricing Tab */}
             <TabsContent value="pricing" className="mt-6 space-y-6">
               {/* General Settings */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-gray-600" />
+              <Card className="p-6 rounded-2xl shadow-sm">
+                <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-zinc-600" />
                   일반 설정
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div>
-                    <label className="text-sm text-gray-600 mb-1.5 block">신규 가입 무료 크레딧</label>
+                    <label className="text-sm text-zinc-600 mb-1.5 block">신규 가입 무료 크레딧</label>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -447,11 +448,11 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                         }}
                         className="w-24"
                       />
-                      <span className="text-sm text-gray-500">크레딧</span>
+                      <span className="text-sm text-zinc-400">크레딧</span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1.5 block">크레딧 만료 기간</label>
+                    <label className="text-sm text-zinc-600 mb-1.5 block">크레딧 만료 기간</label>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -462,11 +463,11 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                         }}
                         className="w-24"
                       />
-                      <span className="text-sm text-gray-500">일</span>
+                      <span className="text-sm text-zinc-400">일</span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1.5 block">일일 사용 제한</label>
+                    <label className="text-sm text-zinc-600 mb-1.5 block">일일 사용 제한</label>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -477,11 +478,11 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                         }}
                         className="w-24"
                       />
-                      <span className="text-sm text-gray-500">회/일</span>
+                      <span className="text-sm text-zinc-400">회/일</span>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1.5 block">동시 요청 제한</label>
+                    <label className="text-sm text-zinc-600 mb-1.5 block">동시 요청 제한</label>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -492,13 +493,13 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                         }}
                         className="w-24"
                       />
-                      <span className="text-sm text-gray-500">건</span>
+                      <span className="text-sm text-zinc-400">건</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm text-gray-600">실패 시 자동 환불</div>
-                      <div className="text-xs text-gray-400 mt-0.5">AI 응답 실패 시 크레딧 자동 환불</div>
+                      <div className="text-sm text-zinc-600">실패 시 자동 환불</div>
+                      <div className="text-xs text-zinc-400 mt-0.5">AI 응답 실패 시 크레딧 자동 환불</div>
                     </div>
                     <Switch
                       checked={generalSettings.autoRefundOnFailure}
@@ -510,8 +511,8 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm text-gray-600">점검 모드</div>
-                      <div className="text-xs text-gray-400 mt-0.5">AI 서비스 일시 중단</div>
+                      <div className="text-sm text-zinc-600">점검 모드</div>
+                      <div className="text-xs text-zinc-400 mt-0.5">AI 서비스 일시 중단</div>
                     </div>
                     <Switch
                       checked={generalSettings.maintenanceMode}
@@ -526,72 +527,67 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
 
               {/* Package Cards */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-gray-600" />
+                <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <Package className="w-5 h-5 text-zinc-600" />
                   크레딧 패키지 ({creditPackages.length}개)
                 </h3>
-                <div className="space-y-4">
+                <Stagger className="space-y-4">
                   {creditPackages.map((pkg, idx) => (
-                    <motion.div
-                      key={pkg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                    >
-                      <Card className={`p-5 ${pkg.popular ? 'border-sky-300 bg-sky-50/30 ring-1 ring-sky-200' : ''} ${!pkg.active ? 'opacity-60' : ''}`}>
+                    <Stagger.Item key={pkg.id}>
+                      <Card className={`p-5 rounded-2xl shadow-sm ${pkg.popular ? 'border-iris-300 bg-iris-50/40 ring-1 ring-iris-200' : ''} ${!pkg.active ? 'opacity-60' : ''}`}>
                         <div className="flex flex-col md:flex-row md:items-center gap-4">
                           <div className="flex items-center gap-3 md:w-48">
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                               pkg.popular
-                                ? 'bg-gradient-to-br from-sky-500 to-blue-600'
-                                : 'bg-gray-100'
+                                ? 'bg-iris-600'
+                                : 'bg-zinc-100'
                             }`}>
-                              <Zap className={`w-5 h-5 ${pkg.popular ? 'text-white' : 'text-gray-600'}`} />
+                              <Zap className={`w-5 h-5 ${pkg.popular ? 'text-white' : 'text-zinc-600'}`} />
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-semibold">{pkg.name}</span>
-                                {pkg.popular && <Badge className="bg-sky-500 text-white border-0 text-xs">인기</Badge>}
+                                <span className="font-semibold text-zinc-900">{pkg.name}</span>
+                                {pkg.popular && <Badge className="bg-iris-50 text-iris-700 border-0 text-xs">인기</Badge>}
                               </div>
-                              <div className="text-xs text-gray-500">{pkg.description}</div>
+                              <div className="text-xs text-zinc-400">{pkg.description}</div>
                             </div>
                           </div>
 
                           <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div>
-                              <label className="text-xs text-gray-500 block mb-1">크레딧 수</label>
+                              <label className="text-xs text-zinc-400 block mb-1">크레딧 수</label>
                               <Input
                                 type="number"
                                 value={pkg.credits}
                                 onChange={(e) => handlePackageChange(pkg.id, 'credits', parseInt(e.target.value) || 0)}
-                                className="h-9"
+                                className="h-9 tnum"
                               />
                             </div>
                             <div>
-                              <label className="text-xs text-gray-500 block mb-1">판매가 (원)</label>
+                              <label className="text-xs text-zinc-400 block mb-1">판매가 (원)</label>
                               <Input
                                 type="number"
                                 value={pkg.price}
                                 onChange={(e) => handlePackageChange(pkg.id, 'price', parseInt(e.target.value) || 0)}
-                                className="h-9"
+                                className="h-9 tnum"
                               />
                             </div>
                             <div>
-                              <label className="text-xs text-gray-500 block mb-1">정가 (원)</label>
+                              <label className="text-xs text-zinc-400 block mb-1">정가 (원)</label>
                               <Input
                                 type="number"
                                 value={pkg.originalPrice || ''}
                                 onChange={(e) => handlePackageChange(pkg.id, 'originalPrice', parseInt(e.target.value) || 0)}
                                 placeholder="할인 전"
-                                className="h-9"
+                                className="h-9 tnum"
                               />
                             </div>
                             <div>
-                              <label className="text-xs text-gray-500 block mb-1">건당 단가</label>
-                              <div className="h-9 flex items-center text-sm font-medium text-sky-600">
+                              <label className="text-xs text-zinc-400 block mb-1">건당 단가</label>
+                              <div className="h-9 flex items-center text-sm font-medium text-iris-600 tnum">
                                 {Math.round(pkg.price / pkg.credits).toLocaleString()}원/건
                                 {pkg.discount && (
-                                  <Badge className="ml-1.5 bg-red-100 text-red-600 border-0 text-xs">
+                                  <Badge className="ml-1.5 bg-red-50 text-red-700 border-0 text-xs tnum">
                                     -{pkg.discount}%
                                   </Badge>
                                 )}
@@ -604,27 +600,27 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                               checked={pkg.active}
                               onCheckedChange={(checked: boolean) => handlePackageChange(pkg.id, 'active', checked)}
                             />
-                            <span className="text-xs text-gray-500 w-8">
+                            <span className="text-xs text-zinc-400 w-8">
                               {pkg.active ? '활성' : '비활성'}
                             </span>
                           </div>
                         </div>
                       </Card>
-                    </motion.div>
+                    </Stagger.Item>
                   ))}
-                </div>
+                </Stagger>
               </div>
             </TabsContent>
 
             {/* Promotions Tab */}
             <TabsContent value="promotions" className="mt-6 space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-gray-600" />
+                <h3 className="font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
+                  <Gift className="w-5 h-5 text-zinc-600" />
                   프로모션 관리
                 </h3>
                 <Button
-                  className="bg-gradient-to-r from-sky-500 to-blue-600 text-white"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white"
                   onClick={() => setShowNewPromoModal(true)}
                 >
                   <Gift className="w-4 h-4 mr-2" />
@@ -632,44 +628,39 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </Button>
               </div>
 
-              <div className="space-y-4">
+              <Stagger className="space-y-4">
                 {promotions.map((promo, idx) => {
                   const typeLabel: Record<string, { label: string; color: string; icon: typeof Gift }> = {
-                    signup_bonus: { label: '가입 보너스', color: 'bg-green-100 text-green-700', icon: Users },
-                    referral: { label: '추천 보너스', color: 'bg-blue-100 text-blue-700', icon: Users },
-                    event: { label: '이벤트', color: 'bg-purple-100 text-purple-700', icon: Sparkles },
-                    seasonal: { label: '시즌 이벤트', color: 'bg-orange-100 text-orange-700', icon: Gift },
+                    signup_bonus: { label: '가입 보너스', color: 'bg-emerald-50 text-emerald-700', icon: Users },
+                    referral: { label: '추천 보너스', color: 'bg-iris-50 text-iris-700', icon: Users },
+                    event: { label: '이벤트', color: 'bg-iris-50 text-iris-700', icon: Sparkles },
+                    seasonal: { label: '시즌 이벤트', color: 'bg-amber-50 text-amber-700', icon: Gift },
                   };
                   const cfg = typeLabel[promo.type];
                   const PromoIcon = cfg.icon;
                   const usagePercent = promo.maxUsage > 0 ? Math.round((promo.usage / promo.maxUsage) * 100) : null;
 
                   return (
-                    <motion.div
-                      key={promo.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                    >
-                      <Card className={`p-5 ${!promo.active ? 'opacity-60' : ''}`}>
+                    <Stagger.Item key={promo.id}>
+                      <Card className={`p-5 rounded-2xl shadow-sm ${!promo.active ? 'opacity-60' : ''}`}>
                         <div className="flex flex-col md:flex-row md:items-center gap-4">
                           <div className="flex items-center gap-3 flex-1">
-                            <div className="w-10 h-10 bg-gradient-to-br from-sky-100 to-blue-100 rounded-lg flex items-center justify-center">
-                              <PromoIcon className="w-5 h-5 text-sky-600" />
+                            <div className="w-10 h-10 bg-iris-50 rounded-lg flex items-center justify-center">
+                              <PromoIcon className="w-5 h-5 text-iris-600" />
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-semibold">{promo.name}</span>
+                                <span className="font-semibold text-zinc-900">{promo.name}</span>
                                 <Badge variant="outline" className={`${cfg.color} border-0 text-xs`}>
                                   {cfg.label}
                                 </Badge>
                                 {promo.active ? (
-                                  <Badge className="bg-green-100 text-green-700 border-0 text-xs">활성</Badge>
+                                  <Badge className="bg-emerald-50 text-emerald-700 border-0 text-xs">활성</Badge>
                                 ) : (
-                                  <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">비활성</Badge>
+                                  <Badge className="bg-zinc-100 text-zinc-500 border-0 text-xs">비활성</Badge>
                                 )}
                               </div>
-                              <div className="text-sm text-gray-500 mt-1">
+                              <div className="text-sm text-zinc-500 mt-1 tnum">
                                 {promo.startDate} ~ {promo.endDate} · 보너스: {promo.credits}크레딧
                               </div>
                             </div>
@@ -677,18 +668,18 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
 
                           <div className="flex items-center gap-6">
                             <div className="text-center">
-                              <div className="text-xs text-gray-500">사용 현황</div>
-                              <div className="font-semibold">
+                              <div className="text-xs text-zinc-400">사용 현황</div>
+                              <div className="font-semibold text-zinc-900 tnum">
                                 {promo.usage.toLocaleString()}
                                 {promo.maxUsage > 0 && (
-                                  <span className="text-gray-400 font-normal">/{promo.maxUsage.toLocaleString()}</span>
+                                  <span className="text-zinc-400 font-normal">/{promo.maxUsage.toLocaleString()}</span>
                                 )}
                               </div>
                               {usagePercent !== null && (
-                                <div className="w-24 h-1.5 bg-gray-200 rounded-full mt-1">
+                                <div className="w-24 h-1.5 bg-zinc-200 rounded-full mt-1">
                                   <div
                                     className={`h-full rounded-full ${
-                                      usagePercent > 80 ? 'bg-red-500' : usagePercent > 50 ? 'bg-yellow-500' : 'bg-green-500'
+                                      usagePercent > 80 ? 'bg-red-500' : usagePercent > 50 ? 'bg-amber-500' : 'bg-emerald-500'
                                     }`}
                                     style={{ width: `${Math.min(usagePercent, 100)}%` }}
                                   />
@@ -702,71 +693,66 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                           </div>
                         </div>
                       </Card>
-                    </motion.div>
+                    </Stagger.Item>
                   );
                 })}
-              </div>
+              </Stagger>
             </TabsContent>
 
             {/* AI Models Tab */}
             <TabsContent value="models" className="mt-6 space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-gray-600" />
+                <h3 className="font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
+                  <Cpu className="w-5 h-5 text-zinc-600" />
                   AI 모델 설정
                 </h3>
                 {generalSettings.maintenanceMode && (
-                  <Badge className="bg-red-500 text-white border-0 px-3 py-1">
+                  <Badge className="bg-red-50 text-red-700 border-0 px-3 py-1">
                     <AlertCircle className="w-3 h-3 mr-1" />
                     점검 모드 활성화됨
                   </Badge>
                 )}
               </div>
 
-              <div className="space-y-4">
+              <Stagger className="space-y-4">
                 {aiModels.map((model, idx) => (
-                  <motion.div
-                    key={model.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                  >
-                    <Card className={`p-5 ${!model.active ? 'opacity-60 bg-gray-50' : ''}`}>
+                  <Stagger.Item key={model.id}>
+                    <Card className={`p-5 rounded-2xl shadow-sm ${!model.active ? 'opacity-60 bg-zinc-50' : ''}`}>
                       <div className="flex flex-col md:flex-row md:items-start gap-4">
                         <div className="flex items-start gap-3 flex-1">
                           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            model.active ? 'bg-gradient-to-br from-purple-500 to-blue-500' : 'bg-gray-200'
+                            model.active ? 'bg-iris-600' : 'bg-zinc-200'
                           }`}>
-                            <Cpu className={`w-5 h-5 ${model.active ? 'text-white' : 'text-gray-500'}`} />
+                            <Cpu className={`w-5 h-5 ${model.active ? 'text-white' : 'text-zinc-500'}`} />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold">{model.name}</span>
+                              <span className="font-semibold text-zinc-900">{model.name}</span>
                               <Badge variant="outline" className="text-xs font-mono">{model.version}</Badge>
                               {model.active ? (
-                                <Badge className="bg-green-100 text-green-700 border-0 text-xs">
+                                <Badge className="bg-emerald-50 text-emerald-700 border-0 text-xs">
                                   <CheckCircle2 className="w-3 h-3 mr-0.5" /> 운영 중
                                 </Badge>
                               ) : (
-                                <Badge className="bg-gray-100 text-gray-500 border-0 text-xs">비활성</Badge>
+                                <Badge className="bg-zinc-100 text-zinc-500 border-0 text-xs">비활성</Badge>
                               )}
                             </div>
-                            <p className="text-sm text-gray-500 mt-1">{model.description}</p>
+                            <p className="text-sm text-zinc-500 mt-1">{model.description}</p>
 
                             <div className="flex items-center gap-4 mt-3 flex-wrap">
                               <div className="flex items-center gap-1.5 text-sm">
-                                <Zap className="w-3.5 h-3.5 text-sky-500" />
-                                <span className="text-gray-600">
+                                <Zap className="w-3.5 h-3.5 text-iris-500" />
+                                <span className="text-zinc-600 tnum">
                                   {model.creditCost === 0 ? '무료' : `${model.creditCost}크레딧/회`}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1.5 text-sm">
-                                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                <span className="text-gray-600">평균 {model.avgResponseTime}</span>
+                                <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                                <span className="text-zinc-600 tnum">평균 {model.avgResponseTime}</span>
                               </div>
                               <div className="flex items-center gap-1.5 text-sm">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                                <span className="text-gray-600">성공률 {model.successRate}%</span>
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                <span className="text-zinc-600 tnum">성공률 {model.successRate}%</span>
                               </div>
                             </div>
                           </div>
@@ -774,7 +760,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
 
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-2">
-                            <label className="text-xs text-gray-500">크레딧</label>
+                            <label className="text-xs text-zinc-400">크레딧</label>
                             <Input
                               type="number"
                               value={model.creditCost}
@@ -788,7 +774,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                                 );
                                 setHasUnsavedChanges(true);
                               }}
-                              className="w-16 h-9"
+                              className="w-16 h-9 tnum"
                             />
                           </div>
                           <Switch
@@ -798,40 +784,40 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                         </div>
                       </div>
                     </Card>
-                  </motion.div>
+                  </Stagger.Item>
                 ))}
-              </div>
+              </Stagger>
 
               {/* System Status */}
-              <Card className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-gray-600" />
+              <Card className="p-6 bg-zinc-50 border-zinc-200/80 rounded-2xl shadow-sm">
+                <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-zinc-600" />
                   시스템 상태
                 </h3>
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="bg-white rounded-lg p-4">
+                  <div className="bg-white rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-sm text-gray-600">API 서버</span>
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-sm text-zinc-600">API 서버</span>
                     </div>
-                    <div className="text-lg font-semibold text-green-600">정상</div>
-                    <div className="text-xs text-gray-500 mt-1">응답 시간: 45ms</div>
+                    <div className="text-lg font-semibold text-emerald-600">정상</div>
+                    <div className="text-xs text-zinc-400 mt-1 tnum">응답 시간: 45ms</div>
                   </div>
-                  <div className="bg-white rounded-lg p-4">
+                  <div className="bg-white rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-sm text-gray-600">AI 엔진</span>
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-sm text-zinc-600">AI 엔진</span>
                     </div>
-                    <div className="text-lg font-semibold text-green-600">정상</div>
-                    <div className="text-xs text-gray-500 mt-1">GPU 사용률: 67%</div>
+                    <div className="text-lg font-semibold text-emerald-600">정상</div>
+                    <div className="text-xs text-zinc-400 mt-1 tnum">GPU 사용률: 67%</div>
                   </div>
-                  <div className="bg-white rounded-lg p-4">
+                  <div className="bg-white rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-sm text-gray-600">크레딧 시스템</span>
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-sm text-zinc-600">크레딧 시스템</span>
                     </div>
-                    <div className="text-lg font-semibold text-green-600">정상</div>
-                    <div className="text-xs text-gray-500 mt-1">대기 큐: 3건</div>
+                    <div className="text-lg font-semibold text-emerald-600">정상</div>
+                    <div className="text-xs text-zinc-400 mt-1 tnum">대기 큐: 3건</div>
                   </div>
                 </div>
               </Card>
@@ -840,25 +826,25 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
             {/* Analytics Tab */}
             <TabsContent value="analytics" className="mt-6 space-y-6">
               {/* Usage Trend */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-gray-600" />
+              <Card className="p-6 rounded-2xl shadow-sm">
+                <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-zinc-600" />
                   AI 이용 및 매출 추이
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={usageChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
                     <XAxis dataKey="date" />
                     <YAxis yAxisId="left" />
                     <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${(v / 10000).toFixed(0)}만`} />
                     <Tooltip
-                      contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb' }}
+                      contentStyle={{ borderRadius: '12px', border: '1px solid #e4e4e7' }}
                       formatter={(value: number, name: string) => {
                         if (name === '매출') return [`${(value / 10000).toFixed(0)}만원`, name];
                         return [`${value}건`, name];
                       }}
                     />
-                    <Line yAxisId="left" type="monotone" dataKey="usage" stroke="#8B5CF6" strokeWidth={2} name="이용건수" dot={{ fill: '#8B5CF6' }} />
+                    <Line yAxisId="left" type="monotone" dataKey="usage" stroke="#6366f1" strokeWidth={2} name="이용건수" dot={{ fill: '#6366f1' }} />
                     <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={2} name="매출" dot={{ fill: '#10B981' }} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -866,9 +852,9 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Usage By Type */}
-                <Card className="p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gray-600" />
+                <Card className="p-6 rounded-2xl shadow-sm">
+                  <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-zinc-600" />
                     서비스별 이용 비중
                   </h3>
                   <div className="flex items-center gap-6">
@@ -894,8 +880,8 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                       {usageByTypeData.map((item) => (
                         <div key={item.name} className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                          <span className="text-sm text-gray-700 flex-1">{item.name}</span>
-                          <span className="text-sm font-medium">{item.value}%</span>
+                          <span className="text-sm text-zinc-700 flex-1">{item.name}</span>
+                          <span className="text-sm font-medium text-zinc-900 tnum">{item.value}%</span>
                         </div>
                       ))}
                     </div>
@@ -903,51 +889,51 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </Card>
 
                 {/* Hourly Usage */}
-                <Card className="p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-gray-600" />
+                <Card className="p-6 rounded-2xl shadow-sm">
+                  <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-zinc-600" />
                     시간대별 이용 현황
                   </h3>
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={hourlyUsageData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
                       <XAxis dataKey="hour" tick={{ fontSize: 11 }} />
                       <YAxis />
-                      <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb' }} />
-                      <Bar dataKey="count" fill="#0EA5E9" radius={[4, 4, 0, 0]} name="이용 건수" />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e4e4e7' }} />
+                      <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} name="이용 건수" />
                     </BarChart>
                   </ResponsiveContainer>
                 </Card>
               </div>
 
               {/* Key Metrics */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-gray-600" />
+              <Card className="p-6 rounded-2xl shadow-sm">
+                <h3 className="font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-zinc-600" />
                   핵심 지표
                 </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-purple-50 rounded-xl p-4">
-                    <div className="text-sm text-purple-600 mb-1">AI → 러너 전환율</div>
-                    <div className="text-2xl font-bold text-purple-700">36.8%</div>
-                    <div className="text-xs text-purple-500 mt-1">AI 이용 → 러너 프로필 클릭</div>
-                  </div>
-                  <div className="bg-sky-50 rounded-xl p-4">
-                    <div className="text-sm text-sky-600 mb-1">세션 전환율</div>
-                    <div className="text-2xl font-bold text-sky-700">62.5%</div>
-                    <div className="text-xs text-sky-500 mt-1">프로필 클릭 → 세션 예약</div>
-                  </div>
-                  <div className="bg-green-50 rounded-xl p-4">
-                    <div className="text-sm text-green-600 mb-1">결제 전환율</div>
-                    <div className="text-2xl font-bold text-green-700">81.0%</div>
-                    <div className="text-xs text-green-500 mt-1">세션 예약 → 결제 완료</div>
-                  </div>
-                  <div className="bg-orange-50 rounded-xl p-4">
-                    <div className="text-sm text-orange-600 mb-1">전체 퍼널 전환율</div>
-                    <div className="text-2xl font-bold text-orange-700">18.7%</div>
-                    <div className="text-xs text-orange-500 mt-1">AI 이용 → 결제 완료</div>
-                  </div>
-                </div>
+                <Stagger className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Stagger.Item className="bg-iris-50 rounded-xl p-4">
+                    <div className="text-sm text-iris-600 mb-1">AI → 러너 전환율</div>
+                    <div className="text-2xl font-semibold tracking-tight text-iris-700 tnum">36.8%</div>
+                    <div className="text-xs text-iris-500 mt-1">AI 이용 → 러너 프로필 클릭</div>
+                  </Stagger.Item>
+                  <Stagger.Item className="bg-iris-50 rounded-xl p-4">
+                    <div className="text-sm text-iris-600 mb-1">세션 전환율</div>
+                    <div className="text-2xl font-semibold tracking-tight text-iris-700 tnum">62.5%</div>
+                    <div className="text-xs text-iris-500 mt-1">프로필 클릭 → 세션 예약</div>
+                  </Stagger.Item>
+                  <Stagger.Item className="bg-emerald-50 rounded-xl p-4">
+                    <div className="text-sm text-emerald-600 mb-1">결제 전환율</div>
+                    <div className="text-2xl font-semibold tracking-tight text-emerald-700 tnum">81.0%</div>
+                    <div className="text-xs text-emerald-500 mt-1">세션 예약 → 결제 완료</div>
+                  </Stagger.Item>
+                  <Stagger.Item className="bg-amber-50 rounded-xl p-4">
+                    <div className="text-sm text-amber-600 mb-1">전체 퍼널 전환율</div>
+                    <div className="text-2xl font-semibold tracking-tight text-amber-700 tnum">18.7%</div>
+                    <div className="text-xs text-amber-500 mt-1">AI 이용 → 결제 완료</div>
+                  </Stagger.Item>
+                </Stagger>
               </Card>
             </TabsContent>
           </Tabs>
@@ -971,14 +957,14 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 p-6"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">새 프로모션 만들기</h2>
+                <h2 className="text-xl font-semibold tracking-tight text-zinc-900">새 프로모션 만들기</h2>
                 <Button variant="ghost" size="icon" onClick={() => setShowNewPromoModal(false)}>
                   <X className="w-5 h-5" />
                 </Button>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-600 block mb-1.5">프로모션 이름</label>
+                  <label className="text-sm text-zinc-600 block mb-1.5">프로모션 이름</label>
                   <Input
                     value={newPromo.name}
                     onChange={(e) => setNewPromo(prev => ({ ...prev, name: e.target.value }))}
@@ -986,7 +972,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600 block mb-1.5">설명</label>
+                  <label className="text-sm text-zinc-600 block mb-1.5">설명</label>
                   <Input
                     value={newPromo.description}
                     onChange={(e) => setNewPromo(prev => ({ ...prev, description: e.target.value }))}
@@ -995,7 +981,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-gray-600 block mb-1.5">할인율 (%)</label>
+                    <label className="text-sm text-zinc-600 block mb-1.5">할인율 (%)</label>
                     <Input
                       type="number"
                       value={newPromo.discount}
@@ -1005,7 +991,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 block mb-1.5">보너스 크레딧</label>
+                    <label className="text-sm text-zinc-600 block mb-1.5">보너스 크레딧</label>
                     <Input
                       type="number"
                       value={newPromo.credits}
@@ -1016,7 +1002,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-gray-600 block mb-1.5">시작일</label>
+                    <label className="text-sm text-zinc-600 block mb-1.5">시작일</label>
                     <Input
                       type="date"
                       value={newPromo.startDate}
@@ -1024,7 +1010,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 block mb-1.5">종료일</label>
+                    <label className="text-sm text-zinc-600 block mb-1.5">종료일</label>
                     <Input
                       type="date"
                       value={newPromo.endDate}
@@ -1045,7 +1031,7 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
                   취소
                 </Button>
                 <Button
-                  className="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                  className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white"
                   disabled={!newPromo.name.trim() || !newPromo.startDate || !newPromo.endDate}
                   onClick={() => {
                     const id = Date.now().toString();

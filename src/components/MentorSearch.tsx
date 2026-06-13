@@ -84,11 +84,11 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
   const getBadgeColor = (badge: string) => {
     switch (badge) {
-      case 'platinum': return 'from-purple-400 to-indigo-500';
-      case 'gold': return 'from-amber-400 to-yellow-500';
-      case 'silver': return 'from-gray-300 to-gray-400';
+      case 'platinum': return 'from-iris-500 to-iris-700';
+      case 'gold': return 'from-amber-400 to-amber-500';
+      case 'silver': return 'from-zinc-300 to-zinc-400';
       case 'bronze': return 'from-orange-400 to-orange-500';
-      default: return 'from-gray-300 to-gray-400';
+      default: return 'from-zinc-300 to-zinc-400';
     }
   };
 
@@ -103,17 +103,17 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
   };
 
   return (
-    <div className="min-h-screen gradient-mesh pb-20">
+    <div className="min-h-screen bg-zinc-50 pb-20">
       <div className="container-web py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold gradient-text">러너 찾기</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900">러너 찾기</h1>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 onClick={() => onNavigate?.('mentor-network')}
-                className="hidden md:flex gap-2 btn-secondary rounded-xl"
+                className="hidden md:flex gap-2 rounded-xl"
               >
                 <Network className="w-4 h-4" />
                 릴레이 네트워크
@@ -121,7 +121,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               <Button
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
-                className={`gap-2 rounded-xl transition-all ${showFilters ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'btn-secondary'}`}
+                className={`gap-2 rounded-xl transition-all ${showFilters ? 'bg-iris-50 border-iris-300 text-iris-700' : ''}`}
                 aria-expanded={showFilters}
                 aria-label="필터"
               >
@@ -134,10 +134,10 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
           {/* Search Bar */}
           <div className="relative max-w-3xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
             <Input
               placeholder={`${catContent.field1Label}, ${catContent.field2Label}, 경험으로 검색...`}
-              className="pl-12 pr-4 h-14 text-lg rounded-2xl border-gray-200 focus:border-indigo-400 focus:ring-indigo-400/20"
+              className="pl-12 pr-4 h-14 text-lg rounded-xl border-zinc-200/80 focus:border-iris-400 focus:ring-iris-400/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="러너 검색"
@@ -154,11 +154,11 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               exit={{ opacity: 0, height: 0 }}
               className="mb-8"
             >
-              <Card className="p-6 card-modern">
+              <Card className="p-6">
                 <div className="grid md:grid-cols-4 gap-6">
                   {/* University Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">{catContent.field1Label}</label>
+                    <label className="text-sm font-semibold text-zinc-700 mb-3 block">{catContent.field1Label}</label>
                     <div className="space-y-2">
                       {universities.map(uni => (
                         <button
@@ -166,8 +166,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                           onClick={() => setSelectedUniversity(uni)}
                           className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                             selectedUniversity === uni 
-                              ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                              : 'hover:bg-gray-100 text-gray-700'
+                              ? 'bg-iris-100 text-iris-700 font-semibold' 
+                              : 'hover:bg-zinc-100 text-zinc-700'
                           }`}
                         >
                           {uni === 'all' ? '전체' : uni}
@@ -178,7 +178,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
                   {/* Badge Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">등급</label>
+                    <label className="text-sm font-semibold text-zinc-700 mb-3 block">등급</label>
                     <div className="space-y-2">
                       {badges.map(badge => (
                         <button
@@ -186,8 +186,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                           onClick={() => setSelectedBadge(badge)}
                           className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                             selectedBadge === badge 
-                              ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                              : 'hover:bg-gray-100 text-gray-700'
+                              ? 'bg-iris-100 text-iris-700 font-semibold' 
+                              : 'hover:bg-zinc-100 text-zinc-700'
                           }`}
                         >
                           {badge === 'all' ? '전체' : getBadgeName(badge)}
@@ -198,7 +198,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
                   {/* Price Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">가격대</label>
+                    <label className="text-sm font-semibold text-zinc-700 mb-3 block">가격대</label>
                     <div className="space-y-2">
                       {priceRanges.map(range => (
                         <button
@@ -206,8 +206,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                           onClick={() => setPriceRange(range.value)}
                           className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                             priceRange === range.value 
-                              ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                              : 'hover:bg-gray-100 text-gray-700'
+                              ? 'bg-iris-100 text-iris-700 font-semibold' 
+                              : 'hover:bg-zinc-100 text-zinc-700'
                           }`}
                         >
                           {range.label}
@@ -218,14 +218,14 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
                   {/* Sort Filter */}
                   <div>
-                    <label className="text-sm font-semibold text-gray-700 mb-3 block">정렬</label>
+                    <label className="text-sm font-semibold text-zinc-700 mb-3 block">정렬</label>
                     <div className="space-y-2">
                       <button
                         onClick={() => setSortBy('rating')}
                         className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                           sortBy === 'rating' 
-                            ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'bg-iris-100 text-iris-700 font-semibold' 
+                            : 'hover:bg-zinc-100 text-zinc-700'
                         }`}
                       >
                         평점 높은 순
@@ -234,8 +234,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                         onClick={() => setSortBy('price')}
                         className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                           sortBy === 'price' 
-                            ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'bg-iris-100 text-iris-700 font-semibold' 
+                            : 'hover:bg-zinc-100 text-zinc-700'
                         }`}
                       >
                         가격 낮은 순
@@ -244,8 +244,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                         onClick={() => setSortBy('successRate')}
                         className={`w-full text-left px-4 py-2 rounded-xl transition-all ${
                           sortBy === 'successRate' 
-                            ? 'bg-indigo-100 text-indigo-700 font-semibold' 
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'bg-iris-100 text-iris-700 font-semibold' 
+                            : 'hover:bg-zinc-100 text-zinc-700'
                         }`}
                       >
                         {catContent.successLabel.replace('평균 ', '')} 높은 순
@@ -260,8 +260,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
         {/* Results Count */}
         <div className="flex items-center justify-between mb-6">
-          <div className="text-gray-600">
-            <span className="text-2xl font-bold text-gray-900">{filteredMentors.length}</span>명의 러너
+          <div className="text-zinc-600">
+            <span className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">{filteredMentors.length}</span>명의 러너
           </div>
           <div className="flex gap-2">
             <Badge className="badge-primary text-sm px-3 py-1">
@@ -277,14 +277,14 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
             {[1, 2, 3, 4].map((i) => (
               <Card key={i} className="p-6 animate-pulse">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-gray-200 rounded-full" />
+                  <div className="w-14 h-14 bg-zinc-200 rounded-full" />
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
-                    <div className="h-3 bg-gray-200 rounded w-32" />
+                    <div className="h-4 bg-zinc-200 rounded w-24 mb-2" />
+                    <div className="h-3 bg-zinc-200 rounded w-32" />
                   </div>
                 </div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-2" />
-                <div className="h-3 bg-gray-200 rounded w-3/4" />
+                <div className="h-3 bg-zinc-200 rounded w-full mb-2" />
+                <div className="h-3 bg-zinc-200 rounded w-3/4" />
               </Card>
             ))}
           </div>
@@ -299,17 +299,17 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
               role="listitem"
             >
               <Card 
-                className="relative overflow-hidden card-modern hover-lift cursor-pointer group"
+                className="relative overflow-hidden cursor-pointer group hover:shadow-md transition-shadow"
                 onClick={() => onMentorSelect(mentor)}
               >
                 {/* Badge Ribbon */}
                 {mentor.badge === 'platinum' && (
-                  <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xs font-bold px-16 py-1 shadow-lg">
+                  <div className="absolute top-4 -right-12 rotate-45 bg-iris-600 text-white text-xs font-semibold px-16 py-1 shadow-md">
                     TOP
                   </div>
                 )}
                 {mentor.badge === 'gold' && (
-                  <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold px-16 py-1 shadow-lg">
+                  <div className="absolute top-4 -right-12 rotate-45 bg-amber-500 text-white text-xs font-semibold px-16 py-1 shadow-md">
                     BEST
                   </div>
                 )}
@@ -319,12 +319,12 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   <div className="flex items-start gap-4 mb-6">
                     {/* Avatar with gradient border */}
                     <div className="relative">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${getBadgeColor(mentor.badge)} rounded-2xl blur-lg opacity-50`}></div>
-                      <div className={`relative w-20 h-20 ${getRunnerColor(mentor.name)} rounded-2xl flex items-center justify-center text-4xl shadow-xl`}>
+                      
+                      <div className={`relative w-20 h-20 ${getRunnerColor(mentor.name)} rounded-2xl flex items-center justify-center text-4xl shadow-sm`}>
                         {getRunnerAvatar(mentor.name)}
                       </div>
                       {mentor.verified && (
-                        <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                        <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-iris-600 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                           <CheckCircle2 className="w-4 h-4 text-white" />
                         </div>
                       )}
@@ -333,76 +333,76 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900">{mentor.name}</h3>
+                        <h3 className="text-xl font-semibold tracking-tight text-zinc-900">{mentor.name}</h3>
                         <Badge className={`bg-gradient-to-r ${getBadgeColor(mentor.badge)} text-white border-0 shadow-md text-xs px-2 py-0.5`}>
                           {getBadgeName(mentor.badge)}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Award className="w-4 h-4 text-indigo-500" />
-                        <span className="font-semibold text-indigo-700">{mentor.university}</span>
+                        <Award className="w-4 h-4 text-iris-600" />
+                        <span className="font-semibold text-iris-700">{mentor.university}</span>
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-zinc-600">
                         {mentor.major} • {mentor.year}
                       </div>
                     </div>
 
                     {/* Price */}
                     <div className="text-right">
-                      <div className="text-2xl font-bold gradient-text">
+                      <div className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">
                         {mentor.price.toLocaleString()}원
                       </div>
-                      <div className="text-xs text-gray-500">60분 기준</div>
+                      <div className="text-xs text-zinc-400">60분 기준</div>
                     </div>
                   </div>
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-3 gap-3 mb-6">
                     {/* Rating */}
-                    <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl p-3 border border-yellow-100">
+                    <div className="bg-amber-50 rounded-xl p-3 border border-amber-100">
                       <div className="flex items-center gap-1 mb-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-xs text-gray-600">평점</span>
+                        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                        <span className="text-xs text-zinc-600">평점</span>
                       </div>
-                      <div className="text-xl font-bold text-gray-900">{mentor.rating}</div>
-                      <div className="text-xs text-gray-500">{mentor.reviews}개 리뷰</div>
+                      <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum">{mentor.rating}</div>
+                      <div className="text-xs text-zinc-400 tnum">{mentor.reviews}개 리뷰</div>
                     </div>
 
                     {/* Success Rate */}
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 border border-green-100">
+                    <div className="bg-iris-50 rounded-xl p-3 border border-iris-100">
                       <div className="flex items-center gap-1 mb-1">
-                        <Target className="w-4 h-4 text-green-600" />
-                        <span className="text-xs text-gray-600">{catContent.successLabel.replace('평균 ', '')}</span>
+                        <Target className="w-4 h-4 text-iris-600" />
+                        <span className="text-xs text-zinc-600">{catContent.successLabel.replace('평균 ', '')}</span>
                       </div>
-                      <div className="text-xl font-bold text-green-700">{mentor.successRate}%</div>
+                      <div className="text-xl font-semibold tracking-tight text-iris-700 tnum">{mentor.successRate}%</div>
                       {/* Progress bar */}
-                      <div className="w-full h-1 bg-green-100 rounded-full mt-1 overflow-hidden">
+                      <div className="w-full h-1 bg-iris-100 rounded-full mt-1 overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+                          className="h-full bg-iris-600 rounded-full"
                           style={{ width: `${mentor.successRate}%` }}
                         />
                       </div>
                     </div>
 
                     {/* Sessions */}
-                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-3 border border-indigo-100">
+                    <div className="bg-zinc-50 rounded-xl p-3 border border-zinc-200/80">
                       <div className="flex items-center gap-1 mb-1">
-                        <Users className="w-4 h-4 text-indigo-600" />
-                        <span className="text-xs text-gray-600">세션</span>
+                        <Users className="w-4 h-4 text-zinc-700" />
+                        <span className="text-xs text-zinc-600">세션</span>
                       </div>
-                      <div className="text-xl font-bold text-indigo-700">{mentor.sessions}</div>
-                      <div className="text-xs text-gray-500">완료</div>
+                      <div className="text-xl font-semibold tracking-tight text-zinc-900 tnum">{mentor.sessions}</div>
+                      <div className="text-xs text-zinc-400">완료</div>
                     </div>
                   </div>
 
                   {/* Quick Info */}
                   <div className="flex items-center gap-4 mb-6 text-sm">
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <Clock className="w-4 h-4 text-green-600" />
+                    <div className="flex items-center gap-2 text-zinc-600">
+                      <Clock className="w-4 h-4 text-iris-600" />
                       <span>응답 {mentor.responseTime}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <MessageCircle className="w-4 h-4 text-purple-600" />
+                    <div className="flex items-center gap-2 text-zinc-600">
+                      <MessageCircle className="w-4 h-4 text-iris-600" />
                       <span>즉시 채팅</span>
                     </div>
                   </div>
@@ -410,7 +410,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                   {/* Action Buttons */}
                   <div className="flex gap-3">
                     <Button 
-                      className="flex-1 btn-primary rounded-xl h-12 font-semibold group-hover:shadow-2xl transition-all"
+                      className="flex-1 rounded-xl h-12 font-semibold transition-all"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
@@ -421,7 +421,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                     </Button>
                     <Button
                       variant="outline"
-                      className="btn-secondary rounded-xl h-12 px-6"
+                      className="rounded-xl h-12 px-6"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);
@@ -433,7 +433,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 </div>
 
                 {/* Hover Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/5 group-hover:to-purple-500/5 transition-all duration-300 pointer-events-none rounded-2xl" />
+                
               </Card>
             </motion.div>
           ))}
@@ -447,8 +447,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
             animate={{ opacity: 1, y: 0 }}
             className="empty-state"
           >
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Search className="w-12 h-12 text-gray-300" />
+            <div className="w-24 h-24 bg-zinc-100 rounded-full flex items-center justify-center mb-6">
+              <Search className="w-12 h-12 text-zinc-300" />
             </div>
             <h3 className="empty-state-title">검색 결과가 없습니다</h3>
             <p className="empty-state-description">
@@ -461,7 +461,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 setSelectedBadge('all');
                 setPriceRange('all');
               }}
-              className="mt-6 btn-secondary rounded-xl"
+              variant="outline"
+              className="mt-6 rounded-xl"
             >
               필터 초기화
             </Button>

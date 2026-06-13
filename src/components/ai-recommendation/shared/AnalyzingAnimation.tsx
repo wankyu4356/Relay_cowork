@@ -31,13 +31,13 @@ export function AnalyzingAnimation({
             rotate: { duration: 2, repeat: Infinity, ease: 'linear' },
             scale: { duration: 1, repeat: Infinity },
           }}
-          className="w-24 h-24 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl"
+          className="w-24 h-24 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
         >
           <Brain className="w-12 h-12 text-white" />
         </motion.div>
-        <h2 className="text-2xl font-bold gradient-text mb-3">{message}</h2>
-        <p className="text-gray-600 mb-6 whitespace-pre-line">{description}</p>
-        <div className="space-y-2 text-sm text-gray-500">
+        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-3">{message}</h2>
+        <p className="text-zinc-600 mb-6 whitespace-pre-line">{description}</p>
+        <div className="space-y-2 text-sm text-zinc-400">
           {steps.map((stepText, index) => (
             <motion.div
               key={index}

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { ArrowLeft, Plus, X, Sparkles, AlertCircle } from 'lucide-react';
+import { FadeIn, Stagger } from './ui/motion';
 import { toast } from 'sonner';
 import type { AIData } from '../App';
 import type { Category } from './GlobalNav';
@@ -118,19 +119,19 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10">
         <div className="container-web py-6">
           <div className="flex items-center gap-4 mb-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold">✨ {catContent.aiToolTitle}</h1>
-              <p className="text-gray-600 mt-1">Step {step}/3</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ {catContent.aiToolTitle}</h1>
+              <p className="text-zinc-600 mt-1">Step {step}/3</p>
             </div>
-            <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 px-4 py-2">
+            <Badge className="bg-zinc-900 text-white border-0 px-4 py-2">
               <Sparkles className="w-4 h-4 mr-2" />
               크레딧 {credits}회
             </Badge>
@@ -143,17 +144,15 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
         <div className="max-w-3xl mx-auto pb-24">
           {/* Step 1 */}
           {step === 1 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+            <FadeIn
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
+              <Card className="p-6 bg-iris-50 border-iris-100">
                 <div className="flex gap-3">
-                  <Sparkles className="w-6 h-6 text-violet-600 flex-shrink-0 mt-1" />
+                  <Sparkles className="w-6 h-6 text-iris-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h2 className="font-semibold text-lg mb-1">📌 Step 1: 내 배경 정보</h2>
-                    <p className="text-gray-600">
+                    <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 1: 내 배경 정보</h2>
+                    <p className="text-zinc-600">
                       내 경험을 입력하면, 지원 학과에 맞는 스토리라인과 초안을 만들어 드려요
                     </p>
                   </div>
@@ -180,30 +179,28 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                     </div>
                   </div>
 
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="p-4 bg-zinc-50 border border-zinc-200/80 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-green-600 font-semibold">✅ 프로필에서 불러옴</span>
+                      <span className="text-iris-600 font-semibold">✅ 프로필에서 불러옴</span>
                     </div>
-                    <div className="space-y-1 text-sm text-gray-700">
+                    <div className="space-y-1 text-sm text-zinc-600">
                       <p>• 전적대: 건국대 정치외교학과</p>
                       <p>• 학점: 3.8 / 4.5</p>
                     </div>
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </FadeIn>
           )}
 
           {/* Step 2 */}
           {step === 2 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+            <FadeIn
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
-                <h2 className="font-semibold text-lg mb-1">📌 Step 2: 경험 & 소재</h2>
-                <p className="text-gray-600">
+              <Card className="p-6 bg-iris-50 border-iris-100">
+                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 2: 경험 & 소재</h2>
+                <p className="text-zinc-600">
                   구체적인 경험을 입력할수록 더 좋은 초안을 받을 수 있어요
                 </p>
               </Card>
@@ -211,7 +208,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               <Card className="p-6 space-y-6">
                 <div>
                   <Label className="text-base">{catContent.motivationLabel} (핵심 소재) *</Label>
-                  <p className="text-sm text-gray-600 mt-1 mb-3">
+                  <p className="text-sm text-zinc-600 mt-1 mb-3">
                     왜 이 학과에 지원하나요? 핵심 경험이나 계기를 자유롭게 적어주세요 (200자 이상)
                   </p>
                   <Textarea
@@ -220,14 +217,14 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                     onChange={(e) => setFormData(prev => ({ ...prev, motivation: e.target.value }))}
                     className="min-h-40"
                   />
-                  <div className={`text-right text-sm mt-2 ${(formData.motivation?.length || 0) >= 200 ? 'text-violet-600 font-medium' : 'text-gray-500'}`}>
+                  <div className={`text-right text-sm mt-2 tnum ${(formData.motivation?.length || 0) >= 200 ? 'text-iris-600 font-medium' : 'text-zinc-400'}`}>
                     {formData.motivation?.length || 0} / 200자
                   </div>
                 </div>
 
                 <div>
                   <Label className="text-base">관련 활동/경험 *</Label>
-                  <Card className="p-4 mt-3 bg-gray-50 space-y-3">
+                  <Card className="p-4 mt-3 bg-zinc-50 space-y-3">
                     <Input
                       placeholder="활동명"
                       value={newActivity.name}
@@ -249,9 +246,9 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       onChange={(e) => setNewActivity(prev => ({ ...prev, achievement: e.target.value }))}
                       className="min-h-24"
                     />
-                    <Button 
+                    <Button
                       onClick={handleAddActivity}
-                      className="w-full bg-violet-500 hover:bg-violet-600 text-white"
+                      className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       활동 추가
@@ -259,13 +256,14 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                   </Card>
 
                   {formData.activities && formData.activities.length > 0 && (
-                    <div className="mt-3 space-y-2">
+                    <Stagger className="mt-3 space-y-2">
                       {formData.activities.map((activity, index) => (
-                        <Card key={index} className="p-4 bg-white">
+                        <Stagger.Item key={index}>
+                        <Card className="p-4 bg-white">
                           <div className="flex justify-between items-start gap-3">
                             <div className="flex-1">
-                              <h4 className="font-semibold">{activity.name}</h4>
-                              <p className="text-sm text-gray-600">{activity.role} · {activity.period}</p>
+                              <h4 className="font-semibold text-zinc-900">{activity.name}</h4>
+                              <p className="text-sm text-zinc-600">{activity.role} · {activity.period}</p>
                             </div>
                             <Button
                               variant="ghost"
@@ -277,14 +275,15 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                             </Button>
                           </div>
                         </Card>
+                        </Stagger.Item>
                       ))}
-                    </div>
+                    </Stagger>
                   )}
                 </div>
 
                 <div>
                   <Label className="text-base">{catContent.keywordsLabel}</Label>
-                  <p className="text-sm text-gray-600 mt-1 mb-3">
+                  <p className="text-sm text-zinc-600 mt-1 mb-3">
                     관심 분야나 수강 희망 과목을 태그로 입력해주세요
                   </p>
                   <div className="flex gap-2">
@@ -294,16 +293,16 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       onChange={(e) => setKeywordInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddKeyword())}
                     />
-                    <Button onClick={handleAddKeyword} className="bg-violet-500 hover:bg-violet-600 text-white">
+                    <Button onClick={handleAddKeyword} className="bg-zinc-900 hover:bg-zinc-800 text-white">
                       추가
                     </Button>
                   </div>
                   {formData.keywords && formData.keywords.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {formData.keywords.map((keyword) => (
-                        <Badge 
+                        <Badge
                           key={keyword}
-                          className="bg-violet-100 text-violet-700 hover:bg-violet-200 gap-2"
+                          className="bg-iris-50 text-iris-700 hover:bg-iris-100 gap-2"
                         >
                           {keyword}
                           <button onClick={() => setFormData(prev => ({ ...prev, keywords: prev.keywords?.filter(k => k !== keyword) }))}>
@@ -315,19 +314,17 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                   )}
                 </div>
               </Card>
-            </motion.div>
+            </FadeIn>
           )}
 
           {/* Step 3 */}
           {step === 3 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+            <FadeIn
               className="space-y-6"
             >
-              <Card className="p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
-                <h2 className="font-semibold text-lg mb-1">📌 Step 3: 선호 설정</h2>
-                <p className="text-gray-600">{catContent.styleDescription}</p>
+              <Card className="p-6 bg-iris-50 border-iris-100">
+                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 3: 선호 설정</h2>
+                <p className="text-zinc-600">{catContent.styleDescription}</p>
               </Card>
 
               <Card className="p-6 space-y-6">
@@ -343,19 +340,19 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                       { value: 'academic', title: '학업 계획 중심', desc: '구체적 계획 강조' },
                       { value: 'balanced', title: '균형형', desc: '경험 + 계획 밸런스' },
                     ].map((option) => (
-                      <Card 
+                      <Card
                         key={option.value}
                         className={`p-4 cursor-pointer transition-all ${
                           formData.tone === option.value
-                            ? 'border-2 border-violet-500 bg-violet-50'
-                            : 'border-2 border-transparent hover:border-violet-200'
+                            ? 'border border-iris-600 bg-iris-50'
+                            : 'border border-zinc-200/80 hover:border-iris-300'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <RadioGroupItem value={option.value} id={option.value} />
                           <label htmlFor={option.value} className="cursor-pointer flex-1">
-                            <div className="font-semibold">{option.title}</div>
-                            <div className="text-sm text-gray-600">{option.desc}</div>
+                            <div className="font-semibold text-zinc-900">{option.title}</div>
+                            <div className="text-sm text-zinc-600">{option.desc}</div>
                           </label>
                         </div>
                       </Card>
@@ -382,22 +379,22 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                   </Select>
                 </div>
 
-                <Card className="p-4 bg-amber-50 border-amber-200">
+                <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-gray-700">
-                      <strong>AI 크레딧 1회</strong>가 사용됩니다. 스토리라인 제안과 초안 생성이 포함됩니다.
+                    <AlertCircle className="w-5 h-5 text-iris-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-zinc-600">
+                      <strong className="text-zinc-900">AI 크레딧 1회</strong>가 사용됩니다. 스토리라인 제안과 초안 생성이 포함됩니다.
                     </div>
                   </div>
                 </Card>
               </Card>
-            </motion.div>
+            </FadeIn>
           )}
         </div>
       </div>
 
       {/* Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-zinc-200/80 p-4 z-10">
         <div className="container-web max-w-3xl flex gap-4">
           {step > 1 && (
             <Button
@@ -414,7 +411,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleNext}
               disabled={!canProceed()}
               size="lg"
-              className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white"
             >
               다음
             </Button>
@@ -423,7 +420,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleSubmit}
               disabled={!canProceed() || credits <= 0}
               size="lg"
-              className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white"
+              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               스토리라인 생성하기
