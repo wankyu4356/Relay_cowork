@@ -51,17 +51,34 @@ update public.profiles set role = 'admin' where email = 'you@example.com';
 1. https://vercel.com → **Add New → Project** → 이 GitHub 저장소 import
 2. 프레임워크 프리셋은 자동 감지(Vite). 빌드 설정은 `vercel.json` 에 이미 있음
    - Build Command: `npm run build` · Output: `build`
-3. **Environment Variables** 에 2개 추가 (Production + Preview 모두):
-   - `VITE_SUPABASE_URL` = `https://<project-ref>.supabase.co`
-   - `VITE_SUPABASE_ANON_KEY` = `<anon public key>`
+3. **Environment Variables** 에 추가 (Production + Preview 모두):
+   - `VITE_SUPABASE_URL` = `https://<project-ref>.supabase.co` (브라우저 노출)
+   - `VITE_SUPABASE_ANON_KEY` = `<anon public key>` (브라우저 노출)
+   - `ANTHROPIC_API_KEY` = `sk-ant-...` (**서버 전용 · VITE_ 접두사 없음** — AI 첨삭용)
 4. **Deploy** → 발급된 도메인을 3단계의 Site URL / Redirect URLs에 반영
 
-## 6. 로컬 개발
+## 6. AI 첨삭 (실제 Claude 연동)
+
+AI 스토리라인·초안·첨삭은 **Vercel Serverless Function `/api/ai`** 가 서버에서
+Anthropic Claude(`claude-opus-4-8`)를 호출해 결과를 **스트리밍**합니다.
+API 키는 서버에만 있고 브라우저 번들에는 절대 포함되지 않습니다.
+
+- `ANTHROPIC_API_KEY` 를 Vercel 환경변수(서버 전용)에 등록하면 자동 활성화됩니다.
+- 키가 없거나 함수가 없으면(예: 로컬 `npm run dev`) **목업으로 자동 폴백**하므로
+  앱은 항상 동작합니다.
+- 동작 위치: `AI 초안 작성` 화면의 초안 생성 + 편집 도구(문단 재생성/톤 변경/
+  더 구체적으로/더 간결하게)와 `재생성` 버튼이 실제 AI 첨삭을 호출합니다.
+- 비용/지연 조절: `api/ai.ts` 의 `effort`(low/medium/high)와 `max_tokens` 로 조정.
+
+## 7. 로컬 개발
 
 ```bash
-cp .env.example .env      # 값을 본인 프로젝트 키로 채우기
+cp .env.example .env      # 값을 본인 키로 채우기
 npm install
-npm run dev               # http://localhost:3000
+npm run dev               # http://localhost:3000 (프론트만 — /api 미동작, AI는 목업)
+
+# AI 첨삭까지 로컬에서 테스트하려면 Vercel CLI 사용:
+npx vercel dev            # /api/ai 서버리스 함수 포함 실행
 ```
 
 ---
@@ -81,8 +98,7 @@ npm run dev               # http://localhost:3000
 ## 한계 / 다음 단계
 
 - **결제**: 크레딧 구매는 현재 가상(`add_credits`). 실결제는 Toss/Stripe 등 PG 연동 필요.
-- **AI 생성**: 스토리라인/초안은 클라이언트 목업입니다. 실제 LLM을 쓰려면
-  Anthropic API 호출을 **서버(예: Supabase Edge Function 또는 Vercel Serverless)** 에 두고
-  키를 노출하지 않도록 하세요. (`ai_usage_logs` 테이블이 사용량 기록용으로 준비돼 있음)
+- **AI 생성**: ✅ 구현됨 — `/api/ai` 서버리스 함수가 실제 Claude를 호출(위 6단계).
+  키 미설정 시에는 목업으로 폴백. (사용량 로깅을 원하면 `ai_usage_logs` 테이블 활용)
 - `src/supabase/functions/server/` 의 기존 Hono Edge Function은 더 이상 사용하지 않습니다
   (참고용으로 남겨둠 — 삭제해도 무방).
