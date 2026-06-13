@@ -225,7 +225,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   선배 러너 ({mentorConnections.length})
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4">
+                <Stagger className="grid md:grid-cols-2 gap-4">
                   {mentorConnections.map((runner, index) => (
                     <Stagger.Item key={runner.id}>
                       <Press>
@@ -306,9 +306,10 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                           릴레이 세션 예약
                         </Button>
                       </Card>
-                    </motion.div>
+                      </Press>
+                    </Stagger.Item>
                   ))}
-                </div>
+                </Stagger>
               </div>
             )}
 
@@ -321,7 +322,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   동료 러너 ({peerConnections.length})
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4">
+                <Stagger className="grid md:grid-cols-2 gap-4">
                   {peerConnections.map((runner, index) => (
                     <Stagger.Item key={runner.id}>
                       <Press>
@@ -401,9 +402,10 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                           정보 교류하기
                         </Button>
                       </Card>
-                    </motion.div>
+                      </Press>
+                    </Stagger.Item>
                   ))}
-                </div>
+                </Stagger>
               </div>
             )}
 
@@ -416,7 +418,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   후배 러너 ({menteeConnections.length})
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4">
+                <Stagger className="grid md:grid-cols-2 gap-4">
                   {menteeConnections.map((runner, index) => (
                     <Stagger.Item key={runner.id}>
                       <Press>
@@ -499,9 +501,10 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                           )}
                         </Button>
                       </Card>
-                    </motion.div>
+                      </Press>
+                    </Stagger.Item>
                   ))}
-                </div>
+                </Stagger>
               </div>
             )}
           </TabsContent>
