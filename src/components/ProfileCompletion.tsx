@@ -2,6 +2,7 @@ import { CheckCircle, Circle } from 'lucide-react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
+import { FadeIn, Stagger, CountUp } from './ui/motion';
 
 interface ProfileCompletionProps {
   hasPhoto?: boolean;
@@ -57,40 +58,44 @@ export function ProfileCompletion({
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">프로필 완성도</h3>
-        <span className="text-2xl font-bold text-sky-600">{totalCompletion}%</span>
-      </div>
+    <FadeIn>
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-zinc-900 tracking-tight">프로필 완성도</h3>
+          <span className="text-2xl font-semibold text-iris-600 tnum">
+            <CountUp value={totalCompletion} suffix="%" />
+          </span>
+        </div>
 
-      <Progress value={totalCompletion} className="mb-4" />
+        <Progress value={totalCompletion} className="mb-4" />
 
-      <div className="space-y-2 mb-4">
-        {completionItems.map((item) => (
-          <div key={item.label} className="flex items-center gap-2 text-sm">
-            {item.completed ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
-            ) : (
-              <Circle className="w-4 h-4 text-gray-300" />
-            )}
-            <span className={item.completed ? 'text-gray-900' : 'text-gray-500'}>
-              {item.label}
-            </span>
+        <Stagger className="space-y-2 mb-4">
+          {completionItems.map((item) => (
+            <Stagger.Item key={item.label} className="flex items-center gap-2 text-sm">
+              {item.completed ? (
+                <CheckCircle className="w-4 h-4 text-emerald-500" />
+              ) : (
+                <Circle className="w-4 h-4 text-zinc-300" />
+              )}
+              <span className={item.completed ? 'text-zinc-900' : 'text-zinc-400'}>
+                {item.label}
+              </span>
+            </Stagger.Item>
+          ))}
+        </Stagger>
+
+        {verificationLevel !== 'none' && (
+          <div className="pt-4 border-t border-zinc-200/80">
+            {getVerificationBadge()}
           </div>
-        ))}
-      </div>
+        )}
 
-      {verificationLevel !== 'none' && (
-        <div className="pt-4 border-t">
-          {getVerificationBadge()}
-        </div>
-      )}
-
-      {totalCompletion < 100 && (
-        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-gray-700">
-          💡 프로필 완성도가 높을수록 검색 결과에서 상위 노출됩니다
-        </div>
-      )}
-    </Card>
+        {totalCompletion < 100 && (
+          <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-zinc-600">
+            💡 프로필 완성도가 높을수록 검색 결과에서 상위 노출됩니다
+          </div>
+        )}
+      </Card>
+    </FadeIn>
   );
 }

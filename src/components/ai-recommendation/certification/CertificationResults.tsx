@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { NextStepsCard } from '../shared/NextStepsCard';
+import { FadeIn, Stagger, Press, CountUp } from '../../ui/motion';
 import { CERTIFICATION_CONFIG } from '../../../lib/recommendation-data/certificationData';
 import type {
   CertificationRecommendation,
@@ -37,39 +38,26 @@ function DdayBanner({ examDate }: { examDate: string }) {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }, [examDate]);
 
-  const colorClass =
-    daysLeft > 60
-      ? 'from-green-50 to-emerald-50 border-green-300'
-      : daysLeft > 30
-        ? 'from-yellow-50 to-amber-50 border-yellow-300'
-        : 'from-red-50 to-rose-50 border-red-300';
-
   const textColor =
     daysLeft > 60
-      ? 'text-green-700'
+      ? 'text-emerald-600'
       : daysLeft > 30
-        ? 'text-yellow-700'
-        : 'text-red-700';
+        ? 'text-amber-600'
+        : 'text-rose-600';
 
   const badgeColor =
     daysLeft > 60
-      ? 'bg-green-500'
+      ? 'bg-emerald-500'
       : daysLeft > 30
-        ? 'bg-yellow-500'
-        : 'bg-red-500';
+        ? 'bg-amber-500'
+        : 'bg-rose-500';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card
-        className={`p-6 bg-gradient-to-r ${colorClass} border-2 text-center`}
-      >
+    <FadeIn y={-12}>
+      <Card className="p-6 bg-white border border-zinc-200/80 rounded-2xl shadow-sm text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
           <CalendarClock className={`w-6 h-6 ${textColor}`} />
-          <span className="text-sm font-medium text-gray-600">
+          <span className="text-sm font-medium text-zinc-600">
             시험 예정일: {examDate}
           </span>
         </div>
@@ -79,11 +67,11 @@ function DdayBanner({ examDate }: { examDate: string }) {
           >
             D
           </span>
-          <span className={`text-5xl font-extrabold ${textColor}`}>
+          <span className={`text-5xl font-semibold tracking-tight tnum ${textColor}`}>
             {daysLeft > 0 ? `-${daysLeft}` : daysLeft === 0 ? '-Day' : `+${Math.abs(daysLeft)}`}
           </span>
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-zinc-400 mt-2">
           {daysLeft > 60
             ? '충분한 시간이 있습니다. 계획적으로 준비하세요!'
             : daysLeft > 30
@@ -93,7 +81,7 @@ function DdayBanner({ examDate }: { examDate: string }) {
                 : '시험일이 지났습니다.'}
         </p>
       </Card>
-    </motion.div>
+    </FadeIn>
   );
 }
 
@@ -135,7 +123,7 @@ function DifficultyGauge({ difficulty }: { difficulty: number }) {
         <path
           d={bgD}
           fill="none"
-          stroke="#e5e7eb"
+          stroke="#e4e4e7"
           strokeWidth="12"
           strokeLinecap="round"
         />
@@ -155,7 +143,7 @@ function DifficultyGauge({ difficulty }: { difficulty: number }) {
           x={cx}
           y={cy - 5}
           textAnchor="middle"
-          className="text-2xl font-bold"
+          className="text-2xl font-semibold tnum"
           fill={strokeColor}
         >
           {difficulty}
@@ -164,13 +152,13 @@ function DifficultyGauge({ difficulty }: { difficulty: number }) {
           x={cx}
           y={cy + 12}
           textAnchor="middle"
-          className="text-xs"
-          fill="#9ca3af"
+          className="text-xs tnum"
+          fill="#a1a1aa"
         >
           / 10
         </text>
       </svg>
-      <span className="text-xs text-gray-500 -mt-1">난이도</span>
+      <span className="text-xs text-zinc-400 -mt-1">난이도</span>
     </div>
   );
 }
@@ -181,29 +169,26 @@ function StudyRoadmapTimeline({
   roadmap: CertificationRecommendation['studyRoadmap'];
 }) {
   return (
-    <div className="relative pl-8">
+    <Stagger className="relative pl-8" stagger={0.12}>
       {/* Vertical line */}
-      <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-indigo-200" />
-      {roadmap.map((item, index) => (
-        <motion.div
+      <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-iris-100" />
+      {roadmap.map((item) => (
+        <Stagger.Item
           key={item.week}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.15, duration: 0.4 }}
           className="relative mb-4 last:mb-0"
         >
           {/* Node */}
           <div
             className={`absolute -left-5 w-6 h-6 rounded-full flex items-center justify-center ${
               item.milestone
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white border-2 border-indigo-300'
+                ? 'bg-iris-600 text-white'
+                : 'bg-white border border-iris-200'
             }`}
           >
             {item.milestone ? (
               <Star className="w-3 h-3" />
             ) : (
-              <span className="text-[10px] font-bold text-indigo-600">
+              <span className="text-[10px] font-bold text-iris-600 tnum">
                 {item.week}
               </span>
             )}
@@ -211,28 +196,28 @@ function StudyRoadmapTimeline({
           {/* Content */}
           <div
             className={`ml-4 p-3 rounded-xl ${
-              item.milestone ? 'bg-indigo-50 border border-indigo-200' : 'bg-gray-50'
+              item.milestone ? 'bg-iris-50 border border-iris-100' : 'bg-zinc-50'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-gray-900 text-sm">
+              <span className="font-semibold text-zinc-900 text-sm">
                 {item.week}주차: {item.topic}
               </span>
-              <span className="text-xs text-gray-500 flex items-center gap-1">
+              <span className="text-xs text-zinc-400 flex items-center gap-1 tnum">
                 <Clock className="w-3 h-3" />
                 {item.hours}시간
               </span>
             </div>
             {item.milestone && (
-              <div className="mt-1 text-xs font-medium text-indigo-600 flex items-center gap-1">
+              <div className="mt-1 text-xs font-medium text-iris-600 flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" />
                 {item.milestone}
               </div>
             )}
           </div>
-        </motion.div>
+        </Stagger.Item>
       ))}
-    </div>
+    </Stagger>
   );
 }
 
@@ -247,27 +232,27 @@ function WeeklyScheduleTable({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b-2 border-indigo-200">
-            <th className="py-2 px-3 text-left text-gray-600 font-semibold">요일</th>
-            <th className="py-2 px-3 text-left text-gray-600 font-semibold">과목</th>
-            <th className="py-2 px-3 text-right text-gray-600 font-semibold">시간</th>
+          <tr className="border-b border-zinc-200/80">
+            <th className="py-2 px-3 text-left text-zinc-600 font-semibold">요일</th>
+            <th className="py-2 px-3 text-left text-zinc-600 font-semibold">과목</th>
+            <th className="py-2 px-3 text-right text-zinc-600 font-semibold">시간</th>
           </tr>
         </thead>
         <tbody>
           {schedule.map((row) => (
-            <tr key={row.day} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-2 px-3 font-medium text-indigo-600">{row.day}</td>
-              <td className="py-2 px-3 text-gray-800">{row.subject}</td>
-              <td className="py-2 px-3 text-right text-gray-600">{row.hours}h</td>
+            <tr key={row.day} className="border-b border-zinc-100 hover:bg-zinc-50">
+              <td className="py-2 px-3 font-medium text-iris-600">{row.day}</td>
+              <td className="py-2 px-3 text-zinc-700">{row.subject}</td>
+              <td className="py-2 px-3 text-right text-zinc-600 tnum">{row.hours}h</td>
             </tr>
           ))}
         </tbody>
         <tfoot>
-          <tr className="border-t-2 border-indigo-200">
-            <td className="py-2 px-3 font-bold text-gray-900" colSpan={2}>
+          <tr className="border-t border-zinc-200/80">
+            <td className="py-2 px-3 font-semibold text-zinc-900" colSpan={2}>
               주간 총 학습 시간
             </td>
-            <td className="py-2 px-3 text-right font-bold text-indigo-600">
+            <td className="py-2 px-3 text-right font-semibold text-iris-600 tnum">
               {totalHours}h
             </td>
           </tr>
@@ -292,56 +277,56 @@ function RecommendationCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.15, duration: 0.5 }}
     >
-      <Card className="p-6 card-modern hover:shadow-lg transition-shadow">
+      <Card className="p-6 card-modern rounded-2xl hover:shadow-lg transition-shadow">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center text-white font-semibold tnum">
               {index + 1}
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900">{rec.name}</h3>
-              <p className="text-sm text-gray-500">{rec.field}</p>
+              <h3 className="text-lg font-semibold tracking-tight text-zinc-900">{rec.name}</h3>
+              <p className="text-sm text-zinc-400">{rec.field}</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-extrabold text-indigo-600">
+            <div className="text-2xl font-semibold tracking-tight text-iris-600 tnum">
               {rec.matchScore}%
             </div>
-            <div className="text-xs text-gray-500">적합도</div>
+            <div className="text-xs text-zinc-400">적합도</div>
           </div>
         </div>
 
         {/* Key metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-          <div className="bg-gray-50 rounded-xl p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">합격률</div>
-            <div className="font-bold text-gray-900">{rec.passRate}</div>
+          <div className="bg-zinc-50 border border-zinc-200/80 rounded-xl p-3 text-center">
+            <div className="text-xs text-zinc-400 mb-1">합격률</div>
+            <div className="font-semibold text-zinc-900 tnum">{rec.passRate}</div>
           </div>
-          <div className="bg-gray-50 rounded-xl p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">학습 기간</div>
-            <div className="font-bold text-gray-900">{rec.studyPeriod}</div>
+          <div className="bg-zinc-50 border border-zinc-200/80 rounded-xl p-3 text-center">
+            <div className="text-xs text-zinc-400 mb-1">학습 기간</div>
+            <div className="font-semibold text-zinc-900">{rec.studyPeriod}</div>
           </div>
-          <div className="bg-gray-50 rounded-xl p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">비용</div>
-            <div className="font-bold text-gray-900 text-xs">{rec.cost}</div>
+          <div className="bg-zinc-50 border border-zinc-200/80 rounded-xl p-3 text-center">
+            <div className="text-xs text-zinc-400 mb-1">비용</div>
+            <div className="font-semibold text-zinc-900 text-xs tnum">{rec.cost}</div>
           </div>
-          <div className="bg-gray-50 rounded-xl p-3 flex items-center justify-center">
+          <div className="bg-zinc-50 border border-zinc-200/80 rounded-xl p-3 flex items-center justify-center">
             <DifficultyGauge difficulty={rec.difficulty} />
           </div>
         </div>
 
         {/* Strengths */}
         <div className="mb-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-            <TrendingUp className="w-4 h-4 text-green-500" />
+          <h4 className="text-sm font-semibold text-zinc-600 mb-2 flex items-center gap-1">
+            <TrendingUp className="w-4 h-4 text-iris-600" />
             추천 이유
           </h4>
           <div className="flex flex-wrap gap-2">
             {rec.strengths.map((s, i) => (
               <span
                 key={i}
-                className="inline-block bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full"
+                className="inline-block bg-iris-50 text-iris-700 text-xs px-3 py-1 rounded-lg"
               >
                 {s}
               </span>
@@ -352,7 +337,7 @@ function RecommendationCard({
         {/* Expand/Collapse */}
         <Button
           variant="ghost"
-          className="w-full text-indigo-600 hover:text-indigo-800"
+          className="w-full text-iris-600 hover:text-iris-700"
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? (
@@ -375,20 +360,20 @@ function RecommendationCard({
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="pt-4 space-y-6 border-t border-gray-100">
+              <div className="pt-4 space-y-6 border-t border-zinc-200/80">
                 {/* Requirements */}
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    <BookOpen className="w-4 h-4 text-indigo-500" />
+                  <h4 className="text-sm font-semibold text-zinc-600 mb-2 flex items-center gap-1">
+                    <BookOpen className="w-4 h-4 text-iris-600" />
                     응시 요건
                   </h4>
                   <ul className="space-y-1">
                     {rec.requirements.map((r, i) => (
                       <li
                         key={i}
-                        className="text-sm text-gray-600 flex items-start gap-2"
+                        className="text-sm text-zinc-600 flex items-start gap-2"
                       >
-                        <CheckCircle2 className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-iris-600 flex-shrink-0 mt-0.5" />
                         {r}
                       </li>
                     ))}
@@ -405,8 +390,8 @@ function RecommendationCard({
 
                 {/* Study Roadmap */}
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-1">
-                    <Star className="w-4 h-4 text-indigo-500" />
+                  <h4 className="text-sm font-semibold text-zinc-600 mb-3 flex items-center gap-1">
+                    <Star className="w-4 h-4 text-iris-600" />
                     학습 로드맵
                   </h4>
                   <StudyRoadmapTimeline roadmap={rec.studyRoadmap} />
@@ -414,8 +399,8 @@ function RecommendationCard({
 
                 {/* Weekly Schedule */}
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-1">
-                    <CalendarClock className="w-4 h-4 text-indigo-500" />
+                  <h4 className="text-sm font-semibold text-zinc-600 mb-3 flex items-center gap-1">
+                    <CalendarClock className="w-4 h-4 text-iris-600" />
                     주간 학습 계획표
                   </h4>
                   <WeeklyScheduleTable schedule={rec.weeklySchedule} />
@@ -438,20 +423,17 @@ export function CertificationResults({
   return (
     <div className="space-y-6">
       {/* Success banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <Card className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 text-center">
-          <Award className="w-10 h-10 text-indigo-600 mx-auto mb-2" />
-          <h2 className="text-xl font-bold text-gray-900">
-            {recommendations.length}개의 맞춤 자격증을 찾았습니다!
+      <FadeIn y={-12}>
+        <Card className="p-6 bg-white border border-zinc-200/80 rounded-2xl shadow-sm text-center">
+          <Award className="w-10 h-10 text-iris-600 mx-auto mb-2" />
+          <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+            <CountUp value={recommendations.length} />개의 맞춤 자격증을 찾았습니다!
           </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-zinc-600 mt-1">
             AI가 분석한 최적의 자격증과 학습 전략을 확인하세요
           </p>
         </Card>
-      </motion.div>
+      </FadeIn>
 
       {/* D-day countdown */}
       {examDate && <DdayBanner examDate={examDate} />}
@@ -463,37 +445,34 @@ export function CertificationResults({
 
       {/* Alternatives */}
       {alternatives.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Card className="p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
+        <FadeIn delay={0.4}>
+          <Card className="p-6 card-modern rounded-2xl">
+            <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-4">
               이런 자격증도 고려해보세요
             </h3>
-            <div className="grid md:grid-cols-2 gap-3">
+            <Stagger className="grid md:grid-cols-2 gap-3" stagger={0.06}>
               {alternatives.map((alt) => (
-                <div
-                  key={alt.name}
-                  className="flex items-center justify-between bg-gray-50 rounded-xl p-4"
-                >
-                  <div>
-                    <div className="font-semibold text-gray-900">{alt.name}</div>
-                    <div className="text-xs text-gray-500">
-                      {Array.isArray(alt.institutions)
-                        ? alt.institutions.join(', ')
-                        : alt.institutions}
+                <Stagger.Item key={alt.name}>
+                  <Press lift={false} scale={0.99}>
+                    <div className="flex items-center justify-between bg-zinc-50 border border-zinc-200/80 rounded-xl p-4">
+                      <div>
+                        <div className="font-semibold text-zinc-900">{alt.name}</div>
+                        <div className="text-xs text-zinc-400">
+                          {Array.isArray(alt.institutions)
+                            ? alt.institutions.join(', ')
+                            : alt.institutions}
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-iris-600 tnum">
+                        {alt.matchScore}%
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm font-bold text-indigo-600">
-                    {alt.matchScore}%
-                  </div>
-                </div>
+                  </Press>
+                </Stagger.Item>
               ))}
-            </div>
+            </Stagger>
           </Card>
-        </motion.div>
+        </FadeIn>
       )}
 
       {/* Next steps */}

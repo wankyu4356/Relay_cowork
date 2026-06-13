@@ -35,6 +35,12 @@ vi.mock('lucide-react', () => {
     Camera: icon,
     Edit2: icon,
     Check: icon,
+    // Pulled in transitively via the Dialog/Sheet primitives:
+    XIcon: icon,
+    X: icon,
+    ChevronDownIcon: icon,
+    ChevronUpIcon: icon,
+    CheckIcon: icon,
   };
 });
 

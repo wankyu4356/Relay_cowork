@@ -63,31 +63,18 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex items-center justify-center p-4">
-      {/* Background decorative elements */}
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4 gradient-mesh">
+      {/* Background decorative elements — restrained */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-20 left-10 w-72 h-72 bg-sky-200/30 rounded-full blur-3xl"
+          animate={{ x: [0, 24, 0], y: [0, -16, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-24 left-10 w-72 h-72 bg-iris-200/25 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            x: [0, -20, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-20 right-10 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-100/20 rounded-full blur-3xl"
+          animate={{ x: [0, -16, 0], y: [0, 24, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute bottom-24 right-10 w-96 h-96 bg-iris-100/30 rounded-full blur-3xl"
         />
       </div>
 
@@ -102,28 +89,26 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           >
             <div className="mb-8">
               <motion.div
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring' }}
-                className="inline-flex items-center gap-2 mb-6"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="inline-flex items-center gap-2.5 mb-8"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-200">
-                  <Zap className="w-7 h-7 text-white" />
+                <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center">
+                  <Zap className="w-[22px] h-[22px] text-white" />
                 </div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+                <span className="text-2xl font-semibold tracking-tight text-zinc-900">
                   Relay
                 </span>
               </motion.div>
 
-              <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+              <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-5 leading-[1.1]">
                 성공의 경험을<br />
-                <span className="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
-                  다음 세대로 이어갑니다
-                </span>
+                <span className="text-zinc-400">다음 세대로 이어갑니다</span>
               </h1>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-[15px] leading-relaxed text-zinc-500 mb-9">
                 편입·취업·자격증·대학원까지, AI 첨삭과 선배 릴레이 세션으로<br />
-                릴레이에서 당신의 성공 바톤을 이어받으세요.
+                당신의 성공 바톤을 이어받으세요.
               </p>
             </div>
 
@@ -137,15 +122,16 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   key={item.title}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 + i * 0.15 }}
-                  className="flex items-start gap-3 p-3 rounded-xl bg-white/60 backdrop-blur-sm border border-white/80"
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  whileHover={{ x: 3 }}
+                  className="flex items-start gap-3 p-3.5 rounded-xl bg-white/70 backdrop-blur-sm border border-zinc-200/70"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-5 h-5 text-sky-600" />
+                  <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-[18px] h-[18px] text-white" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">{item.title}</div>
-                    <div className="text-sm text-gray-500">{item.desc}</div>
+                    <div className="font-medium text-[14px] text-zinc-900">{item.title}</div>
+                    <div className="text-[13px] text-zinc-500">{item.desc}</div>
                   </div>
                 </motion.div>
               ))}
@@ -158,29 +144,29 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Card className="p-8 bg-white/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-sky-100/50 rounded-3xl">
+            <Card className="p-8 bg-white shadow-xl rounded-2xl border-zinc-200/80">
               {/* Mobile logo */}
               <div className="lg:hidden flex items-center justify-center gap-2 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-white" />
+                <div className="w-9 h-9 rounded-xl bg-zinc-900 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+                <span className="text-xl font-semibold tracking-tight text-zinc-900">
                   Relay
                 </span>
               </div>
 
               {/* Tab switcher */}
-              <div className="flex bg-gray-100 rounded-2xl p-1 mb-8" role="tablist" aria-label="인증 방식 선택">
+              <div className="flex bg-zinc-100 rounded-xl p-1 mb-8" role="tablist" aria-label="인증 방식 선택">
                 {(['login', 'signup'] as const).map((tab) => (
                   <button
                     key={tab}
                     role="tab"
                     aria-selected={mode === tab}
                     onClick={() => setMode(tab)}
-                    className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
+                    className={`flex-1 py-2.5 px-4 rounded-lg text-[13px] font-semibold transition-all ${
                       mode === tab
-                        ? 'bg-white text-sky-600 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-white text-zinc-900 shadow-sm'
+                        : 'text-zinc-500 hover:text-zinc-700'
                     }`}
                   >
                     {tab === 'login' ? '로그인' : '회원가입'}
@@ -292,7 +278,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold text-base shadow-lg shadow-sky-200/50"
+                    className="w-full h-12 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[15px] shadow-sm"
                     aria-label={mode === 'login' ? '로그인' : '회원가입'}
                   >
                     {loading ? (

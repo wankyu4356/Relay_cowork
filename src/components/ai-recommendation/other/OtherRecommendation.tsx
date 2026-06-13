@@ -22,7 +22,7 @@ export function OtherRecommendation({ onBack, onComplete }: CategoryRecommendati
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-zinc-50">
       <RecommendationHeader
         title={OTHER_CONFIG.pageTitle}
         subtitle={OTHER_CONFIG.pageSubtitle}

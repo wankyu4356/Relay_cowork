@@ -154,34 +154,34 @@ export function GlobalNav({
       <motion.nav
         animate={{ width: collapsed ? 80 : 288 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="hidden md:block fixed left-0 top-0 bottom-0 bg-white border-r border-gray-200 z-20 overflow-hidden"
+        className="hidden md:block fixed left-0 top-0 bottom-0 bg-white border-r border-zinc-200/80 z-20 overflow-hidden"
         role="navigation"
         aria-label="사이드바 네비게이션"
       >
         <div className="flex flex-col h-full">
           {/* Logo & Category & Toggle Button */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="px-5 pt-5 pb-4 border-b border-zinc-200/70">
             <div className="flex items-center justify-between mb-4">
               {!collapsed && (
                 <button
                   onClick={() => onNavigate('unified-home')}
-                  className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <Repeat className="w-6 h-6 text-white" />
+                  <div className="w-9 h-9 bg-zinc-900 rounded-xl flex items-center justify-center">
+                    <Repeat className="w-[18px] h-[18px] text-white" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold gradient-text">릴레이</h1>
-                    <p className="text-xs text-gray-500">경험 릴레이 플랫폼</p>
+                    <h1 className="text-[17px] font-semibold tracking-tight text-zinc-900 leading-none">Relay</h1>
+                    <p className="text-[11px] text-zinc-400 mt-1">경험 릴레이 플랫폼</p>
                   </div>
                 </button>
               )}
               {collapsed && (
                 <button
                   onClick={() => onNavigate('unified-home')}
-                  className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg mx-auto hover:opacity-80 transition-opacity"
+                  className="w-9 h-9 bg-zinc-900 rounded-xl flex items-center justify-center mx-auto hover:opacity-80 transition-opacity"
                 >
-                  <Repeat className="w-6 h-6 text-white" />
+                  <Repeat className="w-[18px] h-[18px] text-white" />
                 </button>
               )}
             </div>
@@ -204,16 +204,16 @@ export function GlobalNav({
                 <div className="relative mt-4">
                   <Button
                     variant="outline"
-                    className="w-full justify-between rounded-xl border-2 hover:border-sky-300 hover:bg-sky-50 transition-all"
+                    className="w-full justify-between rounded-xl border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 transition-all h-11"
                     onClick={() => setShowCategoryMenu(!showCategoryMenu)}
                     aria-expanded={showCategoryMenu}
                     aria-label="카테고리 선택"
                   >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 ${currentCategory?.bgColor} rounded-lg flex items-center justify-center`}>
-                        <CategoryIcon className={`w-4 h-4 ${currentCategory?.color}`} />
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 bg-zinc-100 rounded-lg flex items-center justify-center">
+                        <CategoryIcon className="w-4 h-4 text-zinc-700" />
                       </div>
-                      <span className="font-semibold">{currentCategory?.label}</span>
+                      <span className="font-medium text-[13px] text-zinc-900">{currentCategory?.label}</span>
                     </div>
                     <motion.div
                       animate={{ rotate: showCategoryMenu ? 180 : 0 }}
@@ -232,7 +232,7 @@ export function GlobalNav({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full mt-2 left-0 right-0 bg-white rounded-xl shadow-2xl border-2 border-gray-100 overflow-hidden z-50"
+                        className="absolute top-full mt-2 left-0 right-0 bg-white rounded-xl shadow-lg border border-zinc-200/80 overflow-hidden z-50 p-1"
                       >
                         {categories.map((category) => {
                           const Icon = category.icon;
@@ -240,21 +240,21 @@ export function GlobalNav({
                             <button
                               key={category.id}
                               onClick={() => handleCategoryChange(category.id)}
-                              className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left cursor-pointer ${
-                                category.id === selectedCategory ? 'bg-sky-50' : ''
+                              className={`w-full p-3 flex items-center gap-3 hover:bg-zinc-50 transition-colors text-left cursor-pointer ${
+                                category.id === selectedCategory ? 'bg-zinc-50' : ''
                               }`}
                             >
-                              <div className={`w-10 h-10 ${category.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                                <Icon className={`w-5 h-5 ${category.color}`} />
+                              <div className="w-9 h-9 bg-zinc-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <Icon className="w-[18px] h-[18px] text-zinc-700" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-gray-900">{category.label}</span>
+                                  <span className="font-medium text-[13px] text-zinc-900">{category.label}</span>
                                 </div>
-                                <p className="text-xs text-gray-600">{category.description}</p>
+                                <p className="text-[11px] text-zinc-400">{category.description}</p>
                               </div>
                               {category.id === selectedCategory && (
-                                <div className="w-2 h-2 bg-sky-500 rounded-full" />
+                                <div className="w-1.5 h-1.5 bg-iris-600 rounded-full" />
                               )}
                             </button>
                           );
@@ -329,9 +329,9 @@ export function GlobalNav({
 
             {/* Category-specific menu items */}
             {currentRole === 'mentee' && sidebarExtras.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-5 pt-5 border-t border-zinc-200/70">
                 {!collapsed && (
-                  <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                  <p className="px-4 text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.08em] mb-2">
                     {categoryContent.label} 전용
                   </p>
                 )}
@@ -358,20 +358,20 @@ export function GlobalNav({
 
             {/* Role Switch */}
             {!collapsed && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="mt-5 pt-5 border-t border-zinc-200/70">
                 <Button
                   variant="outline"
-                  className="w-full justify-start gap-3 h-12 rounded-xl border-2 hover:border-sky-300 hover:bg-sky-50 transition-all"
+                  className="w-full justify-start gap-3 h-12 rounded-xl border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 transition-all"
                   onClick={handleRoleSwitch}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center">
                     <ArrowLeftRight className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="text-sm font-semibold">
+                    <div className="text-[13px] font-semibold text-zinc-900">
                       {currentRole === 'mentee' ? '경험 넘기기' : '경험 받기'}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-[11px] text-zinc-400">
                       {currentRole === 'mentee' ? '러너로 전환' : '멘티로 전환'}
                     </div>
                   </div>
@@ -381,7 +381,7 @@ export function GlobalNav({
           </div>
 
           {/* Bottom Actions */}
-          <div className="p-4 border-t border-gray-200 space-y-2">
+          <div className="p-3 border-t border-zinc-200/70 space-y-1">
             <NavItem
               icon={Bell}
               label="알림"
@@ -402,7 +402,7 @@ export function GlobalNav({
       </motion.nav>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 safe-area-bottom" role="navigation" aria-label="메인 네비게이션">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-zinc-200/80 z-30 safe-area-bottom" role="navigation" aria-label="메인 네비게이션">
         <div className="grid grid-cols-5 h-16">
           <MobileNavItem
             icon={Home}
@@ -464,13 +464,13 @@ export function GlobalNav({
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Repeat className="w-6 h-6 text-white" />
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-zinc-900 rounded-xl flex items-center justify-center">
+                      <Repeat className="w-[18px] h-[18px] text-white" />
                     </div>
                     <div>
-                      <h2 className="font-bold gradient-text">릴레이</h2>
-                      <p className="text-xs text-gray-500">경험 릴레이 플랫폼</p>
+                      <h2 className="font-semibold tracking-tight text-zinc-900 leading-none">Relay</h2>
+                      <p className="text-[11px] text-zinc-400 mt-1">경험 릴레이 플랫폼</p>
                     </div>
                   </div>
                   <Button
@@ -628,24 +628,22 @@ interface NavItemProps {
   hoverBg?: string;
 }
 
-function NavItem({ icon: Icon, label, active, onClick, badge, collapsed, activeColor = 'text-sky-700', activeBg = 'from-sky-50 to-sky-50', hoverBg = 'hover:bg-sky-50' }: NavItemProps) {
+function NavItem({ icon: Icon, label, active, onClick, badge, collapsed }: NavItemProps) {
   if (collapsed) {
     return (
       <button
         onClick={onClick}
-        className={`w-full flex items-center justify-center p-3 rounded-xl transition-all ${
-          active
-            ? `bg-gradient-to-r ${activeBg} ${activeColor} font-semibold shadow-sm`
-            : `text-gray-700 hover:bg-gray-50`
+        className={`group w-full flex items-center justify-center p-2.5 rounded-lg transition-all duration-200 ${
+          active ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
         }`}
         title={label}
         aria-current={active ? 'page' : undefined}
         aria-label={label}
       >
         <div className="relative">
-          <Icon className="w-5 h-5" />
+          <Icon className="w-[18px] h-[18px]" />
           {badge !== undefined && badge > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[15px] h-[15px] px-1 bg-iris-600 text-white text-[10px] rounded-full flex items-center justify-center font-semibold">
               {badge > 9 ? '9+' : badge}
             </span>
           )}
@@ -657,46 +655,45 @@ function NavItem({ icon: Icon, label, active, onClick, badge, collapsed, activeC
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-        active
-          ? `bg-gradient-to-r ${activeBg} ${activeColor} font-semibold shadow-sm`
-          : `text-gray-700 ${hoverBg}`
+      className={`group relative w-full flex items-center gap-3 pl-4 pr-3 py-2.5 rounded-lg transition-all duration-200 ${
+        active ? 'bg-zinc-100 text-zinc-900 font-semibold' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
       }`}
       aria-current={active ? 'page' : undefined}
     >
+      {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-zinc-900" />}
       <div className="relative">
-        <Icon className="w-5 h-5" />
+        <Icon className={`w-[18px] h-[18px] transition-colors ${active ? 'text-zinc-900' : 'text-zinc-400 group-hover:text-zinc-700'}`} />
         {badge !== undefined && badge > 0 && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+          <span className="absolute -top-1.5 -right-1.5 min-w-[15px] h-[15px] px-1 bg-iris-600 text-white text-[10px] rounded-full flex items-center justify-center font-semibold">
             {badge > 9 ? '9+' : badge}
           </span>
         )}
       </div>
-      <span className="flex-1 text-left text-sm">{label}</span>
+      <span className="flex-1 text-left text-[13px]">{label}</span>
     </button>
   );
 }
 
 // Mobile Nav Item
-function MobileNavItem({ icon: Icon, label, active, onClick, badge, activeColor = 'text-sky-600' }: NavItemProps) {
+function MobileNavItem({ icon: Icon, label, active, onClick, badge }: NavItemProps) {
   return (
     <button
       onClick={onClick}
       className={`flex flex-col items-center justify-center gap-1 transition-all ${
-        active ? activeColor : 'text-gray-600'
+        active ? 'text-zinc-900' : 'text-zinc-400'
       }`}
       aria-current={active ? 'page' : undefined}
       aria-label={label}
     >
       <div className="relative">
-        <Icon className="w-6 h-6" />
+        <Icon className="w-[22px] h-[22px]" />
         {badge !== undefined && badge > 0 && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+          <span className="absolute -top-1.5 -right-1.5 min-w-[15px] h-[15px] px-1 bg-iris-600 text-white text-[10px] rounded-full flex items-center justify-center font-semibold">
             {badge > 9 ? '9' : badge}
           </span>
         )}
       </div>
-      <span className="text-xs font-medium">{label}</span>
+      <span className="text-[10px] font-medium">{label}</span>
     </button>
   );
 }

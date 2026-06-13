@@ -1,0 +1,148 @@
+import Anthropic from '@anthropic-ai/sdk';
+
+/**
+ * RELAY · AI 첨삭 백엔드 (Vercel Serverless Function)
+ *
+ * 브라우저는 절대 Anthropic API 키를 보지 않습니다 — 이 함수가 서버에서
+ * 키(ANTHROPIC_API_KEY, VITE_ 접두사 없음)를 들고 Claude를 호출하고,
+ * 생성 텍스트를 클라이언트로 스트리밍합니다.
+ *
+ * 모드:
+ *   - storylines : 입력 경험 → 3개 스토리라인(JSON 배열) 생성
+ *   - draft      : 선택한 스토리라인 → 전체 초안 작성
+ *   - proofread  : 현재 초안 + 지시 → 개선된 초안(실제 AI 첨삭)
+ */
+
+export const maxDuration = 60;
+
+const MODEL = 'claude-opus-4-8';
+
+interface AIData {
+  university?: string;
+  major?: string;
+  motivation?: string;
+  activities?: Array<{ name?: string; role?: string; period?: string; achievement?: string }>;
+  keywords?: string[];
+  tone?: string;
+  wordCount?: number;
+}
+
+const TONE_LABEL: Record<string, string> = {
+  sincere: '진정성 있고 담백한',
+  academic: '학술적이고 논리적인',
+  balanced: '균형 잡힌',
+};
+
+function describeProfile(d: AIData): string {
+  const acts = (d.activities || [])
+    .filter((a) => a && (a.name || a.achievement))
+    .map((a, i) => `  ${i + 1}. ${a.name || ''} (${a.role || ''}, ${a.period || ''}) — ${a.achievement || ''}`)
+    .join('\n');
+  return [
+    `지원처: ${d.university || '(미입력)'} ${d.major || ''}`.trim(),
+    `지원 동기: ${d.motivation || '(미입력)'}`,
+    acts ? `주요 활동/경험:\n${acts}` : '주요 활동/경험: (미입력)',
+    d.keywords?.length ? `핵심 키워드: ${d.keywords.join(', ')}` : '',
+    `희망 톤: ${TONE_LABEL[d.tone || 'balanced'] || '균형 잡힌'}`,
+    d.wordCount ? `목표 분량: 약 ${d.wordCount}자` : '',
+  ].filter(Boolean).join('\n');
+}
+
+const BASE_SYSTEM =
+  '당신은 한국의 편입·입시·취업·자격증·대학원 지원 서류를 첨삭하는 RELAY 플랫폼의 전문 합격 컨설턴트입니다. ' +
+  '지원자의 실제 경험에 근거해 구체적이고 설득력 있는 한국어 지원 서류(학업계획서/자기소개서/포트폴리오)를 작성·개선합니다. ' +
+  '과장이나 거짓 없이, 입력된 사실만 바탕으로 작성하세요.';
+
+function buildRequest(mode: string, payload: any): { system: string; user: string; effort: 'low' | 'medium' | 'high' } {
+  const aiData: AIData = payload?.aiData || {};
+  const profile = describeProfile(aiData);
+
+  if (mode === 'storylines') {
+    return {
+      effort: 'medium',
+      system:
+        BASE_SYSTEM +
+        '\n\n출력은 반드시 JSON 배열만 반환합니다. 마크다운 코드펜스나 설명 문장을 붙이지 마세요.',
+      user:
+        `다음 지원자 프로필을 분석해, 서로 뚜렷이 구별되는 3가지 합격 전략 스토리라인을 제안하세요.\n\n${profile}\n\n` +
+        '각 항목은 아래 형식의 객체로, 정확히 3개를 담은 JSON 배열로만 응답하세요:\n' +
+        '[{"id":"A","title":"한 줄 제목","message":"핵심 메시지 1~2문장","structure":"도입→전개→마무리 형태의 구성 흐름","strength":"이 전략의 강점","materials":"활용할 소재"}, {"id":"B",...}, {"id":"C",...}]',
+    };
+  }
+
+  if (mode === 'draft') {
+    const s = payload?.storyline || {};
+    return {
+      effort: 'medium',
+      system: BASE_SYSTEM + '\n\n초안 본문 텍스트만 출력합니다. 머리말·설명·코드펜스를 붙이지 마세요.',
+      user:
+        `아래 지원자 프로필과 선택된 스토리라인을 바탕으로 완성도 높은 지원 서류 초안을 작성하세요.\n\n` +
+        `[프로필]\n${profile}\n\n` +
+        `[선택한 스토리라인]\n제목: ${s.title || ''}\n핵심 메시지: ${s.message || ''}\n구성: ${s.structure || ''}\n강점: ${s.strength || ''}\n소재: ${s.materials || ''}\n\n` +
+        `요구사항:\n- "1. 지원 동기 / 2. 학업(활동) 배경 / 3. 학업(입사) 계획 / 4. 향후 계획" 구조의 단락으로 구성\n` +
+        `- 입력된 경험을 구체적으로 녹여내고, 추상적 미사여구는 지양\n- 약 ${aiData.wordCount || 1500}자 분량, ${TONE_LABEL[aiData.tone || 'balanced']} 어조`,
+    };
+  }
+
+  // proofread — 핵심 AI 첨삭
+  const instruction: string = payload?.instruction || '전반적으로 더 설득력 있고 구체적으로 다듬어 주세요.';
+  const draft: string = payload?.draft || '';
+  return {
+    effort: 'high',
+    system:
+      BASE_SYSTEM +
+      '\n\n당신은 첨삭 결과로 "개선된 전체 초안 본문"만 출력합니다. 변경 설명·코멘트·코드펜스를 붙이지 말고, 완성된 글 전체를 그대로 반환하세요.',
+    user:
+      `다음은 지원자의 현재 초안입니다. 요청에 따라 첨삭하여 개선된 전체 본문을 작성하세요.\n\n` +
+      `[프로필]\n${profile}\n\n[첨삭 요청]\n${instruction}\n\n[현재 초안]\n${draft}`,
+  };
+}
+
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'POST only' });
+    return;
+  }
+  if (!process.env.ANTHROPIC_API_KEY) {
+    res.status(503).json({ error: 'AI가 설정되지 않았습니다. ANTHROPIC_API_KEY를 등록하세요.' });
+    return;
+  }
+
+  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
+  const mode = body.mode;
+  if (!['storylines', 'draft', 'proofread'].includes(mode)) {
+    res.status(400).json({ error: 'mode는 storylines | draft | proofread 중 하나여야 합니다.' });
+    return;
+  }
+
+  const { system, user, effort } = buildRequest(mode, body);
+
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store');
+
+  try {
+    const client = new Anthropic();
+    const stream = client.messages.stream({
+      model: MODEL,
+      max_tokens: 16000,
+      thinking: { type: 'adaptive' },
+      output_config: { effort },
+      system,
+      messages: [{ role: 'user', content: user }],
+    });
+
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        res.write(event.delta.text);
+      }
+    }
+    res.end();
+  } catch (err: any) {
+    const message = err?.message || 'AI 생성 중 오류가 발생했습니다.';
+    if (!res.headersSent) {
+      res.status(500).json({ error: message });
+    } else {
+      res.end();
+    }
+  }
+}

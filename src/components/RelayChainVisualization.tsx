@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Stagger, Press, CountUp } from './ui/motion';
 import {
   Zap,
   Users,
@@ -141,19 +142,19 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'from-green-400 to-emerald-500';
-      case 'active': return 'from-indigo-400 to-purple-500';
-      case 'preparing': return 'from-blue-400 to-cyan-500';
-      default: return 'from-gray-400 to-gray-500';
+      case 'completed': return 'from-emerald-400 to-emerald-600';
+      case 'active': return 'from-iris-400 to-iris-600';
+      case 'preparing': return 'from-zinc-400 to-zinc-600';
+      default: return 'from-zinc-400 to-zinc-500';
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed': return { text: '합격 완료', icon: Award, color: 'bg-green-500' };
-      case 'active': return { text: '경험 전달중', icon: Zap, color: 'bg-indigo-500' };
-      case 'preparing': return { text: '준비중', icon: Target, color: 'bg-blue-500' };
-      default: return { text: '', icon: Info, color: 'bg-gray-500' };
+      case 'completed': return { text: '합격 완료', icon: Award, color: 'bg-emerald-500' };
+      case 'active': return { text: '경험 전달중', icon: Zap, color: 'bg-iris-500' };
+      case 'preparing': return { text: '준비중', icon: Target, color: 'bg-zinc-500' };
+      default: return { text: '', icon: Info, color: 'bg-zinc-500' };
     }
   };
 
@@ -310,11 +311,11 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         <defs>
           <linearGradient id="connGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#818cf8" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0.8" />
           </linearGradient>
           <linearGradient id="connGradientHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#6366f1" stopOpacity="1" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="1" />
+            <stop offset="100%" stopColor="#6366f1" stopOpacity="1" />
           </linearGradient>
           <filter id="connGlow">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -348,7 +349,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
               {/* Glow background */}
               <path
                 d={path}
-                stroke={isActive ? '#6366f1' : '#a78bfa'}
+                stroke={isActive ? '#6366f1' : '#818cf8'}
                 strokeWidth={isActive ? 8 : 5}
                 fill="none"
                 strokeLinecap="round"
@@ -399,9 +400,9 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
           ref={(el: HTMLElement | null) => registerNode(node.id, el)}
           className={`p-4 card-modern cursor-pointer transition-all duration-300 ${
             isCurrentUser(node.name)
-              ? 'ring-2 ring-indigo-500 ring-offset-2 shadow-xl'
+              ? 'ring-2 ring-iris-500 ring-offset-2 shadow-lg'
               : ''
-          } ${highlighted ? 'ring-2 ring-indigo-400 shadow-xl scale-[1.02]' : ''} ${dimmed ? 'opacity-40 scale-[0.98]' : ''}`}
+          } ${highlighted ? 'ring-2 ring-iris-400 shadow-lg scale-[1.02]' : ''} ${dimmed ? 'opacity-40 scale-[0.98]' : ''}`}
           style={{ transition: 'all 0.3s ease' }}
           onClick={() => handleNodeClick(node)}
           onMouseEnter={() => setHoveredNode(node.id)}
@@ -410,20 +411,20 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         >
           {isCurrentUser(node.name) && (
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-              <Badge className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-lg text-xs">
+              <Badge className="bg-zinc-900 text-white border-0 shadow-md text-xs">
                 <Sparkles className="w-3 h-3 mr-1" />
                 나
               </Badge>
             </div>
           )}
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 bg-gradient-to-br ${getStatusColor(node.status)} rounded-xl flex items-center justify-center text-xl shadow-lg flex-shrink-0 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}>
+            <div className={`w-12 h-12 bg-gradient-to-br ${getStatusColor(node.status)} rounded-xl flex items-center justify-center text-xl shadow-sm flex-shrink-0 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}>
               {node.avatar}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-gray-900 truncate">{node.name}</div>
-              <div className="text-xs text-gray-600 truncate">{node.university}</div>
-              <div className="text-xs text-gray-500">{node.major}</div>
+              <div className="font-semibold text-zinc-900 truncate">{node.name}</div>
+              <div className="text-xs text-zinc-600 truncate">{node.university}</div>
+              <div className="text-xs text-zinc-400">{node.major}</div>
             </div>
           </div>
           <div className="mt-3 flex items-center justify-between">
@@ -431,7 +432,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
               {status.text}
             </Badge>
             {node.passedTo && node.passedTo > 0 && (
-              <div className="text-xs text-indigo-600 font-medium">
+              <div className="text-xs text-iris-600 font-medium">
                 {node.passedTo}명 전달
               </div>
             )}
@@ -445,9 +446,9 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         ref={(el: HTMLElement | null) => registerNode(node.id, el)}
         className={`p-5 card-modern cursor-pointer transition-all duration-300 relative overflow-hidden ${
           isCurrentUser(node.name)
-            ? 'ring-2 ring-indigo-500 ring-offset-2 shadow-2xl scale-[1.02]'
+            ? 'ring-2 ring-iris-500 ring-offset-2 shadow-lg scale-[1.02]'
             : ''
-        } ${highlighted ? 'ring-2 ring-indigo-400 shadow-xl scale-[1.02]' : ''} ${dimmed ? 'opacity-40 scale-[0.98]' : ''} ${isHovered ? 'shadow-2xl scale-[1.03]' : ''}`}
+        } ${highlighted ? 'ring-2 ring-iris-400 shadow-lg scale-[1.02]' : ''} ${dimmed ? 'opacity-40 scale-[0.98]' : ''} ${isHovered ? 'shadow-lg scale-[1.03]' : ''}`}
         style={{ transition: 'all 0.3s ease' }}
         onClick={() => handleNodeClick(node)}
         onMouseEnter={() => setHoveredNode(node.id)}
@@ -455,25 +456,25 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         data-node-id={node.id}
       >
         {isHovered && (
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/60 to-purple-50/60 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-iris-50/60 transition-opacity duration-300" />
         )}
         <div className="relative z-10">
           {isCurrentUser(node.name) && (
             <div className="absolute -top-3 -right-3">
-              <Badge className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-lg animate-pulse">
+              <Badge className="bg-zinc-900 text-white border-0 shadow-md">
                 <Sparkles className="w-3 h-3 mr-1" />
                 나
               </Badge>
             </div>
           )}
           <div className="flex items-start gap-3 mb-4">
-            <div className={`relative w-14 h-14 bg-gradient-to-br ${getStatusColor(node.status)} rounded-2xl flex items-center justify-center text-2xl shadow-xl transform transition-transform duration-300 ${isHovered ? 'scale-110 rotate-3' : ''}`}>
+            <div className={`relative w-14 h-14 bg-gradient-to-br ${getStatusColor(node.status)} rounded-2xl flex items-center justify-center text-2xl shadow-sm transform transition-transform duration-300 ${isHovered ? 'scale-110 rotate-3' : ''}`}>
               {node.avatar}
               <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${status.color} rounded-full border-2 border-white`} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-gray-900 truncate mb-1">{node.name}</div>
-              <div className="text-xs text-gray-600 truncate">{node.university}</div>
+              <div className="font-semibold text-zinc-900 truncate mb-1">{node.name}</div>
+              <div className="text-xs text-zinc-600 truncate">{node.university}</div>
             </div>
           </div>
           <div className="flex items-center gap-2 mb-3">
@@ -483,32 +484,32 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
             </Badge>
           </div>
           <div className="space-y-2 text-sm mb-3">
-            <div className="flex items-center gap-2 text-gray-700">
-              <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+            <div className="flex items-center gap-2 text-zinc-700">
+              <BookOpen className="w-3.5 h-3.5 text-iris-500" />
               <span className="truncate font-medium">{node.major}</span>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5 mb-3">
             {node.experiences.slice(0, 2).map((exp, i) => (
-              <Badge key={i} className="bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200 text-xs px-2 py-0.5">
+              <Badge key={i} className="bg-iris-50 text-iris-700 border border-iris-100 text-xs px-2 py-0.5">
                 {exp}
               </Badge>
             ))}
             {node.experiences.length > 2 && (
-              <Badge className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5">
+              <Badge className="bg-zinc-100 text-zinc-600 text-xs px-2 py-0.5">
                 +{node.experiences.length - 2}
               </Badge>
             )}
           </div>
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+          <div className="pt-3 border-t border-zinc-200/80 flex items-center justify-between text-xs">
             {node.receivedFrom && (
-              <div className="flex items-center gap-1 text-purple-600 font-medium">
+              <div className="flex items-center gap-1 text-iris-600 font-medium">
                 <ArrowRight className="w-3 h-3" />
                 <span>경험 받음</span>
               </div>
             )}
             {node.passedTo && node.passedTo > 0 && (
-              <div className="flex items-center gap-1 text-indigo-600 font-medium">
+              <div className="flex items-center gap-1 text-iris-600 font-medium">
                 <Zap className="w-3 h-3" />
                 <span>{node.passedTo}명 전달</span>
               </div>
@@ -527,46 +528,45 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8"
       >
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-2xl mb-4 shadow-md">
-          <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
-          <span className="font-semibold text-indigo-900">릴레이 체인 시각화</span>
+        <div className="inline-flex items-center gap-2 bg-iris-50 px-6 py-3 rounded-2xl mb-4 shadow-sm">
+          <Sparkles className="w-5 h-5 text-iris-600" />
+          <span className="font-semibold text-iris-900">릴레이 체인 시각화</span>
         </div>
-        <h2 className="text-4xl font-bold gradient-text mb-3">경험의 흐름</h2>
-        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+        <h2 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-3">경험의 흐름</h2>
+        <p className="text-zinc-600 max-w-2xl mx-auto text-lg">
           익명으로 연결되는 경험의 릴레이. 선배에게 받은 경험을 후배에게 전달하며 릴레이는 계속됩니다.
         </p>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid md:grid-cols-5 gap-4 mb-8">
+      <Stagger className="grid md:grid-cols-5 gap-4 mb-8" stagger={0.08}>
         {[
-          { icon: Users, value: stats.total, label: '총 러너', colors: 'from-indigo-100 to-purple-100', textColor: 'text-gray-900', iconColor: 'text-indigo-600', delay: 0.1 },
-          { icon: Award, value: stats.completed, label: '합격 완료', colors: 'from-green-100 to-emerald-100', textColor: 'text-green-700', iconColor: 'text-green-600', delay: 0.2 },
-          { icon: Zap, value: stats.active, label: '경험 전달중', colors: 'from-indigo-100 to-cyan-100', textColor: 'text-indigo-700', iconColor: 'text-indigo-600', delay: 0.3 },
-          { icon: GitBranch, value: stats.generations, label: '세대', colors: 'from-blue-100 to-sky-100', textColor: 'text-blue-700', iconColor: 'text-blue-600', delay: 0.4 },
-          { icon: Network, value: stats.totalPassed, label: '총 전달', colors: 'from-purple-100 to-pink-100', textColor: 'gradient-text', iconColor: 'text-purple-600', delay: 0.5 },
+          { icon: Users, value: stats.total, label: '총 러너', colors: 'bg-iris-50', textColor: 'text-zinc-900', iconColor: 'text-iris-600' },
+          { icon: Award, value: stats.completed, label: '합격 완료', colors: 'bg-emerald-50', textColor: 'text-emerald-700', iconColor: 'text-emerald-600' },
+          { icon: Zap, value: stats.active, label: '경험 전달중', colors: 'bg-iris-50', textColor: 'text-iris-700', iconColor: 'text-iris-600' },
+          { icon: GitBranch, value: stats.generations, label: '세대', colors: 'bg-zinc-100', textColor: 'text-zinc-700', iconColor: 'text-zinc-600' },
+          { icon: Network, value: stats.totalPassed, label: '총 전달', colors: 'bg-iris-50', textColor: 'text-iris-700', iconColor: 'text-iris-600' },
         ].map((stat, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: stat.delay }}
-          >
-            <Card className="p-6 text-center card-modern hover-lift">
-              <div className={`w-14 h-14 bg-gradient-to-br ${stat.colors} rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg`}>
-                <stat.icon className={`w-7 h-7 ${stat.iconColor}`} />
-              </div>
-              <div className={`text-3xl font-bold ${stat.textColor} mb-1`}>{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
-            </Card>
-          </motion.div>
+          <Stagger.Item key={i}>
+            <Press>
+              <Card className="p-6 text-center card-modern">
+                <div className={`w-14 h-14 ${stat.colors} rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm`}>
+                  <stat.icon className={`w-7 h-7 ${stat.iconColor}`} />
+                </div>
+                <div className={`text-3xl font-semibold tracking-tight ${stat.textColor} mb-1`}>
+                  <CountUp value={stat.value} />
+                </div>
+                <div className="text-sm text-zinc-600">{stat.label}</div>
+              </Card>
+            </Press>
+          </Stagger.Item>
         ))}
-      </div>
+      </Stagger>
 
       {/* Visualization */}
       <Card className="p-8 card-modern">
         <div className="mb-6 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-gray-900">릴레이 네트워크</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-zinc-900">릴레이 네트워크</h3>
           <div className="flex gap-2">
             <Button
               variant={viewMode === 'tree' ? 'default' : 'outline'}
@@ -594,7 +594,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 flex items-center gap-3 text-sm text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl"
+            className="mb-4 flex items-center gap-3 text-sm text-iris-600 bg-iris-50 px-4 py-2 rounded-xl"
           >
             <Sparkles className="w-4 h-4" />
             <span>
@@ -631,24 +631,24 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                       >
                         <div className="flex items-center gap-4">
                           <div className={`w-12 h-12 bg-gradient-to-br ${
-                            gen === 1 ? 'from-purple-400 to-pink-500' :
-                            gen === 2 ? 'from-indigo-400 to-purple-500' :
-                            'from-blue-400 to-cyan-500'
-                          } rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+                            gen === 1 ? 'from-zinc-700 to-zinc-900' :
+                            gen === 2 ? 'from-iris-400 to-iris-600' :
+                            'from-iris-300 to-iris-500'
+                          } rounded-2xl flex items-center justify-center text-white font-semibold text-xl shadow-sm tnum`}>
                             {gen}
                           </div>
                           <div>
-                            <Badge className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-md mb-2">
+                            <Badge className="bg-zinc-900 text-white border-0 shadow-sm mb-2">
                               {gen === 1 ? '1세대 - 선배의 선배' : gen === 2 ? '2세대 - 나와 동료' : '3세대 - 내 후배'}
                             </Badge>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-zinc-600">
                               {nodes.length}명의 러너 • {nodes.reduce((sum, n) => sum + (n.passedTo || 0), 0)}회 전달
                             </div>
                           </div>
                         </div>
                         {isExpanded ?
-                          <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" /> :
-                          <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                          <ChevronUp className="w-5 h-5 text-zinc-400 group-hover:text-iris-600 transition-colors" /> :
+                          <ChevronDown className="w-5 h-5 text-zinc-400 group-hover:text-iris-600 transition-colors" />
                         }
                       </div>
 
@@ -703,7 +703,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                       className="space-y-4"
                     >
                       <div className="text-center mb-6">
-                        <Badge className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-lg text-sm px-4 py-2">
+                        <Badge className="bg-zinc-900 text-white border-0 shadow-sm text-sm px-4 py-2">
                           {gen === 1 ? '1세대 (선배의 선배)' : gen === 2 ? '2세대 (나와 동료)' : '3세대 (내 후배)'}
                         </Badge>
                       </div>
@@ -746,8 +746,8 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
             >
-              <Card className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl pointer-events-auto max-h-[90vh] overflow-y-auto">
-                <div className="relative p-8 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white rounded-t-3xl">
+              <Card className="w-full max-w-2xl bg-white rounded-2xl shadow-lg pointer-events-auto max-h-[90vh] overflow-y-auto">
+                <div className="relative p-8 bg-gradient-to-br from-zinc-900 to-iris-800 text-white rounded-t-2xl">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -757,17 +757,17 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                     <X className="w-5 h-5" />
                   </Button>
                   <div className="flex items-start gap-6">
-                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-3xl flex items-center justify-center text-5xl shadow-2xl">
+                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-5xl shadow-md">
                       {selectedNode.avatar}
                     </div>
                     <div className="flex-1">
-                      <h2 className="text-3xl font-bold mb-2">{selectedNode.name}</h2>
+                      <h2 className="text-3xl font-semibold tracking-tight mb-2">{selectedNode.name}</h2>
                       <div className="space-y-1 text-white/90">
                         <p className="text-lg">{selectedNode.university} • {selectedNode.major}</p>
                         <p>{selectedNode.year}</p>
                       </div>
                       <div className="mt-4">
-                        <Badge className={`${getStatusBadge(selectedNode.status).color} text-white border-0 shadow-lg`}>
+                        <Badge className={`${getStatusBadge(selectedNode.status).color} text-white border-0 shadow-sm`}>
                           {getStatusBadge(selectedNode.status).text}
                         </Badge>
                       </div>
@@ -776,39 +776,39 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                 </div>
                 <div className="p-8 space-y-6">
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl">
-                      <div className="text-2xl font-bold text-indigo-600">{selectedNode.sessions || 0}</div>
-                      <div className="text-sm text-gray-600 mt-1">총 세션</div>
+                    <div className="text-center p-4 bg-iris-50 rounded-2xl">
+                      <div className="text-2xl font-semibold text-iris-600 tnum">{selectedNode.sessions || 0}</div>
+                      <div className="text-sm text-zinc-600 mt-1">총 세션</div>
                     </div>
-                    <div className="text-center p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
-                      <div className="text-2xl font-bold text-amber-600 flex items-center justify-center gap-1">
+                    <div className="text-center p-4 bg-amber-50 rounded-2xl">
+                      <div className="text-2xl font-semibold text-amber-600 flex items-center justify-center gap-1 tnum">
                         {selectedNode.rating || 0}
                         <Star className="w-4 h-4 fill-current" />
                       </div>
-                      <div className="text-sm text-gray-600 mt-1">평점</div>
+                      <div className="text-sm text-zinc-600 mt-1">평점</div>
                     </div>
-                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl">
-                      <div className="text-2xl font-bold text-green-600">{selectedNode.passedTo || 0}</div>
-                      <div className="text-sm text-gray-600 mt-1">경험 전달</div>
+                    <div className="text-center p-4 bg-emerald-50 rounded-2xl">
+                      <div className="text-2xl font-semibold text-emerald-600 tnum">{selectedNode.passedTo || 0}</div>
+                      <div className="text-sm text-zinc-600 mt-1">경험 전달</div>
                     </div>
                   </div>
                   {selectedNode.bio && (
                     <div>
-                      <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                        <Info className="w-5 h-5 text-indigo-500" />
+                      <h3 className="font-semibold text-zinc-900 mb-3 flex items-center gap-2">
+                        <Info className="w-5 h-5 text-iris-500" />
                         소개
                       </h3>
-                      <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl">{selectedNode.bio}</p>
+                      <p className="text-zinc-700 leading-relaxed bg-zinc-50 p-4 rounded-xl">{selectedNode.bio}</p>
                     </div>
                   )}
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-indigo-500" />
+                    <h3 className="font-semibold text-zinc-900 mb-3 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-iris-500" />
                       경험 & 활동
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {selectedNode.experiences.map((exp, i) => (
-                        <Badge key={i} className="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border border-indigo-200 px-3 py-1.5">
+                        <Badge key={i} className="bg-iris-50 text-iris-700 border border-iris-100 px-3 py-1.5">
                           {exp}
                         </Badge>
                       ))}
@@ -816,15 +816,15 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                   </div>
                   {selectedNode.receivedFrom && (
                     <div>
-                      <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                        <Network className="w-5 h-5 text-indigo-500" />
+                      <h3 className="font-semibold text-zinc-900 mb-3 flex items-center gap-2">
+                        <Network className="w-5 h-5 text-iris-500" />
                         릴레이 연결
                       </h3>
-                      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-xl border-2 border-purple-200">
-                        <div className="flex items-center gap-2 text-purple-700">
+                      <div className="bg-iris-50 p-4 rounded-xl border border-iris-200">
+                        <div className="flex items-center gap-2 text-iris-700">
                           <ArrowRight className="w-4 h-4" />
                           <span className="font-medium">{selectedNode.receivedFrom}</span>
-                          <span className="text-gray-600">님으로부터 경험을 전달받았습니다</span>
+                          <span className="text-zinc-600">님으로부터 경험을 전달받았습니다</span>
                         </div>
                       </div>
                     </div>
@@ -834,7 +834,7 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                       <MessageSquare className="w-4 h-4 mr-2" />
                       메시지 보내기
                     </Button>
-                    <Button variant="outline" className="flex-1 rounded-xl h-12 hover:bg-indigo-50 hover:border-indigo-300">
+                    <Button variant="outline" className="flex-1 rounded-xl h-12 hover:bg-iris-50 hover:border-iris-300">
                       <Calendar className="w-4 h-4 mr-2" />
                       세션 예약하기
                     </Button>

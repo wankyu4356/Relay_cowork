@@ -222,17 +222,17 @@ export function UnifiedHome({
   return (
     <div className={`min-h-screen bg-gradient-to-br ${content.theme.bgGradient} pb-20 md:pb-0`}>
       {/* Welcome Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/85 backdrop-blur-xl border-b border-zinc-200/70 sticky top-0 z-10">
         <div className="container-web py-6">
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className={`text-3xl font-bold bg-gradient-to-r ${content.theme.headerGradient} bg-clip-text text-transparent mb-1`}>
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-zinc-900 mb-1">
                 안녕하세요 👋
               </h1>
-              <p className="text-gray-600">
+              <p className="text-[14px] text-zinc-500">
                 {activeTab === 'mentee' ? content.greeting : '러너 활동을 시작하세요'}
               </p>
-            </div>
+            </motion.div>
             <div className="flex gap-2">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button variant="ghost" size="icon" onClick={() => onNavigate('notifications')} className="relative">
@@ -252,17 +252,17 @@ export function UnifiedHome({
 
           {/* Role Tabs */}
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="w-full grid grid-cols-2 h-14 bg-gray-100/80 backdrop-blur-sm p-1">
-              <TabsTrigger value="mentee" className="text-base font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md">
+            <TabsList className="w-full grid grid-cols-2 h-12 bg-zinc-100 p-1 rounded-xl">
+              <TabsTrigger value="mentee" className="text-[14px] font-semibold rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500">
                 <span className="mr-2">🎯</span> 경험 받기
               </TabsTrigger>
-              <TabsTrigger 
-                value="mentor" 
-                className="text-base font-semibold relative data-[state=active]:bg-white data-[state=active]:shadow-md"
+              <TabsTrigger
+                value="mentor"
+                className="text-[14px] font-semibold relative rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500"
               >
                 <span className="mr-2">⚡</span> 경험 넘기기
                 {!isMentorActive && (
-                  <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs border-0 shadow-lg">
+                  <Badge className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[10px] border-0 shadow-sm">
                     시작하기
                   </Badge>
                 )}
@@ -272,11 +272,11 @@ export function UnifiedHome({
             {/* Mentee Content */}
             <TabsContent value="mentee" className="mt-6">
               {/* Search Bar */}
-              <div className="relative max-w-2xl mb-6">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <div className="relative max-w-2xl mb-7 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-zinc-400 group-focus-within:text-iris-600 transition-colors" />
                 <Input
                   placeholder={content.searchPlaceholder}
-                  className="pl-12 pr-4 py-6 text-lg bg-gray-50 border-gray-200 focus:bg-white focus:border-sky-400"
+                  className="pl-12 pr-4 h-12 text-[15px] bg-white border-zinc-200 rounded-xl shadow-sm focus:bg-white"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={() => onNavigate('ai-recommendation')}
@@ -514,11 +514,11 @@ export function UnifiedHome({
               {/* Recommended Mentors */}
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold">⭐ 추천 러너</h2>
-                  <Button 
+                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900">⭐ 추천 러너</h2>
+                  <Button
                     variant="ghost"
                     onClick={() => onNavigate('mentor-search')}
-                    className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-xl font-semibold"
+                    className="text-iris-600 hover:text-iris-700 hover:bg-iris-50 rounded-lg font-medium text-[13px]"
                   >
                     전체보기 →
                   </Button>

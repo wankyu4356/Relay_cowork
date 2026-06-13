@@ -23,7 +23,7 @@ export function TransferRecommendation({ onBack, onComplete }: CategoryRecommend
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-zinc-50">
       <RecommendationHeader
         title={TRANSFER_CONFIG.pageTitle}
         subtitle={TRANSFER_CONFIG.pageSubtitle}

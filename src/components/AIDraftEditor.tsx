@@ -5,9 +5,11 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
 import { ArrowLeft, Sparkles, Download, RefreshCw, Users, Loader2, Save, Wand2 } from 'lucide-react';
+import { Stagger } from './ui/motion';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
+import { generateDraftStream, proofreadStream } from '../lib/aiClient';
 import { logger } from '../utils/logger';
 
 interface AIDraftEditorProps {
@@ -18,7 +20,7 @@ interface AIDraftEditorProps {
   aiData: AIData;
 }
 
-const generateDraft = (storyline: Storyline, aiData: AIData) => {
+const generateMockDraft = (storyline: Storyline, aiData: AIData) => {
   return `1. 지원 동기
 
 정치외교학을 전공하며 국제관계의 복잡한 역학을 분석하는 과정에서, 이론적 분석력과 실무적 전략 수립 능력의 간극을 경험했습니다. 특히 학회 활동에서 글로벌 기업의 시장 진입 전략을 연구하면서, 정치학적 통찰을 경영학적 의사결정으로 연결하는 과정에 깊은 흥미를 느꼈습니다. ${aiData.university} ${aiData.major}은 이러한 융합적 역량을 체계적으로 발전시킬 수 있는 최적의 환경이라고 판단했습니다.
@@ -38,25 +40,30 @@ const generateDraft = (storyline: Storyline, aiData: AIData) => {
 
 export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, aiData }: AIDraftEditorProps) {
   const [loading, setLoading] = useState(true);
+  const [proofreading, setProofreading] = useState(false);
   const [draft, setDraft] = useState('');
   const [wordCount, setWordCount] = useState(0);
-  const [analysis, setAnalysis] = useState({
+  const [analysis] = useState({
     structure: 85,
     specificity: 75,
     uniqueness: 90,
     relevance: 92,
   });
 
-  useEffect(() => {
-    const fullDraft = generateDraft(storyline, aiData);
+  const updateDraft = (text: string) => {
+    setDraft(text);
+    setWordCount(text.length);
+  };
+
+  // 목업 폴백: 글자별 타이핑 애니메이션
+  const typeMockDraft = () => {
+    const fullDraft = generateMockDraft(storyline, aiData);
     let currentText = '';
     let index = 0;
-    
     const typingInterval = setInterval(() => {
       if (index < fullDraft.length) {
         currentText += fullDraft[index];
-        setDraft(currentText);
-        setWordCount(currentText.length);
+        updateDraft(currentText);
         index++;
       } else {
         clearInterval(typingInterval);
@@ -64,20 +71,59 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         toast.success('AI 초안이 완료되었습니다! ✨');
       }
     }, 8);
-
     return () => clearInterval(typingInterval);
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    let cleanupMock: (() => void) | undefined;
+    setLoading(true);
+    updateDraft('');
+
+    (async () => {
+      try {
+        // 실제 AI 스트리밍 초안 생성
+        await generateDraftStream(storyline, aiData, (full) => {
+          if (!cancelled) updateDraft(full);
+        });
+        if (!cancelled) {
+          setLoading(false);
+          toast.success('AI 초안이 완료되었습니다! ✨');
+        }
+      } catch (e) {
+        logger.warn('AI draft generation fallback to mock:', e);
+        if (!cancelled) cleanupMock = typeMockDraft();
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      cleanupMock?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storyline, aiData]);
 
   const handleDownload = () => {
     toast.success('PDF 다운로드가 시작됩니다');
   };
 
-  const handleRegenerate = () => {
-    toast.info('문단을 재생성하고 있습니다...');
-    setTimeout(() => {
-      toast.success('재생성이 완료되었습니다');
-    }, 1500);
+  // 실제 AI 첨삭 — 현재 초안을 지시에 따라 다듬어 스트리밍 반영
+  const runProofread = async (instruction: string) => {
+    if (proofreading || loading || !draft.trim()) return;
+    setProofreading(true);
+    const toastId = toast.loading('릴레이 AI가 첨삭하고 있습니다...');
+    try {
+      await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
+      toast.success('AI 첨삭이 완료되었습니다 ✨', { id: toastId });
+    } catch (e) {
+      logger.error('AI proofread error:', e);
+      toast.error('AI 첨삭을 사용할 수 없습니다. 키 설정을 확인해주세요.', { id: toastId });
+    } finally {
+      setProofreading(false);
+    }
   };
+
+  const handleRegenerate = () => runProofread('전체 구조와 흐름을 유지하되 표현을 새롭게 다시 작성해 주세요.');
 
   const handleSave = async () => {
     try {
@@ -96,8 +142,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 pb-20 md:pb-0">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10">
         <div className="container-web py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -105,14 +151,14 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold">✨ AI 초안 작성</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ AI 초안 작성</h1>
+                <p className="text-zinc-600 mt-1">
                   {aiData.university} {aiData.major} · 스토리라인 {storyline.id}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="text-base px-4 py-2">
+              <Badge variant="outline" className="text-base px-4 py-2 tnum">
                 {wordCount} / {aiData.wordCount}자
               </Badge>
               <Button variant="outline" onClick={onManage}>
@@ -127,16 +173,16 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr,360px] gap-6">
           {/* Editor */}
           <div className="space-y-4">
-            {loading && (
-              <Card className="p-5 bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
+            {(loading || proofreading) && (
+              <Card className="p-5 bg-iris-50 border-iris-100">
                 <div className="flex items-center gap-3">
-                  <Loader2 className="w-6 h-6 text-violet-600 animate-spin" />
+                  <Loader2 className="w-6 h-6 text-iris-600 animate-spin" />
                   <div>
-                    <div className="font-semibold text-lg mb-1">
-                      릴레이 AI가 AI 초안을 생성하고 있습니다...
+                    <div className="font-semibold text-lg mb-1 text-zinc-900">
+                      {proofreading ? '릴레이 AI가 첨삭하고 있습니다...' : '릴레이 AI가 AI 초안을 생성하고 있습니다...'}
                     </div>
-                    <div className="text-gray-600">
-                      선택하신 스토리라인으로 AI 초안을 작성 중입니다
+                    <div className="text-zinc-600">
+                      {proofreading ? '요청하신 방향으로 초안을 다듬는 중입니다' : '선택하신 스토리라인으로 AI 초안을 작성 중입니다'}
                     </div>
                   </div>
                 </div>
@@ -172,9 +218,10 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <Download className="w-4 h-4 mr-2" />
                 PDF 다운로드
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleRegenerate}
+                disabled={loading || proofreading}
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 재생성
@@ -186,24 +233,24 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
           <div className="space-y-4">
             {/* AI Analysis */}
             <Card className="p-6">
-              <h3 className="font-semibold text-lg mb-5 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-violet-600" />
+              <h3 className="font-semibold text-lg mb-5 flex items-center gap-2 text-zinc-900 tracking-tight">
+                <Sparkles className="w-5 h-5 text-iris-600" />
                 릴레이 AI 분석
               </h3>
               <div className="space-y-4">
                 {[
-                  { label: '구조 완성도', value: analysis.structure, color: 'bg-green-500' },
-                  { label: '구체성', value: analysis.specificity, color: 'bg-blue-500' },
-                  { label: '차별화', value: analysis.uniqueness, color: 'bg-purple-500' },
-                  { label: '학과 적합도', value: analysis.relevance, color: 'bg-violet-500' },
+                  { label: '구조 완성도', value: analysis.structure, color: 'bg-iris-600' },
+                  { label: '구체성', value: analysis.specificity, color: 'bg-iris-600' },
+                  { label: '차별화', value: analysis.uniqueness, color: 'bg-iris-600' },
+                  { label: '학과 적합도', value: analysis.relevance, color: 'bg-iris-600' },
                 ].map((item, index) => (
                   <div key={item.label}>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-700 font-medium">{item.label}</span>
-                      <span className="font-bold text-gray-900">{item.value}%</span>
+                      <span className="text-zinc-600 font-medium">{item.label}</span>
+                      <span className="font-semibold text-zinc-900 tnum">{item.value}%</span>
                     </div>
-                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                      <motion.div 
+                    <div className="h-2.5 bg-zinc-100 rounded-full overflow-hidden">
+                      <motion.div
                         className={`h-full ${item.color}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${item.value}%` }}
@@ -217,25 +264,28 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
 
             {/* Editing Tools */}
             <Card className="p-6">
-              <h3 className="font-semibold text-lg mb-4">📝 편집 도구</h3>
-              <div className="space-y-2">
+              <h3 className="font-semibold text-lg mb-4 text-zinc-900 tracking-tight">📝 편집 도구</h3>
+              <Stagger className="space-y-2">
                 {[
-                  { icon: Sparkles, label: '문단 재생성' },
-                  { icon: Sparkles, label: '톤 변경' },
-                  { icon: Sparkles, label: '더 구체적으로' },
-                  { icon: Sparkles, label: '더 간결하게' },
+                  { icon: Sparkles, label: '문단 재생성', instruction: '구조와 핵심 메시지는 유지하되 각 문단의 표현을 더 자연스럽고 설득력 있게 다시 써 주세요.' },
+                  { icon: Sparkles, label: '톤 변경', instruction: '전체적으로 더 진정성 있고 담백한 어조로 다듬어 주세요.' },
+                  { icon: Sparkles, label: '더 구체적으로', instruction: '추상적인 표현을 줄이고 구체적인 사례·수치·경험으로 근거를 보강해 주세요.' },
+                  { icon: Sparkles, label: '더 간결하게', instruction: '핵심을 유지하면서 군더더기를 덜어내 더 간결하고 밀도 있게 다듬어 주세요.' },
                 ].map((tool) => (
+                  <Stagger.Item key={tool.label}>
                   <Button
-                    key={tool.label}
                     variant="outline"
-                    className="w-full justify-start hover:bg-violet-50 hover:border-violet-300"
+                    className="w-full justify-start hover:bg-iris-50 hover:border-iris-300"
                     size="sm"
+                    disabled={loading || proofreading}
+                    onClick={() => runProofread(tool.instruction)}
                   >
-                    <tool.icon className="w-4 h-4 mr-2 text-violet-600" />
+                    <tool.icon className="w-4 h-4 mr-2 text-iris-600" />
                     {tool.label}
                   </Button>
+                  </Stagger.Item>
                 ))}
-              </div>
+              </Stagger>
             </Card>
 
             {/* Mentor CTA */}
@@ -244,20 +294,20 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1 }}
             >
-              <Card className="p-6 bg-gradient-to-br from-orange-50 to-red-50 border-orange-200">
+              <Card className="p-6 bg-iris-50 border-iris-100">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                     <Users className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg mb-2">
+                  <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-2">
                     이 학교 합격생<br />러너 3명 추천
                   </h3>
-                  <p className="text-gray-600 mb-5 text-sm">
+                  <p className="text-zinc-600 mb-5 text-sm">
                     AI 초안을 실제 합격생이<br />
                     1:1로 완성해드려요
                   </p>
-                  <Button 
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg"
+                  <Button
+                    className="w-full bg-zinc-900 hover:bg-zinc-800 text-white shadow-sm"
                     onClick={onMentorConnect}
                   >
                     러너 첨삭받기 →

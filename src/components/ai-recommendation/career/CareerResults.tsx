@@ -28,6 +28,7 @@ import {
   Star,
 } from 'lucide-react';
 import { NextStepsCard } from '../shared/NextStepsCard';
+import { FadeIn, Stagger, Press, CountUp } from '../../ui/motion';
 import {
   careerNextSteps,
   type CareerRecommendation,
@@ -61,7 +62,7 @@ function MatchScoreCircle({ score }: { score: number }) {
         cy="44"
         r={radius}
         fill="none"
-        stroke="#e5e7eb"
+        stroke="#e4e4e7"
         strokeWidth="6"
       />
       <circle
@@ -69,25 +70,19 @@ function MatchScoreCircle({ score }: { score: number }) {
         cy="44"
         r={radius}
         fill="none"
-        stroke="url(#scoreGradient)"
+        stroke="#4f46e5"
         strokeWidth="6"
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="round"
         transform="rotate(-90 44 44)"
       />
-      <defs>
-        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#a855f7" />
-        </linearGradient>
-      </defs>
       <text
         x="44"
         y="44"
         textAnchor="middle"
         dominantBaseline="central"
-        className="text-lg font-bold fill-gray-900"
+        className="text-lg font-semibold fill-zinc-900 tnum"
       >
         {score}%
       </text>
@@ -133,10 +128,10 @@ export function CareerResults({
   });
 
   const rankColors = [
-    'bg-yellow-500',
-    'bg-gray-400',
-    'bg-orange-400',
-    'bg-indigo-400',
+    'bg-zinc-900',
+    'bg-zinc-700',
+    'bg-zinc-500',
+    'bg-zinc-400',
   ];
 
   return (
@@ -148,40 +143,33 @@ export function CareerResults({
       className="container-web py-8 space-y-6"
     >
       {/* Success Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <Card className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200">
+      <FadeIn y={-20}>
+        <Card className="p-6 rounded-2xl bg-white border border-zinc-200/80">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-iris-600 rounded-xl flex items-center justify-center">
               <CheckCircle className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
                 AI 분석이 완료되었습니다!
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-600">
                 회원님의 역량과 경험을 바탕으로 {recommendations.length}개 기업을
                 추천합니다
               </p>
             </div>
           </div>
         </Card>
-      </motion.div>
+      </FadeIn>
 
       {/* Radar Chart - Job Fit */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <Card className="p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Star className="w-5 h-5 text-indigo-600" />
+      <FadeIn delay={0.1}>
+        <Card className="p-6 rounded-2xl">
+          <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-2">
+            <Star className="w-5 h-5 text-iris-600" />
             직무 적합도 분석 - {topRec.companyName}
           </h3>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-zinc-400 mb-4">
             1순위 추천 기업의 6가지 적합도 지표
           </p>
           <div className="w-full h-[320px]">
@@ -193,28 +181,24 @@ export function CareerResults({
                 <Radar
                   name="적합도"
                   dataKey="score"
-                  stroke="#6366f1"
-                  fill="#6366f1"
-                  fillOpacity={0.3}
+                  stroke="#4f46e5"
+                  fill="#4f46e5"
+                  fillOpacity={0.25}
                 />
               </RadarChart>
             </ResponsiveContainer>
           </div>
         </Card>
-      </motion.div>
+      </FadeIn>
 
       {/* Salary Comparison Bar Chart */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <Card className="p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-indigo-600" />
+      <FadeIn delay={0.2}>
+        <Card className="p-6 rounded-2xl">
+          <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-iris-600" />
             연봉 비교
           </h3>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-zinc-400 mb-4">
             추천 기업별 연봉 범위 비교 (만원)
           </p>
           <div className="w-full h-[250px]">
@@ -235,38 +219,33 @@ export function CareerResults({
                   ]}
                 />
                 <Bar dataKey="min" stackId="salary" fill="#c7d2fe" name="최소" />
-                <Bar dataKey="range" stackId="salary" fill="#6366f1" name="범위" />
+                <Bar dataKey="range" stackId="salary" fill="#4f46e5" name="범위" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
-      </motion.div>
+      </FadeIn>
 
       {/* Company Recommendation Cards */}
       {recommendations.map((rec, index) => (
-        <motion.div
-          key={rec.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 + index * 0.1 }}
-        >
-          <Card className="p-6">
+        <FadeIn key={rec.id} delay={0.3 + index * 0.1}>
+          <Card className="p-6 rounded-2xl">
             <div className="flex items-start gap-4 mb-4">
               <div
-                className={`w-10 h-10 ${rankColors[index] || 'bg-gray-300'} rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0`}
+                className={`w-10 h-10 ${rankColors[index] || 'bg-zinc-300'} rounded-lg flex items-center justify-center text-white font-semibold flex-shrink-0 tnum`}
               >
                 {index + 1}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-lg font-bold text-gray-900">
+                  <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
                     {rec.companyName}
                   </h3>
                   <Badge variant="outline" className="text-xs">
                     {rec.type}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600">{rec.position}</p>
+                <p className="text-sm text-zinc-600">{rec.position}</p>
               </div>
               <MatchScoreCircle score={rec.matchScore} />
             </div>
@@ -290,7 +269,7 @@ export function CareerResults({
             {/* Expandable Section */}
             <button
               onClick={() => toggleExpand(rec.id)}
-              className="w-full flex items-center justify-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 transition-colors py-2"
+              className="w-full flex items-center justify-center gap-1 text-sm text-iris-600 hover:text-iris-700 transition-colors py-2"
             >
               {expandedCards.has(rec.id) ? (
                 <>
@@ -311,20 +290,20 @@ export function CareerResults({
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="pt-4 space-y-4 border-t border-gray-100">
+                  <div className="pt-4 space-y-4 border-t border-zinc-200/80">
                     {/* Strengths */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-500" />
+                      <h4 className="font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-1">
+                        <Star className="w-4 h-4 text-iris-600" />
                         강점
                       </h4>
                       <ul className="space-y-1">
                         {rec.strengths.map((s, i) => (
                           <li
                             key={i}
-                            className="text-sm text-gray-600 flex items-start gap-2"
+                            className="text-sm text-zinc-600 flex items-start gap-2"
                           >
-                            <span className="text-indigo-500 mt-0.5">-</span>
+                            <span className="text-iris-600 mt-0.5">-</span>
                             {s}
                           </li>
                         ))}
@@ -333,17 +312,17 @@ export function CareerResults({
 
                     {/* Requirements */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                        <Briefcase className="w-4 h-4 text-blue-500" />
+                      <h4 className="font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-1">
+                        <Briefcase className="w-4 h-4 text-zinc-400" />
                         자격 요건
                       </h4>
                       <ul className="space-y-1">
                         {rec.requirements.map((r, i) => (
                           <li
                             key={i}
-                            className="text-sm text-gray-600 flex items-start gap-2"
+                            className="text-sm text-zinc-600 flex items-start gap-2"
                           >
-                            <span className="text-blue-500 mt-0.5">-</span>
+                            <span className="text-zinc-400 mt-0.5">-</span>
                             {r}
                           </li>
                         ))}
@@ -352,26 +331,26 @@ export function CareerResults({
 
                     {/* Recent Trends */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                        <TrendingUp className="w-4 h-4 text-green-500" />
+                      <h4 className="font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-1">
+                        <TrendingUp className="w-4 h-4 text-zinc-400" />
                         최근 동향
                       </h4>
-                      <p className="text-sm text-gray-600">{rec.recentTrends}</p>
+                      <p className="text-sm text-zinc-600">{rec.recentTrends}</p>
                     </div>
 
                     {/* Interview Tips */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                        <MessageSquare className="w-4 h-4 text-purple-500" />
+                      <h4 className="font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-1">
+                        <MessageSquare className="w-4 h-4 text-iris-600" />
                         면접 팁
                       </h4>
                       <ul className="space-y-1">
                         {rec.interviewTips.map((tip, i) => (
                           <li
                             key={i}
-                            className="text-sm text-gray-600 flex items-start gap-2"
+                            className="text-sm text-zinc-600 flex items-start gap-2"
                           >
-                            <span className="text-purple-500 mt-0.5">
+                            <span className="text-iris-600 mt-0.5 tnum">
                               {i + 1}.
                             </span>
                             {tip}
@@ -382,17 +361,17 @@ export function CareerResults({
 
                     {/* Benefits */}
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                        <Gift className="w-4 h-4 text-pink-500" />
+                      <h4 className="font-semibold tracking-tight text-zinc-900 mb-2 flex items-center gap-1">
+                        <Gift className="w-4 h-4 text-zinc-400" />
                         복리후생
                       </h4>
                       <ul className="space-y-1">
                         {rec.benefits.map((b, i) => (
                           <li
                             key={i}
-                            className="text-sm text-gray-600 flex items-start gap-2"
+                            className="text-sm text-zinc-600 flex items-start gap-2"
                           >
-                            <span className="text-pink-500 mt-0.5">-</span>
+                            <span className="text-zinc-400 mt-0.5">-</span>
                             {b}
                           </li>
                         ))}
@@ -403,50 +382,43 @@ export function CareerResults({
               )}
             </AnimatePresence>
           </Card>
-        </motion.div>
+        </FadeIn>
       ))}
 
       {/* Alternatives */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-      >
-        <Card className="p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">
+      <FadeIn delay={0.7}>
+        <Card className="p-6 rounded-2xl">
+          <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-4">
             다른 추천 직무
           </h3>
-          <div className="space-y-3">
+          <Stagger className="space-y-3">
             {alternatives.map((alt, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-xl"
-              >
-                <div>
-                  <div className="font-semibold text-gray-900">{alt.name}</div>
-                  <div className="text-xs text-gray-500">
-                    {Array.isArray(alt.institutions)
-                      ? alt.institutions.join(', ')
-                      : alt.institutions}
+              <Stagger.Item key={index}>
+                <Press lift={false}>
+                  <div className="flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200/80 rounded-xl">
+                    <div>
+                      <div className="font-semibold tracking-tight text-zinc-900">{alt.name}</div>
+                      <div className="text-xs text-zinc-400">
+                        {Array.isArray(alt.institutions)
+                          ? alt.institutions.join(', ')
+                          : alt.institutions}
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="text-xs tnum">
+                      {alt.matchScore}% 적합
+                    </Badge>
                   </div>
-                </div>
-                <Badge variant="outline" className="text-xs">
-                  {alt.matchScore}% 적합
-                </Badge>
-              </div>
+                </Press>
+              </Stagger.Item>
             ))}
-          </div>
+          </Stagger>
         </Card>
-      </motion.div>
+      </FadeIn>
 
       {/* Next Steps */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-      >
+      <FadeIn delay={0.8}>
         <NextStepsCard steps={careerNextSteps} onComplete={onComplete} />
-      </motion.div>
+      </FadeIn>
     </motion.div>
   );
 }

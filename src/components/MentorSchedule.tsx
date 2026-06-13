@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { FadeIn, Stagger, CountUp } from './ui/motion';
 import {
   ArrowLeft,
   Calendar as CalendarIcon,
@@ -218,9 +219,9 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white border-b border-zinc-200/80 sticky top-0 z-10">
         <div className="container-web py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -228,8 +229,8 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold gradient-text">일정 관리</h1>
-                <p className="text-sm text-gray-600">릴레이 가능 시간을 설정하세요</p>
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">일정 관리</h1>
+                <p className="text-sm text-zinc-600">릴레이 가능 시간을 설정하세요</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -257,18 +258,19 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
       <div className="container-web py-8">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* This Week's Sessions Summary */}
-          <Card className="p-6 bg-gradient-to-br from-emerald-50 via-white to-green-50 border-2 border-emerald-200">
+          <FadeIn>
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-bold gradient-text mb-1">이번 주 세션</h2>
-                <p className="text-sm text-gray-600">2월 17일 - 2월 23일</p>
+                <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-1">이번 주 세션</h2>
+                <p className="text-sm text-zinc-600">2월 17일 - 2월 23일</p>
               </div>
               <div className="flex gap-2">
-                <Badge className="bg-blue-500 text-white">
+                <Badge className="bg-iris-600 text-white">
                   <CalendarIcon className="w-3 h-3 mr-1" />
                   예약 3건
                 </Badge>
-                <Badge className="bg-green-500 text-white">
+                <Badge className="bg-zinc-700 text-white">
                   <Check className="w-3 h-3 mr-1" />
                   가능 7건
                 </Badge>
@@ -276,37 +278,33 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
             </div>
 
             {/* Session Cards */}
-            <div className="grid md:grid-cols-3 gap-4">
-              {schedule.filter(slot => slot.session).map((slot, index) => (
-                <motion.div
-                  key={slot.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="p-4 hover:shadow-lg transition-shadow border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <Stagger className="grid md:grid-cols-3 gap-4">
+              {schedule.filter(slot => slot.session).map((slot) => (
+                <Stagger.Item key={slot.id}>
+                  <Card className="p-4 border-zinc-200/80 bg-zinc-50">
                     <div className="flex items-start gap-3 mb-3">
                       <div className="text-3xl">{slot.session!.avatar}</div>
                       <div className="flex-1">
-                        <div className="font-bold text-gray-900">{slot.session!.mentee}</div>
-                        <div className="text-xs text-gray-600">{slot.session!.topic}</div>
+                        <div className="font-semibold text-zinc-900">{slot.session!.mentee}</div>
+                        <div className="text-xs text-zinc-600">{slot.session!.topic}</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <div className="flex items-center gap-2 text-sm text-zinc-700">
                       <div className="flex items-center gap-1 px-2 py-1 bg-white rounded-lg">
-                        <CalendarIcon className="w-3 h-3 text-blue-500" />
+                        <CalendarIcon className="w-3 h-3 text-iris-600" />
                         <span className="font-medium">{slot.day}요일</span>
                       </div>
                       <div className="flex items-center gap-1 px-2 py-1 bg-white rounded-lg">
-                        <Clock className="w-3 h-3 text-purple-500" />
-                        <span className="font-medium">{slot.startTime}</span>
+                        <Clock className="w-3 h-3 text-zinc-500" />
+                        <span className="font-medium tnum">{slot.startTime}</span>
                       </div>
                     </div>
                   </Card>
-                </motion.div>
+                </Stagger.Item>
               ))}
-            </div>
+            </Stagger>
           </Card>
+          </FadeIn>
 
           {/* Calendar Navigation */}
           <Card className="p-6">
@@ -321,8 +319,8 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">2025년 2월</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-2xl font-semibold tracking-tight text-zinc-900">2025년 2월</div>
+                  <div className="text-sm text-zinc-600">
                     2월 17일 - 2월 23일 (이번 주)
                   </div>
                 </div>
@@ -335,62 +333,62 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
-              <Button className="btn-primary rounded-xl">
+              <Button className="rounded-xl">
                 <Plus className="w-4 h-4 mr-2" />
                 가능 시간 추가
               </Button>
             </div>
 
             {/* Quick Stats */}
-            <div className="grid md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+            <Stagger className="grid md:grid-cols-4 gap-4 mb-6">
+              <Stagger.Item className="bg-zinc-50 rounded-xl p-4 border border-zinc-200/80">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-iris-600 rounded-lg flex items-center justify-center">
                     <Check className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-700">7</div>
-                    <div className="text-xs text-gray-600">가능 시간</div>
+                    <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={7} /></div>
+                    <div className="text-xs text-zinc-600">가능 시간</div>
                   </div>
                 </div>
-              </div>
+              </Stagger.Item>
 
-              <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-200">
+              <Stagger.Item className="bg-zinc-50 rounded-xl p-4 border border-zinc-200/80">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-iris-600 rounded-lg flex items-center justify-center">
                     <Video className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-emerald-700">3</div>
-                    <div className="text-xs text-gray-600">예약 세션</div>
+                    <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={3} /></div>
+                    <div className="text-xs text-zinc-600">예약 세션</div>
                   </div>
                 </div>
-              </div>
+              </Stagger.Item>
 
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+              <Stagger.Item className="bg-zinc-50 rounded-xl p-4 border border-zinc-200/80">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-purple-700">4</div>
-                    <div className="text-xs text-gray-600">대기중</div>
+                    <div className="text-2xl font-semibold tracking-tight text-zinc-900"><CountUp value={4} /></div>
+                    <div className="text-xs text-zinc-600">대기중</div>
                   </div>
                 </div>
-              </div>
+              </Stagger.Item>
 
-              <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-4 border border-amber-200">
+              <Stagger.Item className="bg-zinc-50 rounded-xl p-4 border border-zinc-200/80">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
                     <Clock className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-amber-700">5h</div>
-                    <div className="text-xs text-gray-600">이번 주</div>
+                    <div className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">5h</div>
+                    <div className="text-xs text-zinc-600">이번 주</div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </Stagger.Item>
+            </Stagger>
 
             {/* Weekly Timetable */}
             {viewMode === 'week' && (
@@ -398,7 +396,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 <div className="min-w-[800px]">
                   {/* Header - Days */}
                   <div className="grid grid-cols-8 gap-2 mb-2">
-                    <div className="text-sm font-semibold text-gray-600 text-center py-2">
+                    <div className="text-sm font-semibold text-zinc-600 text-center py-2">
                       시간
                     </div>
                     {daysOfWeek.map((day, index) => (
@@ -409,11 +407,11 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                         transition={{ delay: index * 0.05 }}
                         className={`text-center py-3 rounded-xl font-semibold ${
                           day === '월' || day === '화' || day === '수'
-                            ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-700'
-                            : 'bg-gray-100 text-gray-700'
+                            ? 'bg-iris-50 text-iris-700'
+                            : 'bg-zinc-100 text-zinc-700'
                         }`}
                       >
-                        <div className="text-xs text-gray-600 mb-1">
+                        <div className="text-xs text-zinc-500 mb-1 tnum">
                           2/{17 + index}
                         </div>
                         <div className="text-lg">{day}</div>
@@ -432,7 +430,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                         className="grid grid-cols-8 gap-2"
                       >
                         {/* Time Label */}
-                        <div className="text-sm font-medium text-gray-600 text-center py-4 flex items-center justify-center">
+                        <div className="text-sm font-medium text-zinc-600 text-center py-4 flex items-center justify-center tnum">
                           {time}
                         </div>
 
@@ -445,14 +443,14 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                             <div
                               key={`${day}-${time}`}
                               onClick={() => !slotData?.session && toggleSlotSelection(day, time)}
-                              className={`rounded-lg border-2 transition-all cursor-pointer min-h-[80px] p-2 ${
+                              className={`rounded-lg border transition-all cursor-pointer min-h-[80px] p-2 ${
                                 slotData?.session
-                                  ? 'bg-gradient-to-br from-blue-100 to-indigo-100 border-blue-300 cursor-default'
+                                  ? 'bg-iris-50 border-iris-200 cursor-default'
                                   : slotData?.isAvailable
-                                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300 hover:from-green-100 hover:to-emerald-100'
+                                  ? 'bg-zinc-50 border-zinc-200/80 hover:bg-zinc-100'
                                   : isSelected
-                                  ? 'bg-gradient-to-br from-purple-100 to-pink-100 border-purple-400 shadow-md'
-                                  : 'bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
+                                  ? 'bg-iris-100 border-iris-400 shadow-sm'
+                                  : 'bg-white border-zinc-200/80 hover:border-iris-300 hover:bg-iris-50'
                               }`}
                             >
                               {slotData?.session ? (
@@ -462,13 +460,13 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                   className="h-full flex flex-col justify-between"
                                 >
                                   <div>
-                                    <Badge className="bg-blue-500 text-white border-0 text-xs mb-1">
+                                    <Badge className="bg-iris-600 text-white border-0 text-xs mb-1">
                                       예약
                                     </Badge>
-                                    <div className="text-xs font-semibold text-gray-900 mb-1">
+                                    <div className="text-xs font-semibold text-zinc-900 mb-1">
                                       {slotData.session.mentee}
                                     </div>
-                                    <div className="text-xs text-gray-600 line-clamp-2">
+                                    <div className="text-xs text-zinc-600 line-clamp-2">
                                       {slotData.session.topic}
                                     </div>
                                   </div>
@@ -476,7 +474,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                 </motion.div>
                               ) : slotData?.isAvailable ? (
                                 <div className="h-full flex flex-col justify-between">
-                                  <Badge className="bg-green-500 text-white border-0 text-xs w-fit">
+                                  <Badge className="bg-zinc-700 text-white border-0 text-xs w-fit">
                                     가능
                                   </Badge>
                                   <div className="flex gap-1 justify-end">
@@ -504,7 +502,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                 </div>
                               ) : isSelected ? (
                                 <div className="h-full flex items-center justify-center">
-                                  <Check className="w-5 h-5 text-purple-600" />
+                                  <Check className="w-5 h-5 text-iris-600" />
                                 </div>
                               ) : null}
                             </div>
@@ -530,13 +528,13 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: dayIndex * 0.1 }}
                     >
-                      <Card className="p-4 hover:shadow-md transition-shadow">
+                      <Card className="p-4">
                         <div className="flex items-start gap-4">
                           <div className="text-center flex-shrink-0">
-                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg mb-2">
+                            <div className="w-16 h-16 bg-iris-100 rounded-2xl flex items-center justify-center text-iris-700 font-semibold text-xl mb-2">
                               {day}
                             </div>
-                            <div className="text-xs text-gray-600">2/{17 + dayIndex}</div>
+                            <div className="text-xs text-zinc-500 tnum">2/{17 + dayIndex}</div>
                           </div>
 
                           <div className="flex-1">
@@ -545,24 +543,24 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                 {daySlots.map((slot) => (
                                   <div
                                     key={slot.id}
-                                    className={`p-3 rounded-xl border-2 ${
+                                    className={`p-3 rounded-xl border ${
                                       slot.session
-                                        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-300'
-                                        : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300'
+                                        ? 'bg-iris-50 border-iris-200'
+                                        : 'bg-zinc-50 border-zinc-200/80'
                                     }`}
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-3">
-                                        <Clock className="w-4 h-4 text-gray-600" />
-                                        <span className="font-semibold text-gray-900">
+                                        <Clock className="w-4 h-4 text-zinc-500" />
+                                        <span className="font-semibold text-zinc-900 tnum">
                                           {slot.startTime} - {slot.endTime}
                                         </span>
                                         {slot.session ? (
-                                          <Badge className="bg-blue-500 text-white border-0">
+                                          <Badge className="bg-iris-600 text-white border-0">
                                             예약: {slot.session.mentee}
                                           </Badge>
                                         ) : (
-                                          <Badge className="bg-green-500 text-white border-0">
+                                          <Badge className="bg-zinc-700 text-white border-0">
                                             가능
                                           </Badge>
                                         )}
@@ -581,7 +579,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       </div>
                                     </div>
                                     {slot.session && (
-                                      <div className="mt-2 ml-7 text-sm text-gray-700">
+                                      <div className="mt-2 ml-7 text-sm text-zinc-700">
                                         {slot.session.topic}
                                       </div>
                                     )}
@@ -589,7 +587,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                 ))}
                               </div>
                             ) : (
-                              <div className="text-center py-8 text-gray-400">
+                              <div className="text-center py-8 text-zinc-400">
                                 설정된 일정이 없습니다
                               </div>
                             )}
@@ -604,23 +602,23 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
           </Card>
 
           {/* Legend */}
-          <Card className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50">
+          <Card className="p-4 bg-zinc-50">
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded" />
-                <span className="text-gray-700">가능 시간</span>
+                <div className="w-6 h-6 bg-zinc-50 border border-zinc-200/80 rounded" />
+                <span className="text-zinc-700">가능 시간</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-gradient-to-br from-blue-100 to-indigo-100 border-2 border-blue-300 rounded" />
-                <span className="text-gray-700">예약 세션</span>
+                <div className="w-6 h-6 bg-iris-50 border border-iris-200 rounded" />
+                <span className="text-zinc-700">예약 세션</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 rounded" />
-                <span className="text-gray-700">선택됨</span>
+                <div className="w-6 h-6 bg-iris-100 border border-iris-400 rounded" />
+                <span className="text-zinc-700">선택됨</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-white border-2 border-gray-200 rounded" />
-                <span className="text-gray-700">비어있음</span>
+                <div className="w-6 h-6 bg-white border border-zinc-200/80 rounded" />
+                <span className="text-zinc-700">비어있음</span>
               </div>
             </div>
           </Card>
@@ -632,7 +630,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
               animate={{ opacity: 1, y: 0 }}
               className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20"
             >
-              <Card className="p-4 shadow-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+              <Card className="p-4 shadow-lg bg-zinc-900 text-white">
                 <div className="flex items-center gap-4">
                   <div className="text-sm">
                     <strong>{selectedSlots.length}개</strong> 시간대 선택됨
@@ -642,14 +640,14 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => setSelectedSlots([])}
-                      className="bg-white/20 text-white border-white/40 hover:bg-white/30"
+                      className="bg-white/10 text-white border-white/30 hover:bg-white/20"
                     >
                       <X className="w-4 h-4 mr-2" />
                       취소
                     </Button>
                     <Button
                       size="sm"
-                      className="bg-white text-indigo-600 hover:bg-indigo-50"
+                      className="bg-white text-zinc-900 hover:bg-zinc-100"
                       onClick={handleConfirmSelection}
                     >
                       <Check className="w-4 h-4 mr-2" />

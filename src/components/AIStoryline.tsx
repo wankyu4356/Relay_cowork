@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
+import { FadeIn, Stagger, Press } from './ui/motion';
+import { generateStorylines } from '../lib/aiClient';
 import type { AIData, Storyline } from '../App';
 
 interface AIStorylineProps {
@@ -43,45 +45,50 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
   const [storylines, setStorylines] = useState<Storyline[]>([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setStorylines(mockStorylines);
+    let cancelled = false;
+    (async () => {
+      // 실제 AI 생성 시도 → 실패 시 목업으로 폴백
+      const result = await generateStorylines(aiData);
+      if (cancelled) return;
+      setStorylines(result && result.length > 0 ? result : mockStorylines);
       setLoading(false);
-    }, 2500);
-  }, []);
+    })();
+    return () => { cancelled = true; };
+  }, [aiData]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-zinc-50 flex flex-col items-center justify-center p-6">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="text-center max-w-md"
         >
           <motion.div
-            className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-sky-400 to-blue-500 rounded-3xl flex items-center justify-center shadow-2xl"
+            className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center shadow-lg"
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           >
             <Sparkles className="w-12 h-12 text-white" />
           </motion.div>
-          <h2 className="text-3xl font-bold mb-4">✨ AI가 스토리라인을 생성하고 있어요</h2>
-          <p className="text-gray-600 text-lg mb-8">
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">✨ AI가 스토리라인을 생성하고 있어요</h2>
+          <p className="text-zinc-600 text-lg mb-8">
             입력하신 경험을 분석해<br />
             3가지 스토리라인을 만들고 있습니다
           </p>
           <div className="flex gap-3 justify-center">
             <motion.div
-              className="w-3 h-3 bg-sky-500 rounded-full"
+              className="w-3 h-3 bg-iris-600 rounded-full"
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
             />
             <motion.div
-              className="w-3 h-3 bg-blue-500 rounded-full"
+              className="w-3 h-3 bg-iris-400 rounded-full"
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
             />
             <motion.div
-              className="w-3 h-3 bg-sky-500 rounded-full"
+              className="w-3 h-3 bg-iris-600 rounded-full"
               animate={{ y: [0, -12, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
             />
@@ -92,16 +99,16 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 pb-20 md:pb-0">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10">
         <div className="container-web py-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">✨ 스토리라인 제안</h1>
-              <p className="text-gray-600 mt-1">마음에 드는 스토리를 선택하세요</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ 스토리라인 제안</h1>
+              <p className="text-zinc-600 mt-1">마음에 드는 스토리를 선택하세요</p>
             </div>
           </div>
         </div>
@@ -109,44 +116,39 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
 
       <div className="container-web py-8">
         <div className="max-w-4xl mx-auto space-y-6 pb-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+          <FadeIn>
+            <Card className="p-6 bg-iris-50 border-iris-100">
               <div className="flex gap-3">
-                <Sparkles className="w-6 h-6 text-sky-600 flex-shrink-0 mt-1" />
+                <Sparkles className="w-6 h-6 text-iris-600 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-lg">
-                    <strong className="text-sky-700">{aiData.university} {aiData.major}</strong> 지원을 위한<br />
+                  <p className="text-lg text-zinc-700">
+                    <strong className="text-iris-700">{aiData.university} {aiData.major}</strong> 지원을 위한<br />
                     3가지 스토리라인을 만들었어요
                   </p>
                 </div>
               </div>
             </Card>
-          </motion.div>
+          </FadeIn>
 
-          <div className="space-y-5">
-            {storylines.map((storyline, index) => (
-              <motion.div
+          <Stagger className="space-y-5">
+            {storylines.map((storyline) => (
+              <Stagger.Item
                 key={storyline.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 card-hover">
+                <Press lift>
+                <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg">
                   <div className="p-6">
                     <div className="flex items-start gap-4 mb-6">
-                      <div className="w-14 h-14 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl flex-shrink-0 shadow-lg">
+                      <div className="w-14 h-14 bg-zinc-900 rounded-2xl flex items-center justify-center text-white font-semibold text-xl flex-shrink-0 shadow-sm tnum">
                         {storyline.id}
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold mb-3">
+                        <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-3">
                           📋 {storyline.title}
                         </h3>
-                        <div className="p-4 bg-sky-50 rounded-lg mb-4">
-                          <div className="text-sm font-semibold text-gray-700 mb-1">핵심 메시지:</div>
-                          <p className="text-gray-800 whitespace-pre-line font-medium">
+                        <div className="p-4 bg-iris-50 rounded-xl mb-4">
+                          <div className="text-sm font-semibold text-zinc-700 mb-1">핵심 메시지:</div>
+                          <p className="text-zinc-800 whitespace-pre-line font-medium">
                             "{storyline.message}"
                           </p>
                         </div>
@@ -154,24 +156,24 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
                     </div>
 
                     <div className="space-y-3">
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <div className="font-semibold text-gray-700 mb-2">구성</div>
-                        <div className="text-gray-600">{storyline.structure}</div>
+                      <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-200/80">
+                        <div className="font-semibold text-zinc-700 mb-2">구성</div>
+                        <div className="text-zinc-600">{storyline.structure}</div>
                       </div>
                       <div className="grid md:grid-cols-2 gap-3">
-                        <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                          <div className="font-semibold text-green-700 mb-2">강점</div>
-                          <div className="text-gray-700">{storyline.strength}</div>
+                        <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-200/80">
+                          <div className="font-semibold text-zinc-900 mb-2">강점</div>
+                          <div className="text-zinc-600">{storyline.strength}</div>
                         </div>
-                        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                          <div className="font-semibold text-blue-700 mb-2">활용 소재</div>
-                          <div className="text-gray-700">{storyline.materials}</div>
+                        <div className="p-4 bg-iris-50 rounded-xl border border-iris-100">
+                          <div className="font-semibold text-iris-700 mb-2">활용 소재</div>
+                          <div className="text-zinc-600">{storyline.materials}</div>
                         </div>
                       </div>
                     </div>
 
-                    <Button 
-                      className="w-full mt-6 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                    <Button
+                      className="w-full mt-6 bg-zinc-900 hover:bg-zinc-800 text-white"
                       size="lg"
                       onClick={() => onSelect(storyline)}
                     >
@@ -179,25 +181,22 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
                     </Button>
                   </div>
                 </Card>
-              </motion.div>
+                </Press>
+              </Stagger.Item>
             ))}
-          </div>
+          </Stagger>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="p-4 bg-purple-50 border-purple-200">
-              <p className="text-center text-gray-700">
+          <FadeIn delay={0.4}>
+            <Card className="p-4 bg-zinc-50 border-zinc-200/80">
+              <p className="text-center text-zinc-600">
                 💡 스토리라인을 선택하면 해당 구조로 학계서 초안을 생성합니다
               </p>
             </Card>
-          </motion.div>
+          </FadeIn>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-zinc-200/80 p-4 z-10">
         <div className="container-web max-w-4xl flex gap-4">
           <Button
             variant="outline"

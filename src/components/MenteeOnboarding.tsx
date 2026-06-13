@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { FadeIn, Stagger } from './ui/motion';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -134,28 +135,25 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 py-12">
+    <div className="min-h-screen bg-zinc-50 py-12">
       <div className="container-web max-w-3xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <FadeIn>
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-4">
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-4">
               릴레이 시작하기
             </h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-zinc-600">
               맞춤 러너 추천을 위한 정보를 입력해주세요
             </p>
           </div>
 
-          <Card className="p-8 shadow-xl border-0">
+          <Card className="p-8">
             {/* Progress */}
             <div className="mb-8">
               <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">Step {step} / 3</span>
-                <span className="text-sm font-medium text-pink-600">{Math.round((step / 3) * 100)}%</span>
+                <span className="text-sm font-medium text-zinc-600 tnum">Step {step} / 3</span>
+                <span className="text-sm font-medium text-iris-600 tnum">{Math.round((step / 3) * 100)}%</span>
               </div>
               <Progress value={(step / 3) * 100} className="h-2" />
             </div>
@@ -169,12 +167,12 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               >
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">🎓</div>
-                  <h2 className="text-2xl font-bold mb-2">{step1.title}</h2>
-                  <p className="text-gray-600">{step1.description}</p>
+                  <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-2">{step1.title}</h2>
+                  <p className="text-zinc-600">{step1.description}</p>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
+                <Stagger className="space-y-4">
+                  <Stagger.Item>
                     <Label>{step1.field1Label}</Label>
                     <Input
                       placeholder={step1.field1Placeholder}
@@ -182,9 +180,9 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       onChange={(e) => setFormData(prev => ({ ...prev, currentUniversity: e.target.value }))}
                       className="mt-2"
                     />
-                  </div>
+                  </Stagger.Item>
 
-                  <div>
+                  <Stagger.Item>
                     <Label>{step1.field2Label}</Label>
                     <Input
                       placeholder={step1.field2Placeholder}
@@ -192,9 +190,9 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       onChange={(e) => setFormData(prev => ({ ...prev, currentMajor: e.target.value }))}
                       className="mt-2"
                     />
-                  </div>
+                  </Stagger.Item>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <Stagger.Item className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>학점</Label>
                       <Input
@@ -220,8 +218,8 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                </div>
+                  </Stagger.Item>
+                </Stagger>
               </motion.div>
             )}
 
@@ -234,12 +232,12 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               >
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">🎯</div>
-                  <h2 className="text-2xl font-bold mb-2">{content.field1Label} 정보</h2>
-                  <p className="text-gray-600">{STEP2_DESCRIPTION[selectedCategory ?? 'transfer']}</p>
+                  <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-2">{content.field1Label} 정보</h2>
+                  <p className="text-zinc-600">{STEP2_DESCRIPTION[selectedCategory ?? 'transfer']}</p>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
+                <Stagger className="space-y-4">
+                  <Stagger.Item>
                     <Label>{content.field1Label} *</Label>
                     <Input
                       placeholder={content.field1Placeholder}
@@ -247,9 +245,9 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       onChange={(e) => setFormData(prev => ({ ...prev, targetUniversity: e.target.value }))}
                       className="mt-2"
                     />
-                  </div>
+                  </Stagger.Item>
 
-                  <div>
+                  <Stagger.Item>
                     <Label>{content.field2Label} *</Label>
                     <Input
                       placeholder={content.field2Placeholder}
@@ -257,8 +255,8 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                       onChange={(e) => setFormData(prev => ({ ...prev, targetMajor: e.target.value }))}
                       className="mt-2"
                     />
-                  </div>
-                </div>
+                  </Stagger.Item>
+                </Stagger>
               </motion.div>
             )}
 
@@ -276,29 +274,29 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 >
                   🎉
                 </motion.div>
-                <h2 className="text-3xl font-bold mb-4">릴레이 준비 완료!</h2>
-                <p className="text-xl text-gray-600 mb-8">
+                <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">릴레이 준비 완료!</h2>
+                <p className="text-xl text-zinc-600 mb-8">
                   {formData.targetUniversity} {formData.targetMajor} {content.label}을 위한<br />
                   맞춤 러너를 추천해드릴게요
                 </p>
-                <Card className="p-6 bg-gradient-to-br from-pink-50 to-rose-50 border-pink-200 max-w-md mx-auto">
+                <Card className="p-6 bg-zinc-50 border-zinc-200/80 max-w-md mx-auto">
                   <div className="space-y-3 text-left">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">{STEP1_SUMMARY_LABEL[selectedCategory ?? 'transfer']}</span>
-                      <span className="font-medium">{formData.currentUniversity}</span>
+                      <span className="text-zinc-600">{STEP1_SUMMARY_LABEL[selectedCategory ?? 'transfer']}</span>
+                      <span className="font-medium text-zinc-900">{formData.currentUniversity}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">전공</span>
-                      <span className="font-medium">{formData.currentMajor}</span>
+                      <span className="text-zinc-600">전공</span>
+                      <span className="font-medium text-zinc-900">{formData.currentMajor}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">학점</span>
-                      <span className="font-medium">{formData.gpa} / {formData.gpaMax}</span>
+                      <span className="text-zinc-600">학점</span>
+                      <span className="font-medium text-zinc-900 tnum">{formData.gpa} / {formData.gpaMax}</span>
                     </div>
-                    <div className="border-t border-pink-200 pt-3 mt-3">
+                    <div className="border-t border-zinc-200/80 pt-3 mt-3">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{content.label} 목표</span>
-                        <span className="font-medium text-pink-600">
+                        <span className="text-zinc-600">{content.label} 목표</span>
+                        <span className="font-medium text-iris-600">
                           {formData.targetUniversity} {formData.targetMajor}
                         </span>
                       </div>
@@ -324,7 +322,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               <Button
                 onClick={handleNext}
                 disabled={saving}
-                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white"
+                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800"
                 size="lg"
               >
                 {saving ? (
@@ -334,7 +332,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               </Button>
             </div>
           </Card>
-        </motion.div>
+        </FadeIn>
       </div>
     </div>
   );

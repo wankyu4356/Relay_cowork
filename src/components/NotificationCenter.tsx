@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
+import { FadeIn, Stagger, Press } from './ui/motion';
 import {
   ArrowLeft,
   Bell,
@@ -64,13 +65,13 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
 
   const getIconColor = (type: string) => {
     switch (type) {
-      case 'session': return 'bg-sky-100 text-sky-600';
-      case 'message': return 'bg-blue-100 text-blue-600';
-      case 'ai': return 'bg-purple-100 text-purple-600';
-      case 'payment': return 'bg-green-100 text-green-600';
-      case 'review': return 'bg-yellow-100 text-yellow-600';
-      case 'system': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-100 text-gray-600';
+      case 'session': return 'bg-iris-50 text-iris-600';
+      case 'message': return 'bg-iris-50 text-iris-600';
+      case 'ai': return 'bg-iris-100 text-iris-600';
+      case 'payment': return 'bg-zinc-100 text-zinc-600';
+      case 'review': return 'bg-zinc-100 text-zinc-600';
+      case 'system': return 'bg-zinc-100 text-zinc-600';
+      default: return 'bg-zinc-100 text-zinc-600';
     }
   };
 
@@ -103,36 +104,36 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
+    <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-10 shadow-sm">
         <div className="container-web py-6">
           <div className="flex items-center gap-4 mb-4">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Press lift={false}>
               <Button variant="ghost" size="icon" onClick={onBack} aria-label="뒤로 가기">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-            </motion.div>
+            </Press>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
                 알림
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-zinc-600 mt-1">
                 {visibleUnreadCount > 0 ? `${visibleUnreadCount}개의 읽지 않은 알림` : '모든 알림을 확인했습니다'}
               </p>
             </div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Press lift={false}>
               <Button
                 variant={showFilters ? 'default' : 'outline'}
                 size="icon"
                 onClick={() => setShowFilters(!showFilters)}
-                className={showFilters ? 'bg-sky-500 hover:bg-sky-600' : ''}
+                className={showFilters ? 'bg-zinc-900 hover:bg-zinc-800' : ''}
                 aria-label="필터"
                 aria-expanded={showFilters}
               >
                 <Filter className="w-5 h-5" />
               </Button>
-            </motion.div>
+            </Press>
           </div>
 
           {/* Filter Bar */}
@@ -147,17 +148,17 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                 variant={filter === 'all' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('all')}
-                className={filter === 'all' ? 'bg-sky-500 hover:bg-sky-600' : ''}
+                className={filter === 'all' ? 'bg-zinc-900 hover:bg-zinc-800' : ''}
               >
-                전체 ({visibleNotifications.length})
+                전체 (<span className="tnum">{visibleNotifications.length}</span>)
               </Button>
               <Button
                 variant={filter === 'unread' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('unread')}
-                className={filter === 'unread' ? 'bg-sky-500 hover:bg-sky-600' : ''}
+                className={filter === 'unread' ? 'bg-zinc-900 hover:bg-zinc-800' : ''}
               >
-                읽지 않음 ({visibleUnreadCount})
+                읽지 않음 (<span className="tnum">{visibleUnreadCount}</span>)
               </Button>
             </motion.div>
           )}
@@ -169,7 +170,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleMarkAllAsRead}
-                className="text-sky-600 hover:bg-sky-50"
+                className="text-iris-600 hover:bg-iris-50"
                 disabled={visibleUnreadCount === 0}
               >
                 <CheckCheck className="w-4 h-4 mr-2" />
@@ -192,50 +193,40 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
       <div className="container-web py-8 pb-24">
         <div className="max-w-3xl mx-auto">
           {loading ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              <Card className="p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Loader2 className="w-10 h-10 text-sky-400 animate-spin" />
+            <FadeIn>
+              <Card className="p-12 text-center rounded-2xl">
+                <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Loader2 className="w-10 h-10 text-iris-400 animate-spin" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">알림을 불러오는 중...</h3>
+                <h3 className="text-xl text-zinc-900 font-semibold tracking-tight mb-2">알림을 불러오는 중...</h3>
               </Card>
-            </motion.div>
+            </FadeIn>
           ) : filteredNotifications.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              <Card className="p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Bell className="w-10 h-10 text-gray-400" />
+            <FadeIn>
+              <Card className="p-12 text-center rounded-2xl">
+                <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Bell className="w-10 h-10 text-zinc-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">알림이 없습니다</h3>
-                <p className="text-gray-600">
-                  {filter === 'unread' 
+                <h3 className="text-xl text-zinc-900 font-semibold tracking-tight mb-2">알림이 없습니다</h3>
+                <p className="text-zinc-600">
+                  {filter === 'unread'
                     ? '모든 알림을 확인했습니다'
                     : '새로운 알림이 도착하면 여기에 표시됩니다'}
                 </p>
               </Card>
-            </motion.div>
+            </FadeIn>
           ) : (
-            <div className="space-y-3" aria-live="polite" aria-label="알림 목록">
-              {filteredNotifications.map((notification, index) => {
+            <Stagger className="space-y-3" aria-live="polite" aria-label="알림 목록">
+              {filteredNotifications.map((notification) => {
                 const Icon = getIcon(notification.type);
                 const iconColor = getIconColor(notification.type);
 
                 return (
-                  <motion.div
-                    key={notification.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <Card 
-                      className={`p-4 cursor-pointer card-hover ${
-                        !notification.read ? 'bg-sky-50/50 border-sky-200' : ''
+                  <Stagger.Item key={notification.id}>
+                    <Press lift={false} scale={0.99}>
+                    <Card
+                      className={`p-4 cursor-pointer card-hover rounded-2xl ${
+                        !notification.read ? 'bg-iris-50/50 border-iris-200' : ''
                       }`}
                     >
                       <div className="flex gap-4">
@@ -246,17 +237,17 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2 mb-1">
                             <div className="flex items-center gap-2">
-                              <h3 className="font-semibold">{notification.title}</h3>
+                              <h3 className="text-zinc-900 font-semibold tracking-tight">{notification.title}</h3>
                               {!notification.read && (
-                                <div className="w-2 h-2 bg-sky-500 rounded-full"></div>
+                                <div className="w-2 h-2 bg-iris-500 rounded-full"></div>
                               )}
                             </div>
-                            <span className="text-xs text-gray-500 whitespace-nowrap">
+                            <span className="text-xs text-zinc-400 whitespace-nowrap">
                               {formatRelativeTime(notification.created_at)}
                             </span>
                           </div>
 
-                          <p className="text-gray-600 text-sm mb-3">
+                          <p className="text-zinc-600 text-sm mb-3">
                             {notification.message}
                           </p>
 
@@ -264,21 +255,21 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                             {(notification as any).actionLabel && (
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white"
+                                className="bg-zinc-900 hover:bg-zinc-800 text-white"
                               >
                                 {(notification as any).actionLabel}
                               </Button>
                             )}
 
                             {!notification.read && (
-                              <Button 
+                              <Button
                                 size="sm"
                                 variant="ghost"
                                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                   e.stopPropagation();
                                   handleMarkAsRead(notification.id);
                                 }}
-                                className="text-sky-600 hover:bg-sky-50"
+                                className="text-iris-600 hover:bg-iris-50"
                               >
                                 <Check className="w-4 h-4 mr-1" />
                                 읽음
@@ -301,10 +292,11 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                         </div>
                       </div>
                     </Card>
-                  </motion.div>
+                    </Press>
+                  </Stagger.Item>
                 );
               })}
-            </div>
+            </Stagger>
           )}
         </div>
       </div>

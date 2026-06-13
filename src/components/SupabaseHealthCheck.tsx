@@ -68,28 +68,28 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
           >
-            <Card className="max-w-md w-full p-6 bg-white/95 backdrop-blur-md border-2">
+            <Card className="max-w-md w-full p-6 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-zinc-200/80">
               <div className="text-center space-y-4">
                 {status === 'checking' ? (
                   <>
-                    <div className="w-16 h-16 mx-auto rounded-full bg-sky-100 flex items-center justify-center">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-iris-50 flex items-center justify-center">
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                       >
-                        <RefreshCw className="w-8 h-8 text-sky-600" />
+                        <RefreshCw className="w-8 h-8 text-iris-600" />
                       </motion.div>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">연결 확인 중...</h3>
-                    <p className="text-gray-600">Supabase 서버와 연결을 확인하고 있습니다.</p>
+                    <h3 className="text-xl font-semibold tracking-tight text-zinc-900">연결 확인 중...</h3>
+                    <p className="text-zinc-600">Supabase 서버와 연결을 확인하고 있습니다.</p>
                   </>
                 ) : (
                   <>
-                    <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-red-50 flex items-center justify-center">
                       <WifiOff className="w-8 h-8 text-red-600" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">연결 실패</h3>
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h3 className="text-xl font-semibold tracking-tight text-zinc-900">연결 실패</h3>
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                       <div className="flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                         <div className="text-sm text-red-800 text-left">
@@ -98,8 +98,8 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="text-left space-y-2 text-sm text-gray-600 bg-gray-50 rounded-lg p-4">
-                      <p className="font-semibold text-gray-900">해결 방법:</p>
+                    <div className="text-left space-y-2 text-sm text-zinc-600 bg-zinc-50 rounded-xl p-4">
+                      <p className="font-semibold text-zinc-900">해결 방법:</p>
                       <ul className="space-y-1 list-disc list-inside">
                         <li>인터넷 연결을 확인해주세요</li>
                         <li>Supabase 프로젝트가 활성화되어 있는지 확인해주세요</li>
@@ -110,7 +110,7 @@ export function SupabaseHealthCheck({ onHealthy }: SupabaseHealthCheckProps) {
                     <Button
                       onClick={handleRetry}
                       disabled={retrying}
-                      className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700"
+                      className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
                     >
                       {retrying ? (
                         <>

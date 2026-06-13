@@ -41,7 +41,7 @@ function transformApiMentor(m: ApiMentor): Mentor {
     sessions: m.session_count || 0,
     successRate: m.success_rate || 0,
     responseTime: m.response_time || '2시간',
-    price: m.price || 15000,
+    price: m.price || 30000,
     badge: m.badge || 'bronze',
     verified: m.verified || false,
     avatar: m.avatar || '👨‍🎓',
