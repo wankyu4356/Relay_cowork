@@ -220,8 +220,8 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             {mentorConnections.length > 0 && (
               <div>
                 <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-4 h-4 text-purple-600" />
+                  <div className="w-8 h-8 bg-iris-50 rounded-lg flex items-center justify-center">
+                    <Users className="w-4 h-4 text-iris-600" />
                   </div>
                   선배 러너 ({mentorConnections.length})
                 </h3>
