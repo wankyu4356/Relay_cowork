@@ -151,7 +151,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ AI 초안 작성</h1>
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">AI 초안 작성</h1>
                 <p className="text-zinc-600 mt-1">
                   {aiData.university} {aiData.major} · 스토리라인 {storyline.id}
                 </p>
@@ -264,7 +264,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
 
             {/* Editing Tools */}
             <Card className="p-6">
-              <h3 className="font-semibold text-lg mb-4 text-zinc-900 tracking-tight">📝 편집 도구</h3>
+              <h3 className="font-semibold text-lg mb-4 text-zinc-900 tracking-tight">편집 도구</h3>
               <Stagger className="space-y-2">
                 {[
                   { icon: Sparkles, label: '문단 재생성', instruction: '구조와 핵심 메시지는 유지하되 각 문단의 표현을 더 자연스럽고 설득력 있게 다시 써 주세요.' },

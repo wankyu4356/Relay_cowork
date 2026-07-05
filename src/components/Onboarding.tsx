@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { FadeIn, Stagger, Press } from './ui/motion';
-import { Sparkles, Zap, Rocket } from 'lucide-react';
+import { Sparkles, Rocket } from 'lucide-react';
 import type { UserRole } from '../App';
 
 interface OnboardingProps {
@@ -21,13 +21,14 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     }, 800);
   };
 
+  // 관리자 역할은 일반 온보딩에 노출하지 않는다 (운영자가 DB에서 직접 지정)
   const roles = [
     {
       id: 'mentee' as UserRole,
       icon: Sparkles,
       title: '멘티',
-      subtitle: 'AI로 시작하는 편입 준비',
-      description: 'AI 학업계획서 작성부터 합격생 릴레이 세션까지',
+      subtitle: 'AI로 시작하는 합격 준비',
+      description: 'AI 초안 작성부터 합격생 릴레이 세션까지',
       gradient: 'from-zinc-900 to-iris-800',
       bgGradient: 'from-iris-50 to-iris-100',
     },
@@ -36,16 +37,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       icon: Rocket,
       title: '러너',
       subtitle: '경험을 나누고 수익 창출',
-      description: '편입 합격 경험을 활용한 전문 릴레이 세션',
-      gradient: 'from-zinc-900 to-iris-800',
-      bgGradient: 'from-iris-50 to-iris-100',
-    },
-    {
-      id: 'admin' as UserRole,
-      icon: Zap,
-      title: '관리자',
-      subtitle: '플랫폼 관리',
-      description: '러너 승인 및 플랫폼 운영',
+      description: '합격 경험을 활용한 전문 릴레이 세션',
       gradient: 'from-zinc-900 to-iris-800',
       bgGradient: 'from-iris-50 to-iris-100',
     },
@@ -93,12 +85,12 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     transition={{ delay: 0.4 }}
                     className="text-xl md:text-2xl text-zinc-600 max-w-2xl mx-auto"
                   >
-                    AI가 만드는 학업계획서, 합격생이 완성하는 편입 스토리
+                    AI가 만드는 초안, 합격생이 완성하는 성공 스토리
                   </motion.p>
                 </div>
 
                 {/* Role Cards */}
-                <Stagger delay={0.4} className="grid md:grid-cols-3 gap-6 mb-8">
+                <Stagger delay={0.4} className="grid md:grid-cols-2 gap-6 mb-8 max-w-3xl mx-auto">
                   {roles.map((role) => {
                     const Icon = role.icon;
                     const isSelected = selectedRole === role.id;

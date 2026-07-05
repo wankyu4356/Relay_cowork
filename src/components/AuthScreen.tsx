@@ -4,7 +4,6 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card } from './ui/card';
-import { Badge } from './ui/badge';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
@@ -293,40 +292,12 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 </motion.form>
               </AnimatePresence>
 
-              {/* Demo account hint */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <p className="text-xs text-gray-400 text-center mb-3">빠른 체험</p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-xs rounded-lg h-9"
-                    onClick={() => {
-                      setMode('login');
-                      setForm(prev => ({ ...prev, email: 'demo@relay.kr', password: 'demo1234' }));
-                    }}
-                  >
-                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">멘티</Badge>
-                    데모 계정
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-xs rounded-lg h-9"
-                    onClick={() => {
-                      setMode('login');
-                      setForm(prev => ({ ...prev, email: 'mentor@relay.kr', password: 'mentor1234' }));
-                    }}
-                  >
-                    <Badge variant="secondary" className="mr-1 text-[10px] px-1.5">러너</Badge>
-                    데모 계정
-                  </Button>
-                </div>
-              </div>
-
-              {/* Skip auth for demo */}
-              <div className="mt-4 text-center">
-                <button
+              {/* Guest mode — 가장 빠른 체험 경로를 보조 버튼으로 노출 */}
+              <div className="mt-6 pt-6 border-t border-zinc-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-11 rounded-xl text-zinc-700"
                   onClick={() => {
                     onAuthSuccess(null, {
                       profile: { role: 'mentee', name: '게스트', onboardingCompleted: false },
@@ -334,10 +305,12 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     });
                     toast.info('게스트 모드로 접속합니다. 일부 기능이 제한됩니다.');
                   }}
-                  className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2"
                 >
                   릴레이 체험하기
-                </button>
+                </Button>
+                <p className="text-[11px] text-zinc-400 text-center mt-2">
+                  가입 없이 둘러보기 · 데이터는 저장되지 않아요
+                </p>
               </div>
             </Card>
           </motion.div>

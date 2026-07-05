@@ -71,7 +71,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
           >
             <Sparkles className="w-12 h-12 text-white" />
           </motion.div>
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">✨ AI가 스토리라인을 생성하고 있어요</h2>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">AI가 스토리라인을 생성하고 있어요</h2>
           <p className="text-zinc-600 text-lg mb-8">
             입력하신 경험을 분석해<br />
             3가지 스토리라인을 만들고 있습니다
@@ -107,7 +107,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ 스토리라인 제안</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">스토리라인 제안</h1>
               <p className="text-zinc-600 mt-1">마음에 드는 스토리를 선택하세요</p>
             </div>
           </div>
@@ -144,7 +144,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-3">
-                          📋 {storyline.title}
+                          {storyline.title}
                         </h3>
                         <div className="p-4 bg-iris-50 rounded-xl mb-4">
                           <div className="text-sm font-semibold text-zinc-700 mb-1">핵심 메시지:</div>
@@ -189,7 +189,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
           <FadeIn delay={0.4}>
             <Card className="p-4 bg-zinc-50 border-zinc-200/80">
               <p className="text-center text-zinc-600">
-                💡 스토리라인을 선택하면 해당 구조로 학계서 초안을 생성합니다
+                스토리라인을 선택하면 해당 구조로 학계서 초안을 생성합니다
               </p>
             </Card>
           </FadeIn>

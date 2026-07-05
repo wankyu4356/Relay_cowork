@@ -254,13 +254,13 @@ export function UnifiedHome({
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="w-full grid grid-cols-2 h-12 bg-zinc-100 p-1 rounded-xl">
               <TabsTrigger value="mentee" className="text-[14px] font-semibold rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500">
-                <span className="mr-2">🎯</span> 경험 받기
+                경험 받기
               </TabsTrigger>
               <TabsTrigger
                 value="mentor"
                 className="text-[14px] font-semibold relative rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500"
               >
-                <span className="mr-2">⚡</span> 경험 넘기기
+                경험 넘기기
                 {!isMentorActive && (
                   <Badge className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[10px] border-0 shadow-sm">
                     시작하기
@@ -487,24 +487,32 @@ export function UnifiedHome({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 {content.quickStats.map((stat, index) => {
                   const StatIcon = quickStatIconMap[stat.iconName] || BookOpen;
-                  const getStatValue = () => {
+                  // 수치가 없는 타일은 통계가 아니라 바로가기로 표시한다
+                  const getStatValue = (): string | number | null => {
                     switch (stat.valueKey) {
                       case 'draftCount': return draftCount;
                       case 'sessionCount': return upcomingSessionCount;
                       case 'successRate': return `${stats.overallRate}%`;
-                      default: return '--';
+                      default: return null;
                     }
                   };
+                  const statValue = getStatValue();
                   return (
                     <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + index * 0.1 }}>
                       <Card className="p-6 text-center card-hover cursor-pointer" onClick={() => onNavigate(stat.screen as Screen)}>
                         <div className={`w-14 h-14 bg-gradient-to-br ${stat.bgGradient} rounded-2xl flex items-center justify-center mx-auto mb-3`}>
                           <StatIcon className={`w-7 h-7 ${stat.iconColor}`} />
                         </div>
-                        <div className="text-3xl font-bold text-gray-900 mb-1">
-                          {dashboardLoading ? <span className="inline-block w-8 h-8 bg-gray-200 rounded animate-pulse" /> : getStatValue()}
-                        </div>
-                        <div className="text-sm text-gray-600">{stat.label}</div>
+                        {statValue === null ? (
+                          <div className="text-[13px] font-semibold text-iris-600 mb-1 h-9 flex items-center justify-center">
+                            바로가기 →
+                          </div>
+                        ) : (
+                          <div className="text-3xl font-bold text-zinc-900 mb-1 tnum">
+                            {dashboardLoading ? <span className="inline-block w-8 h-8 bg-zinc-200 rounded animate-pulse" /> : statValue}
+                          </div>
+                        )}
+                        <div className="text-sm text-zinc-600">{stat.label}</div>
                       </Card>
                     </motion.div>
                   );
@@ -514,7 +522,7 @@ export function UnifiedHome({
               {/* Recommended Mentors */}
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900">⭐ 추천 러너</h2>
+                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900">추천 러너</h2>
                   <Button
                     variant="ghost"
                     onClick={() => onNavigate('mentor-search')}
@@ -556,14 +564,14 @@ export function UnifiedHome({
                           className="relative overflow-hidden card-modern hover-lift cursor-pointer group"
                           onClick={() => onMentorSelect(mentor)}
                         >
-                          {/* Badge Ribbon */}
+                          {/* Badge Tag — 좌상단 코너, 가격 영역과 겹치지 않음 */}
                           {mentor.badge === 'platinum' && (
-                            <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
+                            <div className="absolute top-0 left-0 bg-iris-600 text-white text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-tl-2xl rounded-br-lg z-10">
                               TOP
                             </div>
                           )}
                           {mentor.badge === 'gold' && (
-                            <div className="absolute top-4 -right-12 rotate-45 bg-gradient-to-r from-amber-400 to-yellow-500 text-white text-xs font-bold px-16 py-1 shadow-lg z-10">
+                            <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-tl-2xl rounded-br-lg z-10">
                               BEST
                             </div>
                           )}
@@ -802,7 +810,7 @@ export function UnifiedHome({
                           </div>
                           <div className="flex-1">
                             <div className="font-semibold">학업계획서 첨삭</div>
-                            <div className="text-sm text-gray-600">박지원 • 연세대 경영 지원</div>
+                            <div className="text-sm text-gray-600">멘티 #4102 • 연세대 경영 지원</div>
                           </div>
                           <div className="text-right">
                             <div className="font-bold text-sky-600">80,000원</div>

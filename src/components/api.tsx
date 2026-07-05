@@ -15,7 +15,14 @@ import { logger } from '../utils/logger';
  * Edge-Function-based layer so hooks and components need no changes.
  */
 
-const SUPABASE_URL = `https://${projectId}.supabase.co`;
+const hasSupabaseEnv = Boolean(projectId && publicAnonKey);
+
+// 환경변수가 없어도 앱이 크래시하지 않도록 무해한 플레이스홀더로 클라이언트를
+// 생성한다. 모든 네트워크 호출이 실패하며 각 화면의 목업 폴백이 동작한다.
+const SUPABASE_URL = hasSupabaseEnv
+  ? `https://${projectId}.supabase.co`
+  : 'https://placeholder.supabase.co';
+const SUPABASE_KEY = hasSupabaseEnv ? publicAnonKey : 'placeholder-anon-key';
 
 // ============ SUPABASE SINGLETON (survives HMR) ============
 
@@ -23,12 +30,12 @@ const _GK = '__relay_sb';
 
 function getSupabaseClient(): ReturnType<typeof createClient> {
   if (!(globalThis as any)[_GK]) {
-    if (!projectId || !publicAnonKey) {
-      logger.error(
-        'Supabase 환경변수가 설정되지 않았습니다. VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 를 확인하세요.',
+    if (!hasSupabaseEnv) {
+      logger.warn(
+        'Supabase 환경변수가 없어 목업 모드로 동작합니다. 실제 연동은 VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 를 설정하세요.',
       );
     }
-    (globalThis as any)[_GK] = createClient(SUPABASE_URL, publicAnonKey, {
+    (globalThis as any)[_GK] = createClient(SUPABASE_URL, SUPABASE_KEY, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,

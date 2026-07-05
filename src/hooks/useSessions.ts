@@ -3,12 +3,23 @@ import * as api from '../components/api';
 import { fetchWithFallback } from './useDataService';
 import type { Session } from '../App';
 
+// 목업 날짜는 항상 오늘 기준 상대값으로 생성한다
+// (과거 날짜에 '예정' 배지가 붙는 모순 방지)
+const daysFromNow = (days: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}.${mm}.${dd}`;
+};
+
+// 러너는 익명 번호로만 노출한다 (러너 #XXXX 익명 시스템)
 const MOCK_SESSIONS: Session[] = [
-  { id: '1', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.20', time: '14:00', duration: 60, price: 65000, status: 'upcoming' },
-  { id: '2', mentorId: '1', mentorName: '이서연', mentorAvatar: '👩‍🎓', date: '2025.02.25', time: '16:00', duration: 60, price: 65000, status: 'upcoming' },
-  { id: '3', mentorId: '2', mentorName: '김민준', mentorAvatar: '👨‍🎓', date: '2025.02.18', time: '10:00', duration: 60, price: 45000, status: 'ongoing' },
-  { id: '4', mentorId: '3', mentorName: '박지우', mentorAvatar: '👨‍💼', date: '2025.01.15', time: '15:00', duration: 60, price: 38000, status: 'completed' },
-  { id: '5', mentorId: '4', mentorName: '최예은', mentorAvatar: '👩‍💼', date: '2025.01.10', time: '11:00', duration: 60, price: 50000, status: 'completed' },
+  { id: '1', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '👩‍🎓', date: daysFromNow(3), time: '14:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '2', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '👩‍🎓', date: daysFromNow(8), time: '16:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '3', mentorId: '2', mentorName: '러너 #1923', mentorAvatar: '👨‍🎓', date: daysFromNow(0), time: '10:00', duration: 60, price: 45000, status: 'ongoing' },
+  { id: '4', mentorId: '3', mentorName: '러너 #5621', mentorAvatar: '👨‍💼', date: daysFromNow(-21), time: '15:00', duration: 60, price: 38000, status: 'completed' },
+  { id: '5', mentorId: '4', mentorName: '러너 #3142', mentorAvatar: '👩‍💼', date: daysFromNow(-26), time: '11:00', duration: 60, price: 50000, status: 'completed' },
 ];
 
 export function useSessions() {

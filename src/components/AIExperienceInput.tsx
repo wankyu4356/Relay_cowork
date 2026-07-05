@@ -128,7 +128,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">✨ {catContent.aiToolTitle}</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{catContent.aiToolTitle}</h1>
               <p className="text-zinc-600 mt-1">Step {step}/3</p>
             </div>
             <Badge className="bg-zinc-900 text-white border-0 px-4 py-2">
@@ -151,7 +151,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                 <div className="flex gap-3">
                   <Sparkles className="w-6 h-6 text-iris-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 1: 내 배경 정보</h2>
+                    <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">Step 1: 내 배경 정보</h2>
                     <p className="text-zinc-600">
                       내 경험을 입력하면, 지원 학과에 맞는 스토리라인과 초안을 만들어 드려요
                     </p>
@@ -199,7 +199,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               className="space-y-6"
             >
               <Card className="p-6 bg-iris-50 border-iris-100">
-                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 2: 경험 & 소재</h2>
+                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">Step 2: 경험 & 소재</h2>
                 <p className="text-zinc-600">
                   구체적인 경험을 입력할수록 더 좋은 초안을 받을 수 있어요
                 </p>
@@ -323,7 +323,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               className="space-y-6"
             >
               <Card className="p-6 bg-iris-50 border-iris-100">
-                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">📌 Step 3: 선호 설정</h2>
+                <h2 className="font-semibold text-lg mb-1 text-zinc-900 tracking-tight">Step 3: 선호 설정</h2>
                 <p className="text-zinc-600">{catContent.styleDescription}</p>
               </Card>
 
@@ -395,6 +395,14 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
 
       {/* Bottom Actions */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-zinc-200/80 p-4 z-10">
+        {/* 왜 진행할 수 없는지 인라인으로 안내 */}
+        {!canProceed() && (
+          <p className="container-web max-w-3xl text-center text-[12px] text-zinc-400 mb-2">
+            {step === 1
+              ? '지원 대학과 학과를 입력하면 다음으로 넘어갈 수 있어요'
+              : '지원 동기(50자 이상)와 활동 1개 이상을 입력해주세요'}
+          </p>
+        )}
         <div className="container-web max-w-3xl flex gap-4">
           {step > 1 && (
             <Button

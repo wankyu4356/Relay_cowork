@@ -302,14 +302,14 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 className="relative overflow-hidden cursor-pointer group hover:shadow-md transition-shadow"
                 onClick={() => onMentorSelect(mentor)}
               >
-                {/* Badge Ribbon */}
+                {/* Badge Tag — 좌상단 코너, 가격 영역과 겹치지 않음 */}
                 {mentor.badge === 'platinum' && (
-                  <div className="absolute top-4 -right-12 rotate-45 bg-iris-600 text-white text-xs font-semibold px-16 py-1 shadow-md">
+                  <div className="absolute top-0 left-0 bg-iris-600 text-white text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-tl-2xl rounded-br-lg z-10">
                     TOP
                   </div>
                 )}
                 {mentor.badge === 'gold' && (
-                  <div className="absolute top-4 -right-12 rotate-45 bg-amber-500 text-white text-xs font-semibold px-16 py-1 shadow-md">
+                  <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-tl-2xl rounded-br-lg z-10">
                     BEST
                   </div>
                 )}

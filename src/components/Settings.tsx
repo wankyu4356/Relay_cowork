@@ -49,9 +49,10 @@ interface SettingsProps {
   onBack: () => void;
   credits?: number;
   isMentorActive?: boolean;
+  isGuest?: boolean;
 }
 
-export function Settings({ onBack, credits = 3, isMentorActive = false }: SettingsProps) {
+export function Settings({ onBack, credits = 3, isMentorActive = false, isGuest = false }: SettingsProps) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [sessionReminder, setSessionReminder] = useState(true);
   const [messageNotif, setMessageNotif] = useState(true);
@@ -154,6 +155,23 @@ export function Settings({ onBack, credits = 3, isMentorActive = false }: Settin
 
       <div className="container-web py-8 pb-24">
         <div className="max-w-3xl mx-auto space-y-6">
+          {/* Guest banner — 게스트 상태를 명확히 표시 */}
+          {isGuest && (
+            <FadeIn>
+              <Card className="p-4 rounded-2xl bg-iris-50 border-iris-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-iris-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <User className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[14px] font-semibold text-zinc-900">게스트 모드로 둘러보는 중</div>
+                    <div className="text-[12px] text-zinc-500">아래 프로필은 예시입니다. 가입하면 내 정보가 저장돼요.</div>
+                  </div>
+                </div>
+              </Card>
+            </FadeIn>
+          )}
+
           {/* Profile Summary Card */}
           <FadeIn>
             <Card className="p-6 rounded-2xl">

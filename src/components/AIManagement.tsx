@@ -66,7 +66,7 @@ const mockDrafts: Draft[] = [
     status: 'with-mentor',
     lastModified: '2025.02.03',
     hasSession: true,
-    mentorName: '김서연',
+    mentorName: '러너 #2847',
   },
 ];
 
@@ -181,7 +181,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 내 AI 초안
               </h1>
-              <p className="text-zinc-600 mt-1">AI로 생성한 AI 초안을 관리하세요</p>
+              <p className="text-zinc-600 mt-1">AI로 생성한 초안을 한곳에서 관리하세요</p>
             </div>
             <Badge className="bg-zinc-900 text-white border-0 px-4 py-2 shadow-sm tnum">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -210,7 +210,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                     <h2 className="text-2xl font-semibold tracking-tight text-white">새 AI 초안 만들기</h2>
                   </div>
                   <p className="text-white/90 mb-4">
-                    AI가 5분 만에 AI 초안을 만들어드립니다
+                    AI가 5분 만에 초안을 만들어드립니다
                   </p>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-white/15 text-white border-0 backdrop-blur-sm tnum">
@@ -262,7 +262,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
               <FileText className="w-5 h-5 text-iris-600" />
-              내 AI 초안 ({drafts.length})
+              초안 목록 ({drafts.length})
             </h2>
 
             {drafts.length === 0 ? (

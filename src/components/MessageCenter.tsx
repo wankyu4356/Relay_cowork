@@ -56,7 +56,7 @@ const mockConversations: Conversation[] = [
   {
     id: '1',
     userId: '1',
-    userName: '김서연',
+    userName: '러너 #2847',
     userAvatar: '👩‍🎓',
     userRole: '러너',
     lastMessage: '학업계획서 초안 검토 완료했습니다.',
@@ -67,7 +67,7 @@ const mockConversations: Conversation[] = [
   {
     id: '2',
     userId: '2',
-    userName: '이준호',
+    userName: '러너 #1923',
     userAvatar: '👨‍🎓',
     userRole: '러너',
     lastMessage: '다음 세션 일정 조율하고 싶어요',
@@ -78,7 +78,7 @@ const mockConversations: Conversation[] = [
   {
     id: '3',
     userId: '3',
-    userName: '박지민',
+    userName: '러너 #5621',
     userAvatar: '👩‍💼',
     userRole: '러너',
     lastMessage: '면접 준비 자료 보내드렸습니다',

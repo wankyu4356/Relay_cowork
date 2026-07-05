@@ -59,7 +59,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
     if (onNavigate) {
       onNavigate('message-center');
     } else {
-      toast.success(`${session.mentorName} 러너에게 메시지를 보냅니다`);
+      toast.success(`${session.mentorName}에게 메시지를 보냅니다`);
     }
   };
 
@@ -147,7 +147,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-lg text-zinc-900 font-semibold tracking-tight mb-1">{session.mentorName} 러너</h3>
+                <h3 className="text-lg text-zinc-900 font-semibold tracking-tight mb-1">{session.mentorName}</h3>
                 <div className="flex items-center gap-2 text-sm text-zinc-600 flex-wrap">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -299,7 +299,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   <div className="flex-1">
                     <div className="font-semibold mb-1">오늘 세션이 있어요!</div>
                     <div className="text-sm text-white/90">
-                      {upcomingSessions[0].mentorName} 러너와 {upcomingSessions[0].time}에 릴레이 시작됩니다
+                      {upcomingSessions[0].mentorName}와 {upcomingSessions[0].time}에 릴레이 시작됩니다
                     </div>
                   </div>
                   <Button

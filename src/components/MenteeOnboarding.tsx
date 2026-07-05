@@ -96,7 +96,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
   const handleNext = async () => {
     if (step === 1) {
       if (!formData.currentUniversity || !formData.currentMajor) {
-        toast.error(`${step1.title} 정보를 입력해주세요`);
+        toast.error(`${step1.title}를 입력해주세요`);
         return;
       }
     } else if (step === 2) {

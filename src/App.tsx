@@ -39,6 +39,7 @@ import { CreditPurchase } from './components/CreditPurchase';
 import { MessageCenter } from './components/MessageCenter';
 import { BottomNav } from './components/BottomNav';
 import { CategoryFeaturePlaceholder } from './components/CategoryFeaturePlaceholder';
+import { useNotifications } from './hooks/useNotifications';
 import { SupabaseHealthCheck } from './components/SupabaseHealthCheck';
 import { Toaster } from './components/ui/sonner';
 import * as api from './components/api';
@@ -250,6 +251,9 @@ function App() {
   const [isGuest, setIsGuest] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
+  // 사이드바 배지: 알림은 실제(또는 목업 폴백) 데이터에서 계산
+  const { unreadCount: unreadNotifications } = useNotifications();
+
   // Check for existing session on mount
   useEffect(() => {
     const checkSession = async () => {
@@ -313,6 +317,8 @@ function App() {
     if (path) {
       navigate(path, { replace: false });
     }
+    // 화면 전환 시 스크롤 최상단으로 (SPA 조건부 렌더링이라 자동 복원 없음)
+    window.scrollTo(0, 0);
   }, [navigate]);
 
   const handleAuthSuccess = useCallback(async (session: AuthSession | null, profileData: ProfileData) => {
@@ -591,22 +597,19 @@ function App() {
         onNavigate={navigateTo}
         onRoleChange={(role) => setUserRole(role)}
         currentRole={userRole === 'admin' ? undefined : userRole}
-        unreadMessages={2}
-        unreadNotifications={3}
+        unreadMessages={3}
+        unreadNotifications={unreadNotifications}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
       
-      {/* Main content with dynamic margin based on sidebar state */}
-      <div 
-        className="transition-all duration-300 ease-in-out"
-        style={{ 
-          marginLeft: isAuthScreen
-            ? '0' 
-            : sidebarCollapsed ? '80px' : '288px',
-        }}
+      {/* Main content — sidebar margin applies on md+ only (mobile uses bottom nav) */}
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          isAuthScreen ? '' : sidebarCollapsed ? 'md:ml-20' : 'md:ml-72'
+        }`}
       >
         {currentScreen === 'onboarding' && (
           <Onboarding onComplete={handleRoleSelect} />
@@ -879,9 +882,10 @@ function App() {
             }}
             credits={credits}
             isMentorActive={false}
+            isGuest={isGuest}
           />
         )}
-        
+
         {currentScreen === 'credit-purchase' && (
           <CreditPurchase
             onBack={() => {
