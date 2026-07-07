@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { ArrowLeft, Plus, X, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react';
+import * as api from './api';
+import { logger } from '../utils/logger';
 import { FadeIn, Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { AIData } from '../App';
@@ -90,6 +92,26 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
     if (credits <= 0) {
       toast.error('AI 크레딧이 부족합니다');
       return;
+    }
+
+    // M1: 입력된 활동을 경험 DB에 자동 축적 (실패해도 플로우는 계속)
+    const activities = (formData.activities || []).filter(a => a.name?.trim());
+    if (activities.length > 0) {
+      api.saveExperiences(activities.map(a => ({
+        category: selectedCategory,
+        kind: 'activity',
+        title: a.name,
+        role: a.role || null,
+        result: a.achievement || null,
+        situation: formData.motivation || null,
+        keywords: formData.keywords || [],
+        source: 'manual' as const,
+      }))).then(({ experiences }) => {
+        // M5: 임베딩 배치 (임베딩 API 미설정이면 조용히 스킵)
+        import('../lib/embedClient').then(({ embedExperiences }) =>
+          embedExperiences((experiences as Array<{ id: string; title: string; action?: string; result?: string }>) || []),
+        );
+      }).catch((e) => logger.log('경험 저장 스킵(게스트/미연동):', e?.message));
     }
 
     onSubmit(formData as AIData);

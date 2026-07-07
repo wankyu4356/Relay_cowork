@@ -17,9 +17,18 @@ async function streamAI(
   payload: Record<string, unknown>,
   onToken?: (full: string, delta: string) => void,
 ): Promise<string> {
+  // 로그인 상태면 토큰을 전달 — 서버가 AI 원장(user_id)·캐시에 사용
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  try {
+    const { getSupabase } = await import('../components/api');
+    const { data } = await getSupabase().auth.getSession();
+    const token = data?.session?.access_token;
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+  } catch { /* 게스트/미연동 — 익명 호출 */ }
+
   const res = await fetch('/api/ai', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({ mode, ...payload }),
   });
 
@@ -137,4 +146,33 @@ export function adviceStream(
   onToken: (full: string, delta: string) => void,
 ): Promise<string> {
   return streamAI('advice', { aiData, context }, onToken);
+}
+
+
+export interface ExtractedExperience {
+  kind: string;
+  title: string;
+  organization?: string | null;
+  role?: string | null;
+  period_start?: string | null;
+  period_end?: string | null;
+  situation?: string | null;
+  task?: string | null;
+  action?: string | null;
+  result?: string | null;
+  metrics?: Record<string, unknown>;
+  skills?: string[];
+  keywords?: string[];
+}
+
+/** 자유 서술 → STAR 경험 배열 추출 (AI). 실패 시 null. */
+export async function extractExperiences(text: string, category: string): Promise<ExtractedExperience[] | null> {
+  try {
+    const out = await streamAI('extract', { text, category });
+    const parsed = JSON.parse(stripFence(out));
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (e) {
+    logger.warn('extractExperiences fallback:', e);
+    return null;
+  }
 }

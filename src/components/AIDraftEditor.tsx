@@ -54,6 +54,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   const [analysisSource, setAnalysisSource] = useState<'ai' | 'local' | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
+  const [lastSource, setLastSource] = useState<'ai_draft' | 'ai_proofread' | 'user_edit'>('ai_draft');
 
   // AI 미연결 시에도 의미 있는 값을 주는 로컬 휴리스틱
   const localAnalysis = (text: string): DraftAnalysis => {
@@ -130,6 +131,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         });
         if (!cancelled) {
           setLoading(false);
+          setLastSource('ai_draft');
           fireCelebrate();
           runAnalysis(finalText);
           toast.success('AI 초안이 완료되었습니다!');
@@ -171,6 +173,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
     const toastId = toast.loading('릴레이 AI가 첨삭하고 있습니다...');
     try {
       const improved = await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
+      setLastSource('ai_proofread');
       runAnalysis(improved);
       toast.success('AI 첨삭이 완료되었습니다', { id: toastId });
     } catch (e) {
@@ -191,6 +194,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         content: draft,
         storyline,
         aiData,
+        source: lastSource,
+        analysis: analysisSource ? { ...analysis, analyzed_by: analysisSource } : undefined,
       });
       toast.success('AI 초안이 서버에 저장되었습니다!');
     } catch (e) {
@@ -254,6 +259,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 onChange={(e) => {
                   setDraft(e.target.value);
                   setWordCount(e.target.value.length);
+                  setLastSource('user_edit');
                 }}
                 className="min-h-[700px] font-serif text-base leading-relaxed border-0 focus-visible:ring-0 p-0"
                 placeholder="릴레이 AI가 AI 초안을 생성하고 있습니다..."

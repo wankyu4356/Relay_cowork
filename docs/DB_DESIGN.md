@@ -1,6 +1,6 @@
 # RELAY · AI-Friendly 데이터베이스 설계 제안
 
-> 상태: **제안(Proposal)** — 적용 시 `supabase/migrations/004_*.sql`로 구현.
+> 상태: **구현됨** — `supabase/migrations/004~008`. 임베딩 차원은 voyage-3-lite 기준 **1024**로 확정(문서 내 1536 표기는 초안 기준).
 > 전제: Supabase(Postgres + RLS + pgvector), 프론트 직접 접근 + AI 서버리스(`/api/ai`).
 
 ---

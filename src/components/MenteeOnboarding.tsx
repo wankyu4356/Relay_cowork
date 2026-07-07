@@ -124,6 +124,14 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
           },
         });
         toast.success('프로필이 저장되었습니다!');
+        // M4: 지원 목표를 경험 DB에 등록 (best-effort)
+        if (formData.targetUniversity) {
+          api.upsertGoal({
+            category: selectedCategory ?? 'transfer',
+            targetName: formData.targetUniversity,
+            subTarget: formData.targetMajor || null,
+          }).catch((err) => logger.log('목표 저장 스킵:', err?.message));
+        }
       } catch (e) {
         logger.log('Profile save during onboarding failed (guest mode?):', e);
         toast.success('릴레이에 오신 것을 환영합니다!');

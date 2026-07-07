@@ -24,6 +24,11 @@ RLS를 우회해야 하는 로직(가입 프로비저닝, 크레딧 가감, 알�
 1. `supabase/migrations/001_initial_schema.sql` — 테이블 + RLS
 2. `supabase/migrations/002_add_category_and_revenue.sql` — 카테고리/수익/AI 로그
 3. `supabase/migrations/003_direct_client_setup.sql` — 트리거 · 크레딧 RPC · 관리자 정책
+4. `supabase/migrations/004_user_experiences.sql` — 경험 DB (STAR + pgvector)
+5. `supabase/migrations/005_documents_versions.sql` — 문서 버전 트리 (+drafts 이관)
+6. `supabase/migrations/006_ai_generations.sql` — AI 원장 · 캐시 · 피드백
+7. `supabase/migrations/007_targets_goals_context.sql` — 지원처/목표 + LLM 컨텍스트 함수
+8. `supabase/migrations/008_semantic_search.sql` — 시맨틱 검색 RPC
 
 > Supabase CLI를 쓴다면: `supabase link --project-ref <ref>` 후 `supabase db push`.
 
@@ -54,7 +59,10 @@ update public.profiles set role = 'admin' where email = 'you@example.com';
 3. **Environment Variables** 에 추가 (Production + Preview 모두):
    - `VITE_SUPABASE_URL` = `https://<project-ref>.supabase.co` (브라우저 노출)
    - `VITE_SUPABASE_ANON_KEY` = `<anon public key>` (브라우저 노출)
-   - `ANTHROPIC_API_KEY` = `sk-ant-...` (**서버 전용 · VITE_ 접두사 없음** — AI 첨삭용)
+   - `ANTHROPIC_API_KEY` = `sk-ant-...` (**서버 전용** — AI 첨삭용)
+   - `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (**서버 전용 · 선택** — 설정 시
+     `/api/ai`가 모든 생성을 ai_generations 원장에 기록하고 동일 입력을 7일 캐시)
+   - `VOYAGE_API_KEY` (**서버 전용 · 선택** — 설정 시 경험 임베딩 + 시맨틱 검색 활성화)
 4. **Deploy** → 발급된 도메인을 3단계의 Site URL / Redirect URLs에 반영
 
 ## 6. AI 첨삭 (실제 Claude 연동)

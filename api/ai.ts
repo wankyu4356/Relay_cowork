@@ -1,4 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { createHash } from 'node:crypto';
 
 /**
  * RELAY · AI 첨삭 백엔드 (Vercel Serverless Function)
@@ -13,9 +15,41 @@ import Anthropic from '@anthropic-ai/sdk';
  *   - proofread  : 현재 초안 + 지시 → 개선된 초안(실제 AI 첨삭)
  *   - analyze    : 현재 초안 → 정량 분석 점수(JSON: 구조/구체성/차별화/적합도)
  *   - advice     : 지원 프로필 → 합격 전략 총평 텍스트
+ *   - extract    : 자유 서술 경험 → STAR 구조화(JSON 배열, 경험 DB 저장용)
  */
 
 export const maxDuration = 60;
+
+// M3: AI 원장 — SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY 가 있으면
+// 모든 생성 호출을 ai_generations 에 기록하고, 동일 입력은 캐시로 응답한다.
+// 두 env 가 없으면 원장/캐시 없이 순수 생성만 동작 (완전 선택적).
+const CACHE_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7일
+const CACHEABLE = new Set(['storylines', 'draft', 'advice', 'extract']); // proofread/analyze는 편집 반복이라 제외
+
+function getServiceDb(): SupabaseClient | null {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+async function resolveUserId(db: SupabaseClient | null, req: any): Promise<string | null> {
+  if (!db) return null;
+  const auth: string = req.headers?.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  if (!token) return null;
+  try {
+    const { data } = await db.auth.getUser(token);
+    return data?.user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function hashInput(mode: string, body: any): string {
+  const { mode: _m, ...rest } = body || {};
+  return createHash('sha256').update(mode + '\u0000' + JSON.stringify(rest)).digest('hex');
+}
 
 const MODEL = 'claude-opus-4-8';
 
@@ -112,6 +146,24 @@ function buildRequest(mode: string, payload: any): { system: string; user: strin
     };
   }
 
+  if (mode === 'extract') {
+    const raw: string = payload?.text || '';
+    const category: string = payload?.category || 'other';
+    return {
+      effort: 'low',
+      system:
+        BASE_SYSTEM +
+        '\n\n출력은 반드시 JSON 배열만 반환합니다. 마크다운 코드펜스나 설명 문장을 붙이지 마세요.',
+      user:
+        `다음 자유 서술에서 지원 서류에 활용 가능한 "경험"들을 추출해 STAR 구조로 정리하세요. 카테고리: ${category}\n\n` +
+        `[서술]\n${raw}\n\n` +
+        '각 경험을 아래 형식 객체로 담은 JSON 배열로만 응답하세요 (없는 필드는 null):\n' +
+        '[{"kind":"activity|internship|project|award|certificate|work|education|etc","title":"","organization":null,"role":null,' +
+        '"period_start":"YYYY-MM-DD|null","period_end":"YYYY-MM-DD|null","situation":"","task":"","action":"","result":"",' +
+        '"metrics":{},"skills":[],"keywords":[]}]',
+    };
+  }
+
   // proofread — 핵심 AI 첨삭
   const instruction: string = payload?.instruction || '전반적으로 더 설득력 있고 구체적으로 다듬어 주세요.';
   const draft: string = payload?.draft || '';
@@ -138,16 +190,44 @@ export default async function handler(req: any, res: any) {
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
   const mode = body.mode;
-  if (!['storylines', 'draft', 'proofread', 'analyze', 'advice'].includes(mode)) {
-    res.status(400).json({ error: 'mode는 storylines | draft | proofread | analyze | advice 중 하나여야 합니다.' });
+  if (!['storylines', 'draft', 'proofread', 'analyze', 'advice', 'extract'].includes(mode)) {
+    res.status(400).json({ error: 'mode는 storylines | draft | proofread | analyze | advice | extract 중 하나여야 합니다.' });
     return;
   }
 
   const { system, user, effort } = buildRequest(mode, body);
 
+  const db = getServiceDb();
+  const userId = await resolveUserId(db, req);
+  const inputHash = hashInput(mode, body);
+  const startedAt = Date.now();
+
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
 
+  // 캐시 조회: 같은 유저 + 같은 입력이 7일 내 성공했으면 재사용
+  if (db && userId && CACHEABLE.has(mode)) {
+    try {
+      const { data: hit } = await db
+        .from('ai_generations')
+        .select('output_text, created_at')
+        .eq('user_id', userId)
+        .eq('input_hash', inputHash)
+        .eq('status', 'ok')
+        .not('output_text', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (hit?.output_text && Date.now() - new Date(hit.created_at).getTime() < CACHE_TTL_MS) {
+        res.setHeader('x-relay-cache', 'hit');
+        res.write(hit.output_text);
+        res.end();
+        return;
+      }
+    } catch { /* 캐시 실패는 무시하고 생성 진행 */ }
+  }
+
+  let fullText = '';
   try {
     const client = new Anthropic();
     const stream = client.messages.stream({
@@ -161,12 +241,42 @@ export default async function handler(req: any, res: any) {
 
     for await (const event of stream) {
       if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        fullText += event.delta.text;
         res.write(event.delta.text);
       }
+    }
+
+    // 원장 기록 (best-effort)
+    if (db) {
+      try {
+        const final = await stream.finalMessage();
+        await db.from('ai_generations').insert({
+          user_id: userId,
+          mode,
+          model: MODEL,
+          input_refs: { hasAiData: !!body.aiData, keys: Object.keys(body).filter(k => k !== 'mode') },
+          input_hash: inputHash,
+          output_text: fullText,
+          prompt_tokens: final.usage?.input_tokens ?? null,
+          output_tokens: final.usage?.output_tokens ?? null,
+          latency_ms: Date.now() - startedAt,
+          status: final.stop_reason === 'refusal' ? 'refusal' : 'ok',
+        });
+      } catch { /* 기록 실패는 응답에 영향 없음 */ }
     }
     res.end();
   } catch (err: any) {
     const message = err?.message || 'AI 생성 중 오류가 발생했습니다.';
+    if (db) {
+      try {
+        await db.from('ai_generations').insert({
+          user_id: userId, mode, model: MODEL,
+          input_refs: {}, input_hash: inputHash,
+          latency_ms: Date.now() - startedAt,
+          status: 'error', error: message.slice(0, 500),
+        });
+      } catch { /* ignore */ }
+    }
     if (!res.headersSent) {
       res.status(500).json({ error: message });
     } else {

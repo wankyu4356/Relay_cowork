@@ -211,6 +211,41 @@ export async function addCredits(amount: number) {
 
 export async function getDrafts() {
   const uid = await requireUserId();
+
+  // M2: documents/document_versions 우선 — 반환 shape은 legacy Draft와 동일하게 매핑
+  const docRes = await sb()
+    .from('documents')
+    .select('*, current:document_versions!documents_current_version_id_fkey(id, content, word_count, source, analysis, created_at)')
+    .eq('user_id', uid)
+    .order('updated_at', { ascending: false });
+
+  if (!docRes.error && docRes.data) {
+    const drafts = await Promise.all((docRes.data as any[]).map(async (d) => {
+      const { count } = await sb()
+        .from('document_versions')
+        .select('*', { count: 'exact', head: true })
+        .eq('document_id', d.id);
+      const cur = d.current;
+      return {
+        id: d.id,
+        university: d.university || '',
+        major: d.major || '',
+        content: cur?.content || '',
+        storyline: d.storyline || undefined,
+        ai_data: d.ai_data || undefined,
+        word_count: cur?.word_count || 0,
+        version: count || 1,
+        status: d.status,
+        created_at: d.created_at,
+        updated_at: d.updated_at,
+        analysis: cur?.analysis || undefined,
+        last_source: cur?.source || undefined,
+      };
+    }));
+    return { drafts };
+  }
+
+  // 폴백: legacy drafts 테이블 (005 미적용 DB)
   const data = check(
     await sb().from('drafts').select('*').eq('user_id', uid).order('updated_at', { ascending: false }),
     '초안 목록 조회 실패',
@@ -224,22 +259,75 @@ export async function createDraft(input: {
   content: string;
   storyline?: import('../App').Storyline;
   aiData?: import('../App').AIData;
+  source?: 'ai_draft' | 'ai_proofread' | 'user_edit';
+  analysis?: Record<string, unknown>;
+  usedExperienceIds?: string[];
+  documentId?: string; // 기존 문서에 새 버전 추가
 }) {
   const uid = await requireUserId();
-  const draft = {
-    id: genId(),
-    user_id: uid,
-    university: input.university || '',
-    major: input.major || '',
-    content: input.content || '',
-    storyline: input.storyline ?? null,
-    ai_data: input.aiData ?? null,
-    word_count: input.content?.length || 0,
-    version: 1,
-    status: 'draft',
+
+  // M2 경로: documents + document_versions
+  const tryNew = async () => {
+    let docId = input.documentId ?? null;
+    let parentVersionId: string | null = null;
+
+    if (docId) {
+      const { data: doc } = await sb().from('documents')
+        .select('id, current_version_id').eq('id', docId).eq('user_id', uid).maybeSingle();
+      if (!doc) throw new Error('문서를 찾을 수 없습니다.');
+      parentVersionId = (doc as any).current_version_id;
+    } else {
+      const { data: doc, error } = await sb().from('documents').insert({
+        user_id: uid,
+        doc_type: 'study_plan',
+        title: `${input.university} ${input.major}`.trim() || '무제 초안',
+        university: input.university || null,
+        major: input.major || null,
+        storyline: input.storyline ?? null,
+        ai_data: input.aiData ?? null,
+      }).select('id').single();
+      if (error) throw error;
+      docId = (doc as any).id;
+    }
+
+    const { data: ver, error: verr } = await sb().from('document_versions').insert({
+      document_id: docId,
+      parent_version_id: parentVersionId,
+      content: input.content || '',
+      source: input.source ?? 'ai_draft',
+      editor_id: uid,
+      analysis: input.analysis ?? null,
+      used_experience_ids: input.usedExperienceIds ?? [],
+    }).select('id').single();
+    if (verr) throw verr;
+
+    await sb().from('documents').update({
+      current_version_id: (ver as any).id,
+      updated_at: new Date().toISOString(),
+    }).eq('id', docId);
+
+    return { success: true, draft: { id: docId, version_id: (ver as any).id } };
   };
-  const data = check(await sb().from('drafts').insert(draft).select().single(), '초안 저장 실패');
-  return { success: true, draft: data };
+
+  try {
+    return await tryNew();
+  } catch (e) {
+    logger.warn('documents 저장 실패 → legacy drafts 폴백:', e);
+    const draft = {
+      id: genId(),
+      user_id: uid,
+      university: input.university || '',
+      major: input.major || '',
+      content: input.content || '',
+      storyline: input.storyline ?? null,
+      ai_data: input.aiData ?? null,
+      word_count: input.content?.length || 0,
+      version: 1,
+      status: 'draft',
+    };
+    const data = check(await sb().from('drafts').insert(draft).select().single(), '초안 저장 실패');
+    return { success: true, draft: data };
+  }
 }
 
 export async function updateDraft(id: string, updates: Record<string, any>) {
@@ -570,9 +658,11 @@ export async function createOutcome(input: {
   result: string;
   detail?: string;
   purpose?: string;
+  goalId?: string;
+  documentId?: string;
 }) {
   const uid = await requireUserId();
-  const outcome = {
+  const outcome: Record<string, unknown> = {
     id: genId(),
     user_id: uid,
     mentor_id: input.mentorId || null,
@@ -580,6 +670,9 @@ export async function createOutcome(input: {
     detail: input.detail || '',
     purpose: input.purpose || '',
   };
+  // M4 라벨 루프 (007 미적용 DB에서는 insert가 무시하도록 조건부)
+  if (input.goalId) outcome.goal_id = input.goalId;
+  if (input.documentId) outcome.document_id = input.documentId;
   const data = check(await sb().from('outcomes').insert(outcome).select().single(), '결과 보고 실패');
   return { success: true, outcome: data };
 }
@@ -744,6 +837,132 @@ export async function getRelayChain() {
     });
   }
   return { nodes };
+}
+
+// ============ GOALS & TARGETS (M4) ============
+
+const CATEGORY_TARGET_TYPE: Record<string, string> = {
+  transfer: 'university',
+  admission: 'university',
+  career: 'company',
+  certification: 'certification',
+  other: 'program',
+};
+
+/** 지원처 find-or-create 후 활성 목표 등록. */
+export async function upsertGoal(input: {
+  category: string;
+  targetName: string;
+  subTarget?: string | null;
+  priority?: number;
+}) {
+  const uid = await requireUserId();
+  const type = CATEGORY_TARGET_TYPE[input.category] || 'program';
+  const targetId = check(
+    await sb().rpc('ensure_target', {
+      p_category: input.category,
+      p_type: type,
+      p_name: input.targetName,
+    }),
+    '지원처 등록 실패',
+  ) as unknown as string;
+
+  // 동일 목표 중복 방지
+  const { data: existing } = await sb().from('user_goals')
+    .select('id').eq('user_id', uid).eq('target_id', targetId)
+    .eq('status', 'active').maybeSingle();
+  if (existing) return { success: true, goalId: (existing as any).id, targetId };
+
+  const data = check(
+    await sb().from('user_goals').insert({
+      user_id: uid,
+      target_id: targetId,
+      sub_target: input.subTarget ?? null,
+      priority: input.priority ?? 1,
+    }).select('id').single(),
+    '목표 등록 실패',
+  );
+  return { success: true, goalId: (data as any).id, targetId };
+}
+
+export async function getGoals() {
+  const uid = await requireUserId();
+  const data = check(
+    await sb().from('user_goals')
+      .select('*, target:targets(id, name, type, category)')
+      .eq('user_id', uid)
+      .order('priority', { ascending: true }),
+    '목표 조회 실패',
+  );
+  return { goals: data || [] };
+}
+
+// ============ EXPERIENCES (M1: 경험 DB) ============
+
+export interface ExperienceInput {
+  category: string;
+  kind?: string;
+  title: string;
+  organization?: string | null;
+  role?: string | null;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  situation?: string | null;
+  task?: string | null;
+  action?: string | null;
+  result?: string | null;
+  metrics?: Record<string, unknown>;
+  skills?: string[];
+  keywords?: string[];
+  source?: 'manual' | 'ai_extracted' | 'imported';
+}
+
+const toDate = (v?: string | null) => {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+};
+
+export async function saveExperiences(items: ExperienceInput[]) {
+  const uid = await requireUserId();
+  const rows = items
+    .filter((e) => e.title?.trim())
+    .map((e) => ({
+      user_id: uid,
+      category: e.category,
+      kind: e.kind || 'activity',
+      title: e.title.trim(),
+      organization: e.organization ?? null,
+      role: e.role ?? null,
+      period_start: toDate(e.periodStart),
+      period_end: toDate(e.periodEnd),
+      situation: e.situation ?? null,
+      task: e.task ?? null,
+      action: e.action ?? null,
+      result: e.result ?? null,
+      metrics: e.metrics ?? {},
+      skills: e.skills ?? [],
+      keywords: e.keywords ?? [],
+      source: e.source ?? 'manual',
+    }));
+  if (rows.length === 0) return { experiences: [] };
+  const data = check(await sb().from('user_experiences').insert(rows).select(), '경험 저장 실패');
+  return { experiences: data || [] };
+}
+
+export async function getExperiences(category?: string) {
+  const uid = await requireUserId();
+  let q = sb().from('user_experiences').select('*').eq('user_id', uid)
+    .order('period_end', { ascending: false, nullsFirst: true });
+  if (category) q = q.eq('category', category);
+  const data = check(await q, '경험 조회 실패');
+  return { experiences: data || [] };
+}
+
+export async function deleteExperience(id: string) {
+  const uid = await requireUserId();
+  check(await sb().from('user_experiences').delete().eq('id', id).eq('user_id', uid), '경험 삭제 실패');
+  return { success: true };
 }
 
 // ============ HELPERS ============
