@@ -9,7 +9,7 @@ import { Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
-import { generateDraftStream, proofreadStream, analyzeDraft, type DraftAnalysis } from '../lib/aiClient';
+import { generateDraftStream, proofreadStream, analyzeDraft, fetchRelevantExperiences, type DraftAnalysis, type RelevantExperience } from '../lib/aiClient';
 import { printAsPdf, downloadText } from '../lib/exportDoc';
 import { Burst } from './ui/motion';
 import { logger } from '../utils/logger';
@@ -55,6 +55,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   const [analyzing, setAnalyzing] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [lastSource, setLastSource] = useState<'ai_draft' | 'ai_proofread' | 'user_edit'>('ai_draft');
+  const [usedExperiences, setUsedExperiences] = useState<RelevantExperience[]>([]);
 
   // AI 미연결 시에도 의미 있는 값을 주는 로컬 휴리스틱
   const localAnalysis = (text: string): DraftAnalysis => {
@@ -125,10 +126,16 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
 
     (async () => {
       try {
+        // M5: 경험 DB에서 관련 경험 선별 → 프롬프트 주입 (게스트/미연동은 빈 배열)
+        const exps = await fetchRelevantExperiences(
+          `${aiData.university} ${aiData.major} ${storyline.title}`.trim(), 5,
+        );
+        if (!cancelled) setUsedExperiences(exps);
+
         // 실제 AI 스트리밍 초안 생성
         const finalText = await generateDraftStream(storyline, aiData, (full) => {
           if (!cancelled) updateDraft(full);
-        });
+        }, exps);
         if (!cancelled) {
           setLoading(false);
           setLastSource('ai_draft');
@@ -196,6 +203,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         aiData,
         source: lastSource,
         analysis: analysisSource ? { ...analysis, analyzed_by: analysisSource } : undefined,
+        usedExperienceIds: usedExperiences.map((e) => e.id),
       });
       toast.success('AI 초안이 서버에 저장되었습니다!');
     } catch (e) {
@@ -354,6 +362,27 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 </motion.p>
               )}
             </Card>
+
+            {/* 이 초안에 주입된 경험 (M5 계보 가시화) */}
+            {usedExperiences.length > 0 && (
+              <Card className="p-5">
+                <h3 className="font-semibold text-[14px] mb-3 text-zinc-900 tracking-tight">
+                  이 초안에 사용된 내 경험
+                  <span className="ml-1.5 text-iris-600 tnum">{usedExperiences.length}</span>
+                </h3>
+                <div className="space-y-1.5">
+                  {usedExperiences.map((e) => (
+                    <div key={e.id} className="flex items-center gap-2 text-[12.5px] text-zinc-600">
+                      <span className="w-1.5 h-1.5 rounded-full bg-iris-400 flex-shrink-0" />
+                      <span className="truncate">{e.title}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-[11px] text-zinc-400">
+                  경험 DB에서 지원처와 관련성이 높은 순으로 선별했어요
+                </p>
+              </Card>
+            )}
 
             {/* Editing Tools */}
             <Card className="p-6">

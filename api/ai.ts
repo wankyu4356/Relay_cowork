@@ -108,12 +108,22 @@ function buildRequest(mode: string, payload: any): { system: string; user: strin
 
   if (mode === 'draft') {
     const s = payload?.storyline || {};
+    // M5 연동: 클라이언트가 경험 DB에서 선별한 관련 경험 top-k
+    const exps: Array<{ kind?: string; title?: string; role?: string; action?: string; result?: string }> =
+      Array.isArray(payload?.experiences) ? payload.experiences.slice(0, 6) : [];
+    const expBlock = exps.length
+      ? `\n[경험 DB에서 선별된 관련 경험 — 반드시 본문에 구체적으로 녹여낼 것]\n` +
+        exps.map((e, i) =>
+          `${i + 1}. [${e.kind || 'activity'}] ${e.title || ''}${e.role ? ` (${e.role})` : ''}` +
+          `${e.action ? `\n   행동: ${e.action}` : ''}${e.result ? `\n   결과: ${e.result}` : ''}`
+        ).join('\n') + '\n'
+      : '';
     return {
       effort: 'medium',
       system: BASE_SYSTEM + '\n\n초안 본문 텍스트만 출력합니다. 머리말·설명·코드펜스를 붙이지 마세요.',
       user:
         `아래 지원자 프로필과 선택된 스토리라인을 바탕으로 완성도 높은 지원 서류 초안을 작성하세요.\n\n` +
-        `[프로필]\n${profile}\n\n` +
+        `[프로필]\n${profile}\n${expBlock}\n` +
         `[선택한 스토리라인]\n제목: ${s.title || ''}\n핵심 메시지: ${s.message || ''}\n구성: ${s.structure || ''}\n강점: ${s.strength || ''}\n소재: ${s.materials || ''}\n\n` +
         `요구사항:\n- "1. 지원 동기 / 2. 학업(활동) 배경 / 3. 학업(입사) 계획 / 4. 향후 계획" 구조의 단락으로 구성\n` +
         `- 입력된 경험을 구체적으로 녹여내고, 추상적 미사여구는 지양\n- 약 ${aiData.wordCount || 1500}자 분량, ${TONE_LABEL[aiData.tone || 'balanced']} 어조`,

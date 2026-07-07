@@ -93,13 +93,51 @@ export async function generateStorylines(aiData: AIData): Promise<Storyline[] | 
   }
 }
 
-/** 선택한 스토리라인으로 초안 생성(스트리밍). */
+export interface RelevantExperience {
+  id: string;
+  kind?: string;
+  title: string;
+  role?: string | null;
+  action?: string | null;
+  result?: string | null;
+}
+
+/**
+ * 초안 생성에 주입할 관련 경험 선별 (M5 연동).
+ * 1) 임베딩 시맨틱 검색 → 2) 최근 경험 폴백 → 3) 게스트/미연동이면 빈 배열.
+ */
+export async function fetchRelevantExperiences(query: string, k = 5): Promise<RelevantExperience[]> {
+  // 1) 시맨틱 검색 (VOYAGE_API_KEY + 임베딩 존재 시)
+  try {
+    const { searchMyExperiences } = await import('./embedClient');
+    const hits = await searchMyExperiences(query, k);
+    if (hits && hits.length > 0) {
+      return hits.map((h: any) => ({
+        id: h.id, kind: h.kind, title: h.title, action: h.action, result: h.result,
+      }));
+    }
+  } catch { /* fall through */ }
+
+  // 2) 최근 경험 폴백 (경험 DB만 있으면 동작)
+  try {
+    const api = await import('../components/api');
+    const { experiences } = await api.getExperiences();
+    return (experiences as any[]).slice(0, k).map((e) => ({
+      id: e.id, kind: e.kind, title: e.title, role: e.role, action: e.action, result: e.result,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** 선택한 스토리라인으로 초안 생성(스트리밍). experiences는 경험 DB 선별분. */
 export function generateDraftStream(
   storyline: Storyline,
   aiData: AIData,
   onToken: (full: string, delta: string) => void,
+  experiences: RelevantExperience[] = [],
 ): Promise<string> {
-  return streamAI('draft', { storyline, aiData }, onToken);
+  return streamAI('draft', { storyline, aiData, experiences }, onToken);
 }
 
 /** 현재 초안을 지시에 따라 AI 첨삭(스트리밍). */
