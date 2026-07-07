@@ -22,13 +22,19 @@ import {
   Check,
   Pencil,
   Gift,
-  Star
+  Star,
+  History,
+  Bot,
+  Wand2,
+  UserRound,
+  GraduationCap
 } from 'lucide-react';
 import { TextReveal, Tilt, CountUp, ScrollReveal } from './ui/motion';
 import { toast } from 'sonner';
 import { downloadText } from '../lib/exportDoc';
 import type { AIData, Screen } from '../App';
 import * as apiClient from './api';
+import type { DocumentVersionRow } from './api';
 
 interface AIManagementProps {
   onBack: () => void;
@@ -77,6 +83,43 @@ const mockDrafts: Draft[] = [
 ];
 
 export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AIManagementProps) {
+  // ② 버전 히스토리 타임라인
+  const [versionDraft, setVersionDraft] = useState<Draft | null>(null);
+  const [versions, setVersions] = useState<DocumentVersionRow[] | null>(null);
+  const [versionsDemo, setVersionsDemo] = useState(false);
+
+  const openVersionHistory = async (draft: Draft) => {
+    setVersionDraft(draft);
+    setVersions(null);
+    setVersionsDemo(false);
+    try {
+      const { versions: rows } = await apiClient.getDocumentVersions(draft.id);
+      if (rows.length === 0) throw new Error('no versions');
+      setVersions(rows);
+    } catch {
+      // DB 미연동/목업 초안 — 데모 타임라인
+      const sources: DocumentVersionRow['source'][] = ['user_edit', 'ai_proofread', 'ai_draft'];
+      const now = Date.now();
+      setVersions(Array.from({ length: Math.max(1, draft.version) }, (_, i) => ({
+        id: `demo-${i}`,
+        source: sources[Math.min(i, sources.length - 1)],
+        word_count: Math.max(400, draft.wordCount - i * 120),
+        analysis: i === 0 ? { structure: 85, specificity: 78, uniqueness: 88, relevance: 90 } : null,
+        used_experience_ids: [],
+        created_at: new Date(now - i * 86400000).toISOString(),
+        is_current: i === 0,
+      })));
+      setVersionsDemo(true);
+    }
+  };
+
+  const VERSION_SOURCE_META: Record<DocumentVersionRow['source'], { label: string; dot: string; Icon: typeof Bot }> = {
+    ai_draft: { label: 'AI 초안 생성', dot: 'bg-iris-600', Icon: Bot },
+    ai_proofread: { label: 'AI 첨삭', dot: 'bg-iris-400', Icon: Wand2 },
+    user_edit: { label: '직접 수정', dot: 'bg-zinc-400', Icon: UserRound },
+    mentor_edit: { label: '러너 첨삭', dot: 'bg-amber-500', Icon: GraduationCap },
+  };
+
   const [credits, setCredits] = useState(2);
   const [drafts, setDrafts] = useState<Draft[]>(mockDrafts);
   const [selectedDraft, setSelectedDraft] = useState<string | null>(null);
@@ -404,10 +447,19 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                             <div className="text-sm text-zinc-600 mb-1">글자수</div>
                             <div className="font-semibold text-iris-600 tnum">{draft.wordCount}</div>
                           </div>
-                          <div className="text-center">
-                            <div className="text-sm text-zinc-600 mb-1">버전</div>
-                            <div className="font-semibold text-zinc-900 tnum">v{draft.version}</div>
-                          </div>
+                          <button
+                            type="button"
+                            className="text-center rounded-lg py-0.5 hover:bg-iris-50 transition-colors group/ver"
+                            onClick={(e) => { e.stopPropagation(); openVersionHistory(draft); }}
+                            aria-label="버전 기록 보기"
+                          >
+                            <div className="text-sm text-zinc-600 mb-1 flex items-center justify-center gap-1">
+                              버전 <History className="w-3 h-3 text-zinc-400 group-hover/ver:text-iris-600 transition-colors" />
+                            </div>
+                            <div className="font-semibold text-iris-700 tnum underline decoration-dotted underline-offset-4 decoration-iris-300">
+                              v{draft.version}
+                            </div>
+                          </button>
                           <div className="text-center">
                             <div className="text-sm text-zinc-600 mb-1">스토리</div>
                             <div className="font-semibold text-zinc-900">{draft.storyline}</div>
@@ -586,6 +638,104 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* ② 버전 히스토리 타임라인 모달 */}
+      <AnimatePresence>
+        {versionDraft && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setVersionDraft(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 16 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="sticky top-0 bg-white/90 backdrop-blur-xl border-b border-zinc-100 px-6 py-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold tracking-tight text-zinc-900">버전 기록</h2>
+                  <p className="text-[12px] text-zinc-500">
+                    {versionDraft.university} {versionDraft.major}
+                    {versionsDemo && <span className="ml-2 text-zinc-400">· 데모 데이터</span>}
+                  </p>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setVersionDraft(null)} aria-label="닫기">
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="p-6">
+                {!versions ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2].map((i) => <div key={i} className="h-14 rounded-xl skeleton-shimmer" />)}
+                  </div>
+                ) : (
+                  <div className="relative pl-6">
+                    {/* 릴레이 라인 — 세로로 그려지는 경로 */}
+                    <motion.div
+                      className="absolute left-[7px] top-2 bottom-2 w-[2px] rounded-full bg-gradient-to-b from-iris-500 via-iris-200 to-zinc-200 origin-top"
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                    <div className="space-y-5">
+                      {versions.map((v, i) => {
+                        const meta = VERSION_SOURCE_META[v.source];
+                        const a = v.analysis as Record<string, number> | null;
+                        return (
+                          <motion.div
+                            key={v.id}
+                            initial={{ opacity: 0, x: 12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.15 + i * 0.08, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative"
+                          >
+                            <span className={`absolute -left-6 top-1.5 w-4 h-4 rounded-full border-[3px] border-white shadow-sm ${meta.dot}`} />
+                            <div className={`rounded-xl border p-3.5 ${v.is_current ? 'border-iris-200 bg-iris-50/60' : 'border-zinc-200/80 bg-white'}`}>
+                              <div className="flex items-center gap-2">
+                                <meta.Icon className="w-4 h-4 text-zinc-500" />
+                                <span className="text-[13px] font-semibold text-zinc-900">{meta.label}</span>
+                                <span className="text-[12px] text-zinc-400 tnum">v{versions.length - i}</span>
+                                {v.is_current && (
+                                  <Badge className="ml-auto bg-iris-600 text-white border-0 text-[10px]">현재</Badge>
+                                )}
+                              </div>
+                              <div className="mt-1.5 flex items-center gap-3 text-[12px] text-zinc-500 tnum">
+                                <span>{v.word_count.toLocaleString()}자</span>
+                                <span>{new Date(v.created_at).toLocaleDateString('ko-KR')}</span>
+                                {v.used_experience_ids.length > 0 && (
+                                  <span className="text-iris-600">경험 {v.used_experience_ids.length}건 사용</span>
+                                )}
+                              </div>
+                              {a && (
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                  {[['구조', a.structure], ['구체성', a.specificity], ['차별화', a.uniqueness], ['적합도', a.relevance]]
+                                    .filter(([, val]) => typeof val === 'number')
+                                    .map(([label, val]) => (
+                                      <span key={String(label)} className="px-2 py-0.5 rounded-md bg-zinc-100 text-[11px] text-zinc-600 tnum">
+                                        {label} {val}
+                                      </span>
+                                    ))}
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

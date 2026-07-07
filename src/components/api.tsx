@@ -839,6 +839,34 @@ export async function getRelayChain() {
   return { nodes };
 }
 
+// ============ DOCUMENT VERSIONS (M2 조회) ============
+
+export interface DocumentVersionRow {
+  id: string;
+  source: 'ai_draft' | 'ai_proofread' | 'user_edit' | 'mentor_edit';
+  word_count: number;
+  analysis: Record<string, unknown> | null;
+  used_experience_ids: string[];
+  created_at: string;
+  is_current: boolean;
+}
+
+export async function getDocumentVersions(documentId: string): Promise<{ versions: DocumentVersionRow[] }> {
+  const { data: doc } = await sb().from('documents')
+    .select('current_version_id').eq('id', documentId).maybeSingle();
+  const data = check(
+    await sb().from('document_versions')
+      .select('id, source, word_count, analysis, used_experience_ids, created_at')
+      .eq('document_id', documentId)
+      .order('created_at', { ascending: false }),
+    '버전 기록 조회 실패',
+  );
+  const currentId = (doc as any)?.current_version_id;
+  return {
+    versions: ((data as any[]) || []).map((v) => ({ ...v, is_current: v.id === currentId })),
+  };
+}
+
 // ============ GOALS & TARGETS (M4) ============
 
 const CATEGORY_TARGET_TYPE: Record<string, string> = {
