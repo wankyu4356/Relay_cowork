@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { logger } from './utils/logger';
 import { GlobalNav } from './components/GlobalNav';
@@ -611,6 +612,13 @@ function App() {
           isAuthScreen ? '' : sidebarCollapsed ? 'md:ml-20' : 'md:ml-72'
         }`}
       >
+        {/* 화면 전환 트랜지션 — 스크린 변경 시 부드러운 페이드/라이즈 */}
+        <motion.div
+          key={currentScreen}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
         {currentScreen === 'onboarding' && (
           <Onboarding onComplete={handleRoleSelect} />
         )}
@@ -739,7 +747,7 @@ function App() {
             mentor={selectedMentor ?? {
               id: '1',
               name: '러너 A',
-              avatar: '👨‍🎓',
+              avatar: '',
               university: '연세대',
               major: '경영학과',
               year: '22학번',
@@ -931,6 +939,7 @@ function App() {
             onBack={() => navigateTo('unified-home')}
           />
         )}
+        </motion.div>
         {userRole === 'mentee' && !(isAuthScreen) && (
           <BottomNav currentScreen={currentScreen} onNavigate={navigateTo} />
         )}

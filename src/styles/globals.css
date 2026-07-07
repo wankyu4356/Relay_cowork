@@ -376,6 +376,68 @@
   .text-responsive-xl { @apply text-3xl md:text-4xl lg:text-5xl; }
   .text-responsive-lg { @apply text-xl md:text-2xl lg:text-3xl; }
   .text-responsive-base { @apply text-base md:text-lg; }
+
+  /* ---- Premium motion helpers ---- */
+
+  /* Hover sheen sweep — add `.shine` to a relative overflow-hidden element */
+  .shine { position: relative; overflow: hidden; }
+  .shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.18) 50%, transparent 60%);
+    transform: translateX(-120%);
+    transition: none;
+    pointer-events: none;
+  }
+  .shine:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Infinite marquee */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll linear infinite;
+  }
+  .marquee-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .marquee-pausable:hover .marquee-track { animation-play-state: paused; }
+
+  /* Aurora ambient backdrop */
+  .aurora-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    will-change: transform;
+  }
+  .aurora-1 {
+    width: 480px; height: 480px;
+    left: -8%; top: -12%;
+    background: rgb(84 87 158 / 0.16);
+    animation: aurora-drift-1 26s ease-in-out infinite;
+  }
+  .aurora-2 {
+    width: 560px; height: 560px;
+    right: -10%; bottom: -18%;
+    background: rgb(47 48 82 / 0.12);
+    animation: aurora-drift-2 32s ease-in-out infinite;
+  }
+  .aurora-3 {
+    width: 360px; height: 360px;
+    left: 42%; top: 38%;
+    background: rgb(148 152 205 / 0.10);
+    animation: aurora-drift-3 22s ease-in-out infinite;
+  }
 }
 
 /* ============================================================
@@ -397,6 +459,22 @@
 @keyframes border-sheen {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 40px) scale(1.12); }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-70px, -50px) scale(1.08); }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  50% { transform: translate(40px, -60px) scale(1.15); opacity: 0.6; }
 }
 
 /* ============================================================

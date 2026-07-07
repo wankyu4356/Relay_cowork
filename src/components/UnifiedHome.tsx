@@ -47,6 +47,8 @@ import {
 } from 'lucide-react';
 import type { Screen, Mentor } from '../App';
 import type { Category } from './GlobalNav';
+import { Tilt, ScrollReveal, Marquee, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { CATEGORY_CONTENT } from '../lib/categoryContent';
 import { CATEGORY_STATS } from '../lib/categoryStats';
 import { useMentors } from '../hooks/useMentors';
@@ -193,16 +195,6 @@ export function UnifiedHome({
     }
   };
 
-  const getBadgeIcon = (badge: string) => {
-    switch (badge) {
-      case 'platinum': return '💎';
-      case 'gold': return '🥇';
-      case 'silver': return '🥈';
-      case 'bronze': return '🥉';
-      default: return '';
-    }
-  };
-
   // Icon maps for dynamic rendering
   const consultingIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     Compass, Target, Briefcase, Award, MapPin,
@@ -227,7 +219,7 @@ export function UnifiedHome({
           <div className="flex items-center justify-between mb-6">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
               <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-zinc-900 mb-1">
-                안녕하세요 👋
+                <TextReveal text="안녕하세요" delay={0.05} />
               </h1>
               <p className="text-[14px] text-zinc-500">
                 {activeTab === 'mentee' ? content.greeting : '러너 활동을 시작하세요'}
@@ -287,7 +279,7 @@ export function UnifiedHome({
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -4 }}
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-recommendation')}
               >
@@ -317,7 +309,7 @@ export function UnifiedHome({
                       </div>
                       <Button
                         size="lg"
-                        className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
+                        className={`shine ${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
                       >
                         AI 추천 받기
                         <ArrowRight className="w-5 h-5 ml-2" />
@@ -345,7 +337,7 @@ export function UnifiedHome({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -4 }}
                 className="cursor-pointer mb-6"
                 onClick={() => onNavigate('ai-experience')}
               >
@@ -397,7 +389,7 @@ export function UnifiedHome({
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <Button
                         size="lg"
-                        className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
+                        className={`shine ${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
                       >
                         지금 시작하기
                         <ArrowRight className="w-5 h-5 ml-2" />
@@ -416,7 +408,7 @@ export function UnifiedHome({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -4 }}
                 className="cursor-pointer mb-8"
                 onClick={() => onNavigate('mentor-search')}
               >
@@ -440,10 +432,14 @@ export function UnifiedHome({
                   <div className="relative p-8">
                     <div className="flex items-center gap-4 mb-5">
                       <div className="flex -space-x-3">
-                        {content.cardTheme.runnerAvatars.map((avatar, i) => (
-                          <div key={i} className="w-11 h-11 bg-white/90 rounded-full flex items-center justify-center text-lg border-2 border-white/60 shadow-md">
-                            {avatar}
-                          </div>
+                        {['러너 #2847', '러너 #1923', '러너 #5621'].map((runner) => (
+                          <RunnerAvatar
+                            key={runner}
+                            name={runner}
+                            size="sm"
+                            variant="monogram"
+                            className="!rounded-full border-2 border-white/60 shadow-md"
+                          />
                         ))}
                         <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white/30 shadow-md">
                           +{content.cardTheme.runnerCount - 3}
@@ -473,7 +469,7 @@ export function UnifiedHome({
 
                     <Button
                       size="lg"
-                      className={`${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
+                      className={`shine ${content.theme.buttonClass} font-bold shadow-lg rounded-xl`}
                     >
                       <UserCheck className="w-5 h-5 mr-2" />
                       {content.cardTheme.runnerTitle}
@@ -482,6 +478,22 @@ export function UnifiedHome({
                   </div>
                 </Card>
               </motion.div>
+
+              {/* 합격 릴레이 marquee — 신뢰 시그널 */}
+              <ScrollReveal className="mb-8">
+                <div className="py-5 border-y border-zinc-200/70">
+                  <Marquee duration={32}>
+                    {[
+                      '연세대학교', '고려대학교', '성균관대학교', '서강대학교', '한양대학교',
+                      '중앙대학교', '경희대학교', '이화여자대학교', '서울시립대학교', '건국대학교',
+                    ].map((u) => (
+                      <span key={u} className="mx-7 text-[17px] font-semibold tracking-tight text-zinc-300 whitespace-nowrap select-none">
+                        {u}
+                      </span>
+                    ))}
+                  </Marquee>
+                </div>
+              </ScrollReveal>
 
               {/* Quick Stats - category-specific */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -581,10 +593,7 @@ export function UnifiedHome({
                             <div className="flex items-start gap-4 mb-5">
                               {/* Avatar with gradient border */}
                               <div className="relative">
-                                <div className={`absolute inset-0 bg-gradient-to-br ${getBadgeColor(mentor.badge)} rounded-2xl blur-lg opacity-50`}></div>
-                                <div className="relative w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl">
-                                  {mentor.avatar}
-                                </div>
+                                <RunnerAvatar name={mentor.name} size="lg" variant="monogram" />
                                 {mentor.verified && (
                                   <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
                                     <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -805,9 +814,7 @@ export function UnifiedHome({
                     <div className="space-y-3">
                       {[1, 2, 3].map((i) => (
                         <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center text-xl">
-                            👨‍🎓
-                          </div>
+                          <RunnerAvatar name={`멘티 #410${i}`} size="md" variant="user" />
                           <div className="flex-1">
                             <div className="font-semibold">학업계획서 첨삭</div>
                             <div className="text-sm text-gray-600">멘티 #4102 • 연세대 경영 지원</div>
@@ -922,7 +929,7 @@ export function UnifiedHome({
                   <div className="grid grid-cols-2 gap-3">
                     {stats.fields.map((item) => (
                       <div key={item.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                        <span className="text-xl">{item.icon}</span>
+                        <span className="w-2 h-2 rounded-full bg-iris-400 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-gray-800 text-sm truncate">{item.name}</div>
                         </div>

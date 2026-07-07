@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card } from './ui/card';
+import { TextReveal, Aurora, Marquee } from './ui/motion';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
@@ -63,19 +64,8 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
 
   return (
     <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4 gradient-mesh">
-      {/* Background decorative elements — restrained */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ x: [0, 24, 0], y: [0, -16, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-24 left-10 w-72 h-72 bg-iris-200/25 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ x: [0, -16, 0], y: [0, 24, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-24 right-10 w-96 h-96 bg-iris-100/30 rounded-full blur-3xl"
-        />
-      </div>
+      {/* Ambient aurora backdrop */}
+      <Aurora />
 
       <div className="w-full max-w-[1000px] relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -101,9 +91,12 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 </span>
               </motion.div>
 
-              <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-5 leading-[1.1]">
-                성공의 경험을<br />
-                <span className="text-zinc-400">다음 세대로 이어갑니다</span>
+              <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-5 leading-[1.15]">
+                <TextReveal text="성공의 경험을" delay={0.15} />
+                <br />
+                <span className="text-zinc-400">
+                  <TextReveal text="다음 세대로 이어갑니다" delay={0.3} />
+                </span>
               </h1>
               <p className="text-[15px] leading-relaxed text-zinc-500 mb-9">
                 편입·취업·자격증·대학원까지, AI 첨삭과 선배 릴레이 세션으로<br />
@@ -134,6 +127,20 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   </div>
                 </motion.div>
               ))}
+            </div>
+
+            {/* 합격 릴레이 marquee */}
+            <div className="mt-10">
+              <p className="text-[11px] font-medium tracking-[0.14em] text-zinc-400 uppercase mb-3">
+                합격 릴레이가 이어지는 학교
+              </p>
+              <Marquee duration={28}>
+                {['연세대학교', '고려대학교', '성균관대학교', '서강대학교', '한양대학교', '중앙대학교', '경희대학교', '이화여자대학교', '서울시립대학교', '건국대학교'].map((u) => (
+                  <span key={u} className="mx-6 text-[15px] font-semibold text-zinc-300 whitespace-nowrap select-none">
+                    {u}
+                  </span>
+                ))}
+              </Marquee>
             </div>
           </motion.div>
 
@@ -277,7 +284,7 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-12 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[15px] shadow-sm"
+                    className="shine w-full h-12 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[15px] shadow-sm"
                     aria-label={mode === 'login' ? '로그인' : '회원가입'}
                   >
                     {loading ? (
