@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
 import { RunnerAvatar } from './ui/runner-avatar';
 import { motion } from 'motion/react';
@@ -20,6 +20,8 @@ import {
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
+import * as api from './api';
+import { downloadText } from '../lib/exportDoc';
 import type { Mentor } from '../App';
 
 interface SessionWorkspaceProps {
@@ -59,6 +61,41 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState('');
   const [sessionTime, setSessionTime] = useState('14:32');
+  // ④ 실제 문서 연동 — 로그인 + 005/009 적용 시 자동 활성화, 아니면 데모 문서
+  const [workspaceDoc, setWorkspaceDoc] = useState<api.WorkspaceDoc | null>(null);
+  const [docDirty, setDocDirty] = useState(false);
+  const [docSaving, setDocSaving] = useState(false);
+
+  useEffect(() => {
+    api.getWorkspaceDocument()
+      .then((doc) => {
+        if (doc && doc.content) {
+          setWorkspaceDoc(doc);
+          setDocumentContent(doc.content);
+        }
+      })
+      .catch(() => { /* 게스트/미연동 — 데모 문서 유지 */ });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSaveVersion = async () => {
+    if (!workspaceDoc || docSaving) return;
+    setDocSaving(true);
+    try {
+      const { source } = await api.saveWorkspaceVersion(workspaceDoc, documentContent);
+      setDocDirty(false);
+      toast.success(
+        source === 'mentor_edit'
+          ? '첨삭 버전이 기록되었습니다 — 멘티의 버전 타임라인에 표시돼요'
+          : '새 버전으로 저장되었습니다',
+      );
+    } catch {
+      toast.error('버전 저장에 실패했습니다');
+    } finally {
+      setDocSaving(false);
+    }
+  };
+
   const [documentContent, setDocumentContent] = useState(`1. 지원 동기
 
 정치외교학을 전공하며 국제관계의 복잡한 역학을 분석하는 과정에서, 이론적 분석력과 실무적 전략 수립 능력의 간극을 경험했습니다. 특히 학회 활동에서 글로벌 기업의 시장 진입 전략을 연구하면서, 정치학적 통찰을 경영학적 의사결정으로 연결하는 과정에 깊은 흥미를 느꼈습니다.
@@ -252,11 +289,30 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                 <div className="p-4 border-b border-zinc-200/80 flex items-center justify-between bg-zinc-50">
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-iris-600" />
-                    <h3 className="text-zinc-900 font-semibold tracking-tight">학업계획서 (공동 편집)</h3>
-                    <Badge className="bg-emerald-100 text-emerald-700">실시간 동기화</Badge>
+                    <h3 className="text-zinc-900 font-semibold tracking-tight">
+                      {workspaceDoc ? workspaceDoc.title : '학업계획서 (공동 편집)'}
+                    </h3>
+                    {workspaceDoc ? (
+                      <Badge className={workspaceDoc.isOwner ? 'bg-iris-100 text-iris-700' : 'bg-amber-100 text-amber-700'}>
+                        {workspaceDoc.isOwner ? '내 문서' : '러너 첨삭 모드'}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-zinc-500">데모 문서</Badge>
+                    )}
+                    {docDirty && <span className="w-2 h-2 rounded-full bg-amber-500" aria-label="저장되지 않은 변경" />}
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline">
+                    {workspaceDoc && (
+                      <Button size="sm" onClick={handleSaveVersion} disabled={docSaving || !docDirty}
+                        className="bg-zinc-900 hover:bg-zinc-800 text-white">
+                        {docSaving ? '저장 중...' : workspaceDoc.isOwner ? '버전 저장' : '첨삭 저장'}
+                      </Button>
+                    )}
+                    <Button size="sm" variant="outline"
+                      onClick={() => {
+                        downloadText(workspaceDoc?.title || '릴레이_세션_문서', documentContent);
+                        toast.success('.txt로 저장했습니다');
+                      }}>
                       <Download className="w-4 h-4 mr-2" />
                       다운로드
                     </Button>
@@ -272,7 +328,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                 <div className="flex-1 overflow-auto p-6">
                   <Textarea
                     value={documentContent}
-                    onChange={(e) => setDocumentContent(e.target.value)}
+                    onChange={(e) => { setDocumentContent(e.target.value); setDocDirty(true); }}
                     className="min-h-full font-serif text-base leading-relaxed border-0 focus-visible:ring-0"
                   />
                 </div>

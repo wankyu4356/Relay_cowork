@@ -839,6 +839,63 @@ export async function getRelayChain() {
   return { nodes };
 }
 
+// ============ WORKSPACE DOCUMENT (④ 세션 공동 편집) ============
+
+export interface WorkspaceDoc {
+  documentId: string;
+  title: string;
+  content: string;
+  ownerId: string;
+  isOwner: boolean;
+}
+
+/** 워크스페이스에서 열 문서 — RLS가 소유자/연결된 러너를 판별한다. */
+export async function getWorkspaceDocument(): Promise<WorkspaceDoc | null> {
+  const uid = await requireUserId();
+  const { data, error } = await sb()
+    .from('documents')
+    .select('id, title, user_id, current:document_versions!documents_current_version_id_fkey(content)')
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data) return null;
+  const d = data as any;
+  return {
+    documentId: d.id,
+    title: d.title,
+    content: d.current?.content || '',
+    ownerId: d.user_id,
+    isOwner: d.user_id === uid,
+  };
+}
+
+/** 워크스페이스 편집 저장 — 소유자면 user_edit(+현재 포인터 갱신), 러너면 mentor_edit 버전 기록. */
+export async function saveWorkspaceVersion(doc: WorkspaceDoc, content: string) {
+  const uid = await requireUserId();
+  const { data: cur } = await sb().from('documents')
+    .select('current_version_id').eq('id', doc.documentId).maybeSingle();
+
+  const source = doc.isOwner ? 'user_edit' : 'mentor_edit';
+  const ver = check(
+    await sb().from('document_versions').insert({
+      document_id: doc.documentId,
+      parent_version_id: (cur as any)?.current_version_id ?? null,
+      content,
+      source,
+      editor_id: uid,
+    }).select('id').single(),
+    '버전 저장 실패',
+  );
+
+  if (doc.isOwner) {
+    await sb().from('documents').update({
+      current_version_id: (ver as any).id,
+      updated_at: new Date().toISOString(),
+    }).eq('id', doc.documentId);
+  }
+  return { success: true, source, versionId: (ver as any).id };
+}
+
 // ============ AI FEEDBACK (③ 암묵 RLHF 신호) ============
 
 export async function submitAiFeedback(input: {
