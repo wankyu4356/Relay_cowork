@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 /**
  * RELAY · AI 첨삭 백엔드 (Vercel Serverless Function)
@@ -212,8 +212,12 @@ export default async function handler(req: any, res: any) {
   const inputHash = hashInput(mode, body);
   const startedAt = Date.now();
 
+  // 피드백 연결용 생성 ID — 스트림 시작 전에 헤더로 전달
+  const generationId = randomUUID();
+
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
+  if (db && userId) res.setHeader('x-relay-generation-id', generationId);
 
   // 캐시 조회: 같은 유저 + 같은 입력이 7일 내 성공했으면 재사용
   if (db && userId && CACHEABLE.has(mode)) {
@@ -261,6 +265,7 @@ export default async function handler(req: any, res: any) {
       try {
         const final = await stream.finalMessage();
         await db.from('ai_generations').insert({
+          id: generationId,
           user_id: userId,
           mode,
           model: MODEL,
@@ -280,6 +285,7 @@ export default async function handler(req: any, res: any) {
     if (db) {
       try {
         await db.from('ai_generations').insert({
+          id: generationId,
           user_id: userId, mode, model: MODEL,
           input_refs: {}, input_hash: inputHash,
           latency_ms: Date.now() - startedAt,

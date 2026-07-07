@@ -10,7 +10,13 @@ import type { AIData, Storyline } from '../App';
  * 목업으로 폴백할 수 있도록 throw 합니다.
  */
 
-type Mode = 'storylines' | 'draft' | 'proofread';
+type Mode = 'storylines' | 'draft' | 'proofread' | 'analyze' | 'advice' | 'extract';
+
+// 직전 스트림 호출의 ai_generations id (원장 미연동이면 null)
+let lastGenerationId: string | null = null;
+export function getLastGenerationId(): string | null {
+  return lastGenerationId;
+}
 
 async function streamAI(
   mode: Mode,
@@ -31,6 +37,9 @@ async function streamAI(
     headers,
     body: JSON.stringify({ mode, ...payload }),
   });
+
+  // ③ 피드백 연결용 — 서버가 원장 기록 시 생성 ID를 헤더로 알려준다
+  lastGenerationId = res.headers.get('x-relay-generation-id');
 
   if (!res.ok || !res.body) {
     let msg = `AI 요청 실패 (${res.status})`;

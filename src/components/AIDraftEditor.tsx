@@ -9,7 +9,7 @@ import { Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
-import { generateDraftStream, proofreadStream, analyzeDraft, fetchRelevantExperiences, type DraftAnalysis, type RelevantExperience } from '../lib/aiClient';
+import { generateDraftStream, proofreadStream, analyzeDraft, fetchRelevantExperiences, getLastGenerationId, type DraftAnalysis, type RelevantExperience } from '../lib/aiClient';
 import { printAsPdf, downloadText } from '../lib/exportDoc';
 import { Burst } from './ui/motion';
 import { logger } from '../utils/logger';
@@ -56,6 +56,21 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   const [celebrate, setCelebrate] = useState(false);
   const [lastSource, setLastSource] = useState<'ai_draft' | 'ai_proofread' | 'user_edit'>('ai_draft');
   const [usedExperiences, setUsedExperiences] = useState<RelevantExperience[]>([]);
+  // ③ 암묵 피드백: 마지막 AI 산출물의 원장 ID + 원문 스냅샷
+  const [aiGenRef, setAiGenRef] = useState<{ id: string; snapshot: string } | null>(null);
+
+  // AI 원문 대비 수정 비율 (0=그대로 채택, 1=전부 수정)
+  const editedRatio = (current: string, original: string): number => {
+    if (!original) return 0;
+    if (current === original) return 0;
+    let p = 0;
+    const minLen = Math.min(current.length, original.length);
+    while (p < minLen && current[p] === original[p]) p++;
+    let sfx = 0;
+    while (sfx < minLen - p && current[current.length - 1 - sfx] === original[original.length - 1 - sfx]) sfx++;
+    const changed = Math.max(current.length, original.length) - p - sfx;
+    return Math.min(1, Math.round((changed / original.length) * 100) / 100);
+  };
 
   // AI 미연결 시에도 의미 있는 값을 주는 로컬 휴리스틱
   const localAnalysis = (text: string): DraftAnalysis => {
@@ -137,6 +152,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
           if (!cancelled) updateDraft(full);
         }, exps);
         if (!cancelled) {
+          const genId = getLastGenerationId();
+          if (genId) setAiGenRef({ id: genId, snapshot: finalText });
           setLoading(false);
           setLastSource('ai_draft');
           fireCelebrate();
@@ -180,6 +197,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
     const toastId = toast.loading('릴레이 AI가 첨삭하고 있습니다...');
     try {
       const improved = await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
+      const genId = getLastGenerationId();
+      if (genId) setAiGenRef({ id: genId, snapshot: improved });
       setLastSource('ai_proofread');
       runAnalysis(improved);
       toast.success('AI 첨삭이 완료되었습니다', { id: toastId });
@@ -205,6 +224,14 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         analysis: analysisSource ? { ...analysis, analyzed_by: analysisSource } : undefined,
         usedExperienceIds: usedExperiences.map((e) => e.id),
       });
+      // ③ 저장 = AI 산출물 채택 — 수정률과 함께 자동 기록 (best-effort)
+      if (aiGenRef) {
+        api.submitAiFeedback({
+          generationId: aiGenRef.id,
+          accepted: true,
+          editedRatio: editedRatio(draft, aiGenRef.snapshot),
+        }).catch(() => { /* 원장 미연동 — 조용히 스킵 */ });
+      }
       toast.success('AI 초안이 서버에 저장되었습니다!');
     } catch (e) {
       logger.error('Draft save error:', e);

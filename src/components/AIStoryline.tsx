@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
-import { generateStorylines } from '../lib/aiClient';
+import { generateStorylines, getLastGenerationId } from '../lib/aiClient';
+import * as api from './api';
 import type { AIData, Storyline } from '../App';
 
 interface AIStorylineProps {
@@ -57,6 +58,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
     return () => clearInterval(t);
   }, [loading]);
   const [storylines, setStorylines] = useState<Storyline[]>([]);
+  const [generationId, setGenerationId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +66,8 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
       // 실제 AI 생성 시도 → 실패 시 목업으로 폴백
       const result = await generateStorylines(aiData);
       if (cancelled) return;
+      const genId = result && result.length > 0 ? getLastGenerationId() : null;
+      setGenerationId(genId);
       setStorylines(result && result.length > 0 ? result : mockStorylines);
       setLoading(false);
     })();
@@ -202,7 +206,13 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
                     <Button
                       className="w-full mt-6 bg-zinc-900 hover:bg-zinc-800 text-white shine"
                       size="lg"
-                      onClick={() => onSelect(storyline)}
+                      onClick={() => {
+                        // ③ 스토리라인 선택 = AI 산출물 채택 신호
+                        if (generationId) {
+                          api.submitAiFeedback({ generationId, accepted: true }).catch(() => {});
+                        }
+                        onSelect(storyline);
+                      }}
                     >
                       이 스토리 선택하기
                     </Button>

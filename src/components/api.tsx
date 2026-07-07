@@ -839,6 +839,28 @@ export async function getRelayChain() {
   return { nodes };
 }
 
+// ============ AI FEEDBACK (③ 암묵 RLHF 신호) ============
+
+export async function submitAiFeedback(input: {
+  generationId: string;
+  accepted?: boolean;
+  editedRatio?: number;
+  rating?: number;
+}) {
+  const uid = await requireUserId();
+  check(
+    await sb().from('ai_feedback').upsert({
+      generation_id: input.generationId,
+      user_id: uid,
+      accepted: input.accepted ?? null,
+      edited_ratio: input.editedRatio ?? null,
+      rating: input.rating ?? null,
+    }),
+    'AI 피드백 기록 실패',
+  );
+  return { success: true };
+}
+
 // ============ DOCUMENT VERSIONS (M2 조회) ============
 
 export interface DocumentVersionRow {
