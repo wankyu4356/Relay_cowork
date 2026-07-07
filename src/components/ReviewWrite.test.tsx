@@ -25,17 +25,26 @@ vi.mock('lucide-react', () => {
   };
 });
 
-vi.mock('motion/react', () => ({
-  motion: new Proxy({}, {
-    get: (_target, prop) => {
-      return ({ children, ...props }: any) => {
-        const { whileHover, whileTap, initial, animate, exit, transition, ...rest } = props;
-        const Tag = prop === 'button' ? 'button' : prop === 'p' ? 'p' : 'div';
-        return <Tag data-motion={prop as string} {...rest}>{children}</Tag>;
-      };
-    },
-  }),
-}));
+vi.mock('motion/react', () => {
+  // 참조 안정화: 매 렌더마다 새 컴포넌트가 만들어져 서브트리가
+  // 리마운트되는 문제를 막는다 (userEvent.click 중 detach 방지)
+  const cache = new Map<PropertyKey, any>();
+  return {
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+    motion: new Proxy({}, {
+      get: (_target, prop) => {
+        if (!cache.has(prop)) {
+          cache.set(prop, ({ children, ...props }: any) => {
+            const { whileHover, whileTap, whileInView, viewport, variants, initial, animate, exit, transition, ...rest } = props;
+            const Tag = prop === 'button' ? 'button' : prop === 'span' ? 'span' : prop === 'p' ? 'p' : 'div';
+            return <Tag data-motion={prop as string} {...rest}>{children}</Tag>;
+          });
+        }
+        return cache.get(prop);
+      },
+    }),
+  };
+});
 
 import * as api from './api';
 import { toast } from 'sonner';

@@ -1001,6 +1001,17 @@ export async function submitAiFeedback(input: {
   return { success: true };
 }
 
+// ============ GOAL STATUS (⑥ 결과 라벨 루프) ============
+
+export async function updateGoalStatus(goalId: string, status: 'achieved' | 'failed' | 'active' | 'paused') {
+  const uid = await requireUserId();
+  check(
+    await sb().from('user_goals').update({ status }).eq('id', goalId).eq('user_id', uid),
+    '목표 상태 갱신 실패',
+  );
+  return { success: true };
+}
+
 // ============ DOCUMENT VERSIONS (M2 조회) ============
 
 export interface DocumentVersionRow {

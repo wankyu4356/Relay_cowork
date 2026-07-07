@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { FadeIn, Stagger, TextReveal } from './ui/motion';
+import { FadeIn, Stagger, TextReveal, Burst } from './ui/motion';
 import { RunnerAvatar } from './ui/runner-avatar';
 import { PartyPopper, Frown, ArrowLeft, Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -23,6 +23,36 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
   const [outcome, setOutcome] = useState<'success' | 'fail' | null>(null);
   const [detail, setDetail] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
+
+  // ⑥ 라벨 루프: 이 결과를 어떤 목표/문서에 연결할지 (연동 시에만 노출)
+  const [goalOptions, setGoalOptions] = useState<Array<{ id: string; label: string }>>([]);
+  const [docOptions, setDocOptions] = useState<Array<{ id: string; label: string }>>([]);
+  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.getGoals()
+      .then(({ goals }) => {
+        const opts = (goals as any[]).filter((g) => g.status === 'active').map((g) => ({
+          id: g.id,
+          label: `${g.target?.name ?? ''}${g.sub_target ? ` ${g.sub_target}` : ''}`.trim() || '목표',
+        }));
+        setGoalOptions(opts);
+        if (opts.length === 1) setSelectedGoalId(opts[0].id);
+      })
+      .catch(() => {});
+    api.getDrafts()
+      .then(({ drafts }) => {
+        const opts = (drafts as any[]).slice(0, 5).map((d) => ({
+          id: d.id,
+          label: `${d.university} ${d.major}`.trim() || '초안',
+        }));
+        setDocOptions(opts);
+        if (opts.length === 1) setSelectedDocId(opts[0].id);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async () => {
     if (!outcome) {
@@ -41,7 +71,18 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
         result: outcome,
         detail,
         purpose,
+        goalId: selectedGoalId ?? undefined,
+        documentId: selectedDocId ?? undefined,
       });
+
+      // 연결된 목표의 상태를 결과로 라벨링 (best-effort)
+      if (selectedGoalId) {
+        api.updateGoalStatus(selectedGoalId, outcome === 'success' ? 'achieved' : 'failed').catch(() => {});
+      }
+      if (outcome === 'success') {
+        setCelebrate(true);
+        setTimeout(() => setCelebrate(false), 1200);
+      }
 
       onSubmit(outcome, detail);
 
@@ -183,6 +224,60 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
             </FadeIn>
           )}
 
+          {/* ⑥ 목표/문서 연결 — 연동된 계정에서만 표시 */}
+          {(goalOptions.length > 0 || docOptions.length > 0) && (
+            <Stagger.Item>
+              <Card className="p-6">
+                <h4 className="text-zinc-900 font-semibold tracking-tight mb-1">이 결과를 연결할 대상</h4>
+                <p className="text-[12px] text-zinc-500 mb-4">
+                  연결하면 "어떤 준비가 합격으로 이어졌는지"가 내 기록으로 남아요
+                </p>
+                {goalOptions.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-[12px] font-medium text-zinc-500 mb-2">목표</div>
+                    <div className="flex flex-wrap gap-2">
+                      {goalOptions.map((g) => (
+                        <button
+                          key={g.id}
+                          type="button"
+                          onClick={() => setSelectedGoalId(selectedGoalId === g.id ? null : g.id)}
+                          className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-all ${
+                            selectedGoalId === g.id
+                              ? 'bg-zinc-900 text-white border-zinc-900'
+                              : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                          }`}
+                        >
+                          {g.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {docOptions.length > 0 && (
+                  <div>
+                    <div className="text-[12px] font-medium text-zinc-500 mb-2">사용한 초안</div>
+                    <div className="flex flex-wrap gap-2">
+                      {docOptions.map((d) => (
+                        <button
+                          key={d.id}
+                          type="button"
+                          onClick={() => setSelectedDocId(selectedDocId === d.id ? null : d.id)}
+                          className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-all ${
+                            selectedDocId === d.id
+                              ? 'bg-iris-600 text-white border-iris-600'
+                              : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                          }`}
+                        >
+                          {d.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </Card>
+            </Stagger.Item>
+          )}
+
           {/* Benefits */}
           <Stagger.Item>
             <Card className="p-6 bg-iris-50 border-iris-100">
@@ -212,7 +307,8 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
 
           {/* Submit */}
           <Stagger.Item>
-            <div className="flex gap-4">
+            <div className="flex gap-4 relative">
+              <Burst trigger={celebrate} count={24} />
               <Button
                 variant="outline"
                 onClick={onBack}
