@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card } from './ui/card';
-import { TextReveal, Aurora, Marquee } from './ui/motion';
+import { TextReveal, Aurora, Marquee, RelayLine } from './ui/motion';
 import { Sparkles, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, Zap, Shield, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
@@ -98,10 +98,13 @@ export function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   <TextReveal text="다음 세대로 이어갑니다" delay={0.3} />
                 </span>
               </h1>
-              <p className="text-[15px] leading-relaxed text-zinc-500 mb-9">
+              <p className="text-[15px] leading-relaxed text-zinc-500 mb-6">
                 편입·취업·자격증·대학원까지, AI 첨삭과 선배 릴레이 세션으로<br />
                 당신의 성공 바톤을 이어받으세요.
               </p>
+              <div className="max-w-sm mb-8">
+                <RelayLine duration={5} />
+              </div>
             </div>
 
             <div className="space-y-4">

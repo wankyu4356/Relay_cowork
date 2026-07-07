@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
 import { RunnerAvatar } from './ui/runner-avatar';
 import { motion } from 'motion/react';
@@ -50,6 +50,7 @@ const mockMessages = [
 ];
 
 export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspaceProps) {
+  const screenStreamRef = useRef<MediaStream | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
@@ -196,9 +197,26 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   variant={isScreenSharing ? 'default' : 'outline'}
                   size="lg"
                   className="rounded-full w-14 h-14"
-                  onClick={() => {
-                    setIsScreenSharing(!isScreenSharing);
-                    toast.info(isScreenSharing ? '화면 공유 종료' : '화면 공유 시작');
+                  onClick={async () => {
+                    if (isScreenSharing) {
+                      screenStreamRef.current?.getTracks().forEach((t) => t.stop());
+                      screenStreamRef.current = null;
+                      setIsScreenSharing(false);
+                      toast.info('화면 공유를 종료했습니다');
+                      return;
+                    }
+                    try {
+                      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                      screenStreamRef.current = stream;
+                      stream.getVideoTracks()[0]?.addEventListener('ended', () => {
+                        screenStreamRef.current = null;
+                        setIsScreenSharing(false);
+                      });
+                      setIsScreenSharing(true);
+                      toast.success('화면 공유를 시작했습니다');
+                    } catch {
+                      toast.error('화면 공유가 취소되었거나 지원되지 않습니다');
+                    }
                   }}
                   aria-label={isScreenSharing ? '화면 공유 종료' : '화면 공유 시작'}
                   aria-pressed={isScreenSharing}

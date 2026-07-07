@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { RecommendationHeader } from '../shared/RecommendationHeader';
 import { AnalyzingAnimation } from '../shared/AnalyzingAnimation';
+import { AIAdviceCard } from '../shared/AIAdviceCard';
 import { TransferForm } from './TransferForm';
 import { TransferResults } from './TransferResults';
 import {
@@ -14,8 +15,10 @@ import type { CategoryRecommendationProps } from '../../../lib/recommendation-da
 
 export function TransferRecommendation({ onBack, onComplete }: CategoryRecommendationProps) {
   const [step, setStep] = useState<'input' | 'analyzing' | 'results'>('input');
+  const [formData, setFormData] = useState<Record<string, unknown> | null>(null);
 
-  const handleSubmit = (_data: TransferFormData) => {
+  const handleSubmit = (data: TransferFormData) => {
+    setFormData(data);
     setStep('analyzing');
     setTimeout(() => {
       setStep('results');
@@ -50,11 +53,14 @@ export function TransferRecommendation({ onBack, onComplete }: CategoryRecommend
             )}
 
             {step === 'results' && (
+              <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              <AIAdviceCard context={JSON.stringify(formData ?? {})} />
               <TransferResults
                 recommendations={TRANSFER_RECOMMENDATIONS}
                 alternatives={TRANSFER_ALTERNATIVES}
                 onComplete={onComplete}
               />
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

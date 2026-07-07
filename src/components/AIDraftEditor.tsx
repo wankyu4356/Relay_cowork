@@ -9,7 +9,9 @@ import { Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
-import { generateDraftStream, proofreadStream } from '../lib/aiClient';
+import { generateDraftStream, proofreadStream, analyzeDraft, type DraftAnalysis } from '../lib/aiClient';
+import { printAsPdf, downloadText } from '../lib/exportDoc';
+import { Burst } from './ui/motion';
 import { logger } from '../utils/logger';
 
 interface AIDraftEditorProps {
@@ -43,12 +45,50 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   const [proofreading, setProofreading] = useState(false);
   const [draft, setDraft] = useState('');
   const [wordCount, setWordCount] = useState(0);
-  const [analysis] = useState({
-    structure: 85,
-    specificity: 75,
-    uniqueness: 90,
-    relevance: 92,
+  const [analysis, setAnalysis] = useState<DraftAnalysis>({
+    structure: 0,
+    specificity: 0,
+    uniqueness: 0,
+    relevance: 0,
   });
+  const [analysisSource, setAnalysisSource] = useState<'ai' | 'local' | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
+
+  // AI 미연결 시에도 의미 있는 값을 주는 로컬 휴리스틱
+  const localAnalysis = (text: string): DraftAnalysis => {
+    const sections = (text.match(/^\s*\d+\./gm) || []).length;
+    const len = text.length;
+    const kw = (aiData.keywords || []).filter(k => k && text.includes(k)).length;
+    const kwTotal = Math.max(1, (aiData.keywords || []).length);
+    const uniTouch = (aiData.university && text.includes(aiData.university) ? 1 : 0)
+      + (aiData.major && text.includes(aiData.major) ? 1 : 0);
+    return {
+      structure: Math.min(95, 40 + sections * 13),
+      specificity: Math.min(95, Math.round((len / Math.max(600, aiData.wordCount || 1500)) * 70) + 20),
+      uniqueness: Math.min(95, 55 + kw * Math.round(35 / kwTotal)),
+      relevance: Math.min(95, 55 + uniTouch * 20),
+    };
+  };
+
+  const runAnalysis = async (text: string) => {
+    if (!text.trim()) return;
+    setAnalyzing(true);
+    const ai = await analyzeDraft(text, aiData);
+    if (ai) {
+      setAnalysis(ai);
+      setAnalysisSource('ai');
+    } else {
+      setAnalysis(localAnalysis(text));
+      setAnalysisSource('local');
+    }
+    setAnalyzing(false);
+  };
+
+  const fireCelebrate = () => {
+    setCelebrate(true);
+    setTimeout(() => setCelebrate(false), 1200);
+  };
 
   const updateDraft = (text: string) => {
     setDraft(text);
@@ -68,6 +108,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
       } else {
         clearInterval(typingInterval);
         setLoading(false);
+        fireCelebrate();
+        runAnalysis(fullDraft);
         toast.success('AI 초안이 완료되었습니다!');
       }
     }, 8);
@@ -83,11 +125,13 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
     (async () => {
       try {
         // 실제 AI 스트리밍 초안 생성
-        await generateDraftStream(storyline, aiData, (full) => {
+        const finalText = await generateDraftStream(storyline, aiData, (full) => {
           if (!cancelled) updateDraft(full);
         });
         if (!cancelled) {
           setLoading(false);
+          fireCelebrate();
+          runAnalysis(finalText);
           toast.success('AI 초안이 완료되었습니다!');
         }
       } catch (e) {
@@ -104,7 +148,20 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
   }, [storyline, aiData]);
 
   const handleDownload = () => {
-    toast.success('PDF 다운로드가 시작됩니다');
+    const title = `${aiData.university} ${aiData.major} 지원 서류`.trim() || 'RELAY 초안';
+    const ok = printAsPdf(title, `스토리라인 ${storyline.id} · ${new Date().toLocaleDateString('ko-KR')}`, draft);
+    if (ok) {
+      toast.success('인쇄 창에서 "PDF로 저장"을 선택하세요');
+    } else {
+      downloadText(title, draft);
+      toast.success('팝업이 차단되어 .txt 파일로 저장했습니다');
+    }
+  };
+
+  const handleDownloadTxt = () => {
+    const title = `${aiData.university} ${aiData.major} 지원 서류`.trim() || 'RELAY 초안';
+    downloadText(title, draft);
+    toast.success('.txt 파일로 저장했습니다');
   };
 
   // 실제 AI 첨삭 — 현재 초안을 지시에 따라 다듬어 스트리밍 반영
@@ -113,7 +170,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
     setProofreading(true);
     const toastId = toast.loading('릴레이 AI가 첨삭하고 있습니다...');
     try {
-      await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
+      const improved = await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
+      runAnalysis(improved);
       toast.success('AI 첨삭이 완료되었습니다', { id: toastId });
     } catch (e) {
       logger.error('AI proofread error:', e);
@@ -189,7 +247,8 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
               </Card>
             )}
 
-            <Card className="p-8">
+            <Card className="p-8 relative overflow-visible">
+              <Burst trigger={celebrate} />
               <Textarea
                 value={draft}
                 onChange={(e) => {
@@ -210,13 +269,21 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <Save className="w-4 h-4 mr-2" />
                 저장
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 className="flex-1"
                 onClick={handleDownload}
+                disabled={loading || !draft.trim()}
               >
                 <Download className="w-4 h-4 mr-2" />
-                PDF 다운로드
+                PDF로 저장
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleDownloadTxt}
+                disabled={loading || !draft.trim()}
+              >
+                .txt
               </Button>
               <Button
                 variant="outline"
@@ -233,10 +300,21 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
           <div className="space-y-4">
             {/* AI Analysis */}
             <Card className="p-6">
-              <h3 className="font-semibold text-lg mb-5 flex items-center gap-2 text-zinc-900 tracking-tight">
-                <Sparkles className="w-5 h-5 text-iris-600" />
-                릴레이 AI 분석
-              </h3>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-semibold text-lg flex items-center gap-2 text-zinc-900 tracking-tight">
+                  <Sparkles className="w-5 h-5 text-iris-600" />
+                  릴레이 AI 분석
+                </h3>
+                {analyzing ? (
+                  <span className="flex items-center gap-1.5 text-[11px] text-iris-600 font-medium">
+                    <Loader2 className="w-3 h-3 animate-spin" /> 분석 중
+                  </span>
+                ) : analysisSource === 'ai' ? (
+                  <Badge className="bg-iris-600 text-white border-0 text-[10px]">실시간 AI 분석</Badge>
+                ) : analysisSource === 'local' ? (
+                  <Badge variant="outline" className="text-[10px] text-zinc-500">기본 추정치</Badge>
+                ) : null}
+              </div>
               <div className="space-y-4">
                 {[
                   { label: '구조 완성도', value: analysis.structure, color: 'bg-iris-600' },
@@ -260,6 +338,15 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                   </div>
                 ))}
               </div>
+              {analysis.comment && (
+                <motion.p
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-5 pt-4 border-t border-zinc-100 text-[13px] leading-relaxed text-zinc-600"
+                >
+                  {analysis.comment}
+                </motion.p>
+              )}
             </Card>
 
             {/* Editing Tools */}

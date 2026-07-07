@@ -102,3 +102,39 @@ export function proofreadStream(
 ): Promise<string> {
   return streamAI('proofread', { draft, instruction, aiData }, onToken);
 }
+
+export interface DraftAnalysis {
+  structure: number;
+  specificity: number;
+  uniqueness: number;
+  relevance: number;
+  comment?: string;
+}
+
+/** 초안 정량 분석 (AI). 실패 시 null — 호출부에서 로컬 휴리스틱 폴백. */
+export async function analyzeDraft(draft: string, aiData: AIData): Promise<DraftAnalysis | null> {
+  try {
+    const text = await streamAI('analyze', { draft, aiData });
+    const parsed = JSON.parse(stripFence(text));
+    const clamp = (n: unknown) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+    return {
+      structure: clamp(parsed.structure),
+      specificity: clamp(parsed.specificity),
+      uniqueness: clamp(parsed.uniqueness),
+      relevance: clamp(parsed.relevance),
+      comment: typeof parsed.comment === 'string' ? parsed.comment : undefined,
+    };
+  } catch (e) {
+    logger.warn('analyzeDraft fallback:', e);
+    return null;
+  }
+}
+
+/** 지원 프로필 기반 합격 전략 총평 (스트리밍). 실패 시 throw — 호출부 폴백. */
+export function adviceStream(
+  aiData: AIData,
+  context: string,
+  onToken: (full: string, delta: string) => void,
+): Promise<string> {
+  return streamAI('advice', { aiData, context }, onToken);
+}

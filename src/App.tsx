@@ -41,6 +41,7 @@ import { MessageCenter } from './components/MessageCenter';
 import { BottomNav } from './components/BottomNav';
 import { CategoryFeaturePlaceholder } from './components/CategoryFeaturePlaceholder';
 import { useNotifications } from './hooks/useNotifications';
+import { ScrollProgress } from './components/ui/motion';
 import { SupabaseHealthCheck } from './components/SupabaseHealthCheck';
 import { Toaster } from './components/ui/sonner';
 import * as api from './components/api';
@@ -593,6 +594,7 @@ function App() {
 
   return (
     <div className="min-h-screen gradient-mesh">
+      <ScrollProgress />
       <GlobalNav 
         currentScreen={currentScreen}
         onNavigate={navigateTo}

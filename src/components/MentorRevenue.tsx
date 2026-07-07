@@ -7,6 +7,7 @@ import { Stagger, Press, CountUp, TextReveal, ScrollReveal } from './ui/motion';
 import { ArrowLeft, DollarSign, TrendingUp, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
+import { downloadCsv } from '../lib/exportDoc';
 import * as api from './api';
 
 interface MentorRevenueProps {
@@ -54,7 +55,14 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
   };
 
   const handleDownload = () => {
-    toast.success('거래 내역 다운로드가 시작됩니다');
+    const rows: Array<Array<string | number>> = [
+      ['날짜', '멘티', '금액(원)'],
+      ...transactions.map((tx: { date: string; mentee_name?: string; menteeName?: string; amount: number }) => [
+        tx.date, tx.mentee_name ?? tx.menteeName ?? '', tx.amount,
+      ]),
+    ];
+    downloadCsv(`릴레이_거래내역_${new Date().toISOString().slice(0, 10)}`, rows);
+    toast.success('거래 내역 CSV를 저장했습니다');
   };
 
   return (

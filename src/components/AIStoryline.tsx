@@ -40,8 +40,22 @@ const mockStorylines: Storyline[] = [
   },
 ];
 
+const GEN_STAGES = [
+  '입력하신 경험을 분석하고 있어요',
+  '합격 사례 패턴과 대조하고 있어요',
+  '차별화 포인트를 추출하고 있어요',
+  '3가지 스토리라인을 구성하고 있어요',
+];
+
 export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
   const [loading, setLoading] = useState(true);
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    if (!loading) return;
+    const t = setInterval(() => setStage((v) => (v + 1) % GEN_STAGES.length), 1600);
+    return () => clearInterval(t);
+  }, [loading]);
   const [storylines, setStorylines] = useState<Storyline[]>([]);
 
   useEffect(() => {
@@ -71,27 +85,40 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
           >
             <Sparkles className="w-12 h-12 text-white" />
           </motion.div>
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">AI가 스토리라인을 생성하고 있어요</h2>
-          <p className="text-zinc-600 text-lg mb-8">
-            입력하신 경험을 분석해<br />
-            3가지 스토리라인을 만들고 있습니다
-          </p>
-          <div className="flex gap-3 justify-center">
-            <motion.div
-              className="w-3 h-3 bg-iris-600 rounded-full"
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-            />
-            <motion.div
-              className="w-3 h-3 bg-iris-400 rounded-full"
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-            />
-            <motion.div
-              className="w-3 h-3 bg-iris-600 rounded-full"
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-            />
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-3">AI가 스토리라인을 생성하고 있어요</h2>
+
+          {/* 단계 캡션 로테이션 */}
+          <div className="h-7 overflow-hidden mb-8" aria-live="polite">
+            <motion.p
+              key={stage}
+              initial={{ y: 18, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -18, opacity: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="text-iris-600 font-medium"
+            >
+              {GEN_STAGES[stage]}
+            </motion.p>
+          </div>
+
+          {/* 시머 프리뷰 카드 — 완성될 결과의 실루엣 */}
+          <div className="w-full max-w-md mx-auto space-y-3">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.15 }}
+                className="rounded-xl border border-zinc-200/80 bg-white p-4 flex items-center gap-3"
+              >
+                <div className="w-9 h-9 rounded-lg skeleton-shimmer flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-2/3 rounded skeleton-shimmer" />
+                  <div className="h-2.5 w-5/6 rounded skeleton-shimmer" />
+                </div>
+                <div className="text-[11px] font-semibold text-zinc-300 tnum">0{i + 1}</div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>

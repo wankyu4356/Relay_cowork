@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { RecommendationHeader } from '../shared/RecommendationHeader';
 import { AnalyzingAnimation } from '../shared/AnalyzingAnimation';
+import { AIAdviceCard } from '../shared/AIAdviceCard';
 import { CertificationForm } from './CertificationForm';
 import { CertificationResults } from './CertificationResults';
 import {
@@ -55,12 +56,15 @@ export function CertificationRecommendation({
           )}
 
           {step === 'results' && (
+            <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            <AIAdviceCard context={JSON.stringify(formData ?? {})} />
             <CertificationResults
               recommendations={CERTIFICATION_RECOMMENDATIONS}
               alternatives={CERTIFICATION_ALTERNATIVES}
               onComplete={onComplete}
               examDate={examDate}
             />
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

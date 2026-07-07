@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { TextReveal, Tilt, CountUp, ScrollReveal } from './ui/motion';
 import { toast } from 'sonner';
+import { downloadText } from '../lib/exportDoc';
 import type { AIData, Screen } from '../App';
 import * as apiClient from './api';
 
@@ -129,9 +130,19 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
     }
   };
 
-  const handleDownloadPDF = (draft: Draft) => {
-    toast.success(`${draft.university} ${draft.major} AI 초안 PDF 다운로드 시작`);
-    // In real app, this would trigger PDF generation and download
+  const handleDownload = (draft: Draft) => {
+    downloadText(
+      `${draft.university}_${draft.major}_초안요약`,
+      [
+        `RELAY AI 초안 요약`,
+        `지원처: ${draft.university} ${draft.major}`,
+        `글자수: ${draft.wordCount}자 · 버전 v${draft.version} · 스토리라인 ${draft.storyline}`,
+        `상태: ${draft.status} · 최종 수정: ${draft.lastModified}`,
+        ``,
+        `본문은 편집 화면에서 확인·수정할 수 있습니다.`,
+      ].join('\n'),
+    );
+    toast.success('초안 요약을 .txt로 저장했습니다');
   };
 
   const handleDuplicate = (draft: Draft) => {
@@ -154,7 +165,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   };
 
   const handlePurchaseCredit = () => {
-    toast.success('크레딧 구매 페이지로 이동합니다');
+    onNavigate?.('credit-purchase');
     // Navigate to payment
   };
 

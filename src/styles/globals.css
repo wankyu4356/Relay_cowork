@@ -495,3 +495,10 @@
   body { background: white; }
   .no-print { display: none !important; }
 }
+
+@keyframes relay-run {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}

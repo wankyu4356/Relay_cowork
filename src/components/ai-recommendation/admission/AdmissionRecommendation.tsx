@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { RecommendationHeader } from '../shared/RecommendationHeader';
 import { AnalyzingAnimation } from '../shared/AnalyzingAnimation';
+import { AIAdviceCard } from '../shared/AIAdviceCard';
 import { AdmissionForm } from './AdmissionForm';
 import { AdmissionResults } from './AdmissionResults';
 import {
@@ -46,11 +47,14 @@ export function AdmissionRecommendation({ onBack, onComplete }: CategoryRecommen
         )}
 
         {step === 'results' && (
+          <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+          <AIAdviceCard context={JSON.stringify(formData ?? {})} />
           <AdmissionResults
             recommendations={mockAdmissionRecommendations}
             alternatives={mockAdmissionAlternatives}
             onComplete={onComplete}
           />
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

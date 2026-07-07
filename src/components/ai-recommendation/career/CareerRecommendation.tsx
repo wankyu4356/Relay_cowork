@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { RecommendationHeader } from '../shared/RecommendationHeader';
 import { AnalyzingAnimation } from '../shared/AnalyzingAnimation';
+import { AIAdviceCard } from '../shared/AIAdviceCard';
 import { CareerForm } from './CareerForm';
 import { CareerResults } from './CareerResults';
 import {
@@ -20,7 +21,8 @@ export function CareerRecommendation({
 }: CategoryRecommendationProps) {
   const [step, setStep] = useState<Step>('form');
 
-  const handleSubmit = (_data: CareerFormData) => {
+  const handleSubmit = (data: CareerFormData) => {
+    setFormData(data);
     setStep('analyzing');
     setTimeout(() => {
       setStep('results');
@@ -45,11 +47,14 @@ export function CareerRecommendation({
           />
         )}
         {step === 'results' && (
+          <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+          <AIAdviceCard context={JSON.stringify(formData ?? {})} />
           <CareerResults
             recommendations={mockCareerRecommendations}
             alternatives={mockCareerAlternatives}
             onComplete={onComplete}
           />
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

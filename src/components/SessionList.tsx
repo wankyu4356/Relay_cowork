@@ -52,9 +52,10 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
     }
   };
 
-  const handleReschedule = (sessionId: string) => {
-    toast.success('일정 변경 페이지로 이동합니다');
+  const handleReschedule = (_sessionId: string) => {
     setSelectedSession(null);
+    toast.info('러너와 릴레이 톡에서 일정을 조율하세요');
+    onNavigate?.('message-center');
   };
 
   const handleSendMessage = (session: Session) => {

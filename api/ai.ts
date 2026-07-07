@@ -11,6 +11,8 @@ import Anthropic from '@anthropic-ai/sdk';
  *   - storylines : 입력 경험 → 3개 스토리라인(JSON 배열) 생성
  *   - draft      : 선택한 스토리라인 → 전체 초안 작성
  *   - proofread  : 현재 초안 + 지시 → 개선된 초안(실제 AI 첨삭)
+ *   - analyze    : 현재 초안 → 정량 분석 점수(JSON: 구조/구체성/차별화/적합도)
+ *   - advice     : 지원 프로필 → 합격 전략 총평 텍스트
  */
 
 export const maxDuration = 60;
@@ -84,6 +86,32 @@ function buildRequest(mode: string, payload: any): { system: string; user: strin
     };
   }
 
+  if (mode === 'analyze') {
+    const draft: string = payload?.draft || '';
+    return {
+      effort: 'low',
+      system:
+        BASE_SYSTEM +
+        '\n\n출력은 반드시 JSON 객체만 반환합니다. 마크다운 코드펜스나 설명 문장을 붙이지 마세요.',
+      user:
+        `다음 지원 서류 초안을 평가 기준별로 0~100 점수로 정량 평가하고, 한 줄 총평을 작성하세요.\n\n` +
+        `[프로필]\n${profile}\n\n[초안]\n${draft}\n\n` +
+        '정확히 이 형식의 JSON 객체로만 응답하세요:\n' +
+        '{"structure": 85, "specificity": 72, "uniqueness": 80, "relevance": 90, "comment": "한 줄 총평"}',
+    };
+  }
+
+  if (mode === 'advice') {
+    return {
+      effort: 'medium',
+      system: BASE_SYSTEM + '\n\n총평 본문 텍스트만 출력합니다. 머리말·코드펜스를 붙이지 마세요.',
+      user:
+        `다음 지원자 프로필을 바탕으로 합격 가능성을 높이는 종합 전략 총평을 작성하세요.\n\n${profile}\n\n` +
+        (payload?.context ? `[추가 컨텍스트]\n${payload.context}\n\n` : '') +
+        '요구사항:\n- 3~5문장, 구체적이고 실행 가능한 조언 중심\n- 지원자의 강점 1가지와 보완점 1가지를 반드시 포함',
+    };
+  }
+
   // proofread — 핵심 AI 첨삭
   const instruction: string = payload?.instruction || '전반적으로 더 설득력 있고 구체적으로 다듬어 주세요.';
   const draft: string = payload?.draft || '';
@@ -110,8 +138,8 @@ export default async function handler(req: any, res: any) {
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
   const mode = body.mode;
-  if (!['storylines', 'draft', 'proofread'].includes(mode)) {
-    res.status(400).json({ error: 'mode는 storylines | draft | proofread 중 하나여야 합니다.' });
+  if (!['storylines', 'draft', 'proofread', 'analyze', 'advice'].includes(mode)) {
+    res.status(400).json({ error: 'mode는 storylines | draft | proofread | analyze | advice 중 하나여야 합니다.' });
     return;
   }
 

@@ -336,3 +336,109 @@ export function Aurora({ className = '' }: { className?: string }) {
     </div>
   );
 }
+
+/** Hairline scroll progress bar fixed to the viewport top. */
+export function ScrollProgress() {
+  const [p, setP] = React.useState(0);
+  React.useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      setP(max > 0 ? window.scrollY / max : 0);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div aria-hidden className="fixed top-0 left-0 right-0 h-[2px] z-[60] pointer-events-none">
+      <motion.div
+        className="h-full origin-left bg-gradient-to-r from-iris-600 via-iris-500 to-iris-400"
+        style={{ scaleX: p }}
+        transition={{ duration: 0.1 }}
+      />
+    </div>
+  );
+}
+
+/** Iris particle burst — celebrate a success moment without confetti emoji. */
+export function Burst({ trigger, count = 18 }: { trigger: boolean; count?: number }) {
+  const [seeds, setSeeds] = React.useState<Array<{ a: number; d: number; s: number; hue: number }> | null>(null);
+  React.useEffect(() => {
+    if (trigger) {
+      setSeeds(
+        Array.from({ length: count }, (_, i) => ({
+          a: (i / count) * Math.PI * 2 + (i % 3) * 0.35,
+          d: 60 + (i % 5) * 26,
+          s: 5 + (i % 3) * 3,
+          hue: i % 4,
+        })),
+      );
+      const t = setTimeout(() => setSeeds(null), 1100);
+      return () => clearTimeout(t);
+    }
+  }, [trigger, count]);
+  if (!seeds) return null;
+  const colors = ['#54579e', '#9498cd', '#2f3052', '#d9dcef'];
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-visible">
+      {seeds.map((sd, i) => (
+        <motion.span
+          key={i}
+          className="absolute rounded-full"
+          style={{ width: sd.s, height: sd.s, background: colors[sd.hue] }}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{
+            x: Math.cos(sd.a) * sd.d,
+            y: Math.sin(sd.a) * sd.d,
+            opacity: 0,
+            scale: 0.4,
+          }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * RelayLine — brand signature: a baton dot travelling along a drawn path.
+ * Renders a subtle curved line that draws itself, then a dot loops along it.
+ */
+export function RelayLine({ className = '', duration = 5 }: { className?: string; duration?: number }) {
+  const path = 'M2 26 C 120 -10, 260 60, 398 18';
+  return (
+    <div aria-hidden className={`relative ${className}`}>
+      <svg viewBox="0 0 400 44" fill="none" className="w-full h-auto overflow-visible">
+        <motion.path
+          d={path}
+          stroke="url(#relay-grad)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeDasharray="4 7"
+          initial={{ pathLength: 0, opacity: 0 }}
+          whileInView={{ pathLength: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <defs>
+          <linearGradient id="relay-grad" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#d9dcef" />
+            <stop offset="0.5" stopColor="#54579e" />
+            <stop offset="1" stopColor="#d9dcef" />
+          </linearGradient>
+        </defs>
+      </svg>
+      {/* 바통 — CSS offset-path로 경로를 따라 순환 */}
+      <span
+        className="absolute w-2.5 h-2.5 rounded-full bg-iris-600 shadow-[0_0_12px_rgba(84,87,158,0.6)]"
+        style={{
+          offsetPath: `path('${path}')`,
+          animation: `relay-run ${duration}s cubic-bezier(0.45, 0, 0.55, 1) infinite`,
+          top: 0,
+          left: 0,
+        }}
+      />
+    </div>
+  );
+}

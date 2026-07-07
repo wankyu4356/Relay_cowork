@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, Press, TextReveal, Aurora, RelayLine } from './ui/motion';
 import { Sparkles, Rocket } from 'lucide-react';
 import type { UserRole } from '../App';
 
@@ -45,11 +45,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   return (
     <div className="min-h-screen bg-zinc-50 relative overflow-hidden">
-      {/* Subtle background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-iris-100/30 rounded-full blur-2xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-zinc-100/50 rounded-full blur-2xl" style={{ animationDelay: '1s' }} />
-      </div>
+      {/* Ambient aurora backdrop */}
+      <Aurora />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-6xl">
@@ -85,8 +82,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     transition={{ delay: 0.4 }}
                     className="text-xl md:text-2xl text-zinc-600 max-w-2xl mx-auto"
                   >
-                    AI가 만드는 초안, 합격생이 완성하는 성공 스토리
+                    <TextReveal text="AI가 만드는 초안, 합격생이 완성하는 성공 스토리" delay={0.35} stagger={0.04} />
                   </motion.p>
+                  <div className="max-w-md mx-auto mt-6">
+                    <RelayLine duration={4.5} />
+                  </div>
                 </div>
 
                 {/* Role Cards */}

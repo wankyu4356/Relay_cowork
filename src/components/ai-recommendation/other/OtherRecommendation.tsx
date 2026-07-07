@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RecommendationHeader } from '../shared/RecommendationHeader';
 import { AnalyzingAnimation } from '../shared/AnalyzingAnimation';
+import { AIAdviceCard } from '../shared/AIAdviceCard';
 import { OtherForm } from './OtherForm';
 import { OtherResults } from './OtherResults';
 import {
@@ -52,11 +53,14 @@ export function OtherRecommendation({ onBack, onComplete }: CategoryRecommendati
             )}
 
             {step === 'results' && (
+              <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              <AIAdviceCard context={JSON.stringify(formData ?? {})} />
               <OtherResults
                 recommendations={OTHER_RECOMMENDATIONS}
                 alternatives={OTHER_ALTERNATIVES}
                 onComplete={onComplete}
               />
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
