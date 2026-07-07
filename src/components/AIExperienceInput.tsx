@@ -9,8 +9,8 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { ArrowLeft, Plus, X, Sparkles, AlertCircle } from 'lucide-react';
-import { FadeIn, Stagger } from './ui/motion';
+import { ArrowLeft, Plus, X, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { FadeIn, Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { AIData } from '../App';
 import type { Category } from './GlobalNav';
@@ -128,7 +128,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{catContent.aiToolTitle}</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text={catContent.aiToolTitle} delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">Step {step}/3</p>
             </div>
             <Badge className="bg-zinc-900 text-white border-0 px-4 py-2">
@@ -181,7 +181,8 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
 
                   <div className="p-4 bg-zinc-50 border border-zinc-200/80 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-iris-600 font-semibold">✅ 프로필에서 불러옴</span>
+                      <CheckCircle2 className="w-4 h-4 text-iris-600" />
+                      <span className="text-iris-600 font-semibold">프로필에서 불러옴</span>
                     </div>
                     <div className="space-y-1 text-sm text-zinc-600">
                       <p>• 전적대: 건국대 정치외교학과</p>
@@ -248,7 +249,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
                     />
                     <Button
                       onClick={handleAddActivity}
-                      className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
+                      className="w-full bg-zinc-900 hover:bg-zinc-800 text-white shine"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       활동 추가
@@ -419,7 +420,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleNext}
               disabled={!canProceed()}
               size="lg"
-              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white"
+              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white shine"
             >
               다음
             </Button>
@@ -428,7 +429,7 @@ export function AIExperienceInput({ onBack, onSubmit, credits, selectedCategory 
               onClick={handleSubmit}
               disabled={!canProceed() || credits <= 0}
               size="lg"
-              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white"
+              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-white shine"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               스토리라인 생성하기

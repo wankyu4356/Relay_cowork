@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, ScrollStagger, Press, TextReveal } from './ui/motion';
 import {
   ArrowLeft,
   Bell,
@@ -116,7 +116,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
             </Press>
             <div className="flex-1">
               <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
-                알림
+                <TextReveal text="알림" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">
                 {visibleUnreadCount > 0 ? `${visibleUnreadCount}개의 읽지 않은 알림` : '모든 알림을 확인했습니다'}
@@ -216,13 +216,13 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
               </Card>
             </FadeIn>
           ) : (
-            <Stagger className="space-y-3" aria-live="polite" aria-label="알림 목록">
+            <ScrollStagger className="space-y-3" aria-live="polite" aria-label="알림 목록">
               {filteredNotifications.map((notification) => {
                 const Icon = getIcon(notification.type);
                 const iconColor = getIconColor(notification.type);
 
                 return (
-                  <Stagger.Item key={notification.id}>
+                  <ScrollStagger.Item key={notification.id}>
                     <Press lift={false} scale={0.99}>
                     <Card
                       className={`p-4 cursor-pointer card-hover rounded-2xl ${
@@ -255,7 +255,7 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                             {(notification as any).actionLabel && (
                               <Button
                                 size="sm"
-                                className="bg-zinc-900 hover:bg-zinc-800 text-white"
+                                className="bg-zinc-900 hover:bg-zinc-800 text-white shine"
                               >
                                 {(notification as any).actionLabel}
                               </Button>
@@ -293,10 +293,10 @@ export function NotificationCenter({ onBack }: NotificationCenterProps) {
                       </div>
                     </Card>
                     </Press>
-                  </Stagger.Item>
+                  </ScrollStagger.Item>
                 );
               })}
-            </Stagger>
+            </ScrollStagger>
           )}
         </div>
       </div>

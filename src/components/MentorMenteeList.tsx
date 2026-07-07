@@ -4,7 +4,8 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, TextReveal, ScrollStagger } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   Search,
@@ -31,7 +32,6 @@ interface MentorMenteeListProps {
 interface Mentee {
   id: string;
   name: string;
-  avatar: string;
   university: string;
   major: string;
   status: 'active' | 'completed' | 'scheduled';
@@ -48,7 +48,6 @@ const mockMentees: Mentee[] = [
   {
     id: '1',
     name: '강서준',
-    avatar: '👨‍🎓',
     university: '연세대',
     major: '경영학과',
     status: 'active',
@@ -62,7 +61,6 @@ const mockMentees: Mentee[] = [
   {
     id: '2',
     name: '조유진',
-    avatar: '👨‍💼',
     university: '고려대',
     major: '경제학과',
     status: 'active',
@@ -76,7 +74,6 @@ const mockMentees: Mentee[] = [
   {
     id: '3',
     name: '윤시우',
-    avatar: '👩‍🎓',
     university: '서강대',
     major: '경영학과',
     status: 'scheduled',
@@ -89,7 +86,6 @@ const mockMentees: Mentee[] = [
   {
     id: '4',
     name: '임채원',
-    avatar: '👩‍💼',
     university: '성균관대',
     major: '글로벌경영',
     status: 'completed',
@@ -104,7 +100,6 @@ const mockMentees: Mentee[] = [
   {
     id: '5',
     name: '한지호',
-    avatar: '👨‍🎓',
     university: '한양대',
     major: '경영학과',
     status: 'active',
@@ -118,7 +113,6 @@ const mockMentees: Mentee[] = [
   {
     id: '6',
     name: '오수민',
-    avatar: '👩‍🎓',
     university: '중앙대',
     major: '경제학과',
     status: 'completed',
@@ -150,7 +144,6 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
               menteeMap.set(s.mentee_id, {
                 id: s.mentee_id,
                 name: s.mentee_name || '러너',
-                avatar: s.mentee_avatar || '👤',
                 university: s.university || '',
                 major: s.major || '',
                 status: s.status === 'completed' ? 'completed' : 'active',
@@ -213,7 +206,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
       <div className="container-web py-8">
         {/* Header */}
         <FadeIn className="mb-8">
-          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2">내 러너</h1>
+          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2"><TextReveal text="내 러너" delay={0.05} /></h1>
           <p className="text-zinc-600">릴레이를 제공한 모든 러너를 관리하세요</p>
         </FadeIn>
 
@@ -302,18 +295,16 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
         </div>
 
         {/* Mentee List */}
-        <Stagger className="space-y-4">
+        <ScrollStagger className="space-y-4">
           {filteredMentees.map((mentee) => (
-            <Stagger.Item key={mentee.id}>
+            <ScrollStagger.Item key={mentee.id}>
               <Press>
               <Card className="p-6 cursor-pointer group">
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* Left: Avatar & Basic Info */}
                   <div className="flex items-start gap-4 flex-1">
                     <div className="relative">
-                      <div className="w-16 h-16 bg-iris-100 rounded-2xl flex items-center justify-center text-3xl">
-                        {mentee.avatar}
-                      </div>
+                      <RunnerAvatar name={mentee.name} size="lg" variant="user" />
                       {mentee.status === 'active' && (
                         <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-iris-600 rounded-full border-2 border-white" />
                       )}
@@ -378,7 +369,7 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                       채팅
                     </Button>
                     <Button
-                      className="rounded-xl flex-1 md:flex-none"
+                      className="rounded-xl flex-1 md:flex-none shine"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onNavigate('session-detail');
@@ -403,9 +394,9 @@ export function MentorMenteeList({ onBack, onNavigate }: MentorMenteeListProps) 
                 </div>
               </Card>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
           ))}
-        </Stagger>
+        </ScrollStagger>
 
         {/* Empty State */}
         {filteredMentees.length === 0 && (

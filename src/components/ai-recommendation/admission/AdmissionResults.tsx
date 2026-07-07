@@ -27,7 +27,7 @@ import {
   Bar,
 } from 'recharts';
 import { NextStepsCard } from '../shared/NextStepsCard';
-import { FadeIn, Stagger, Press, CountUp } from '../../ui/motion';
+import { FadeIn, Stagger, Press, CountUp, Tilt, ScrollStagger } from '../../ui/motion';
 import type { AdmissionRecommendation, AdmissionAlternative } from '../../../lib/recommendation-data/admissionData';
 import { admissionNextSteps } from '../../../lib/recommendation-data/admissionData';
 
@@ -66,6 +66,7 @@ export function AdmissionResults({ recommendations, alternatives, onComplete }: 
       className="container-web py-8 space-y-8"
     >
       {/* Success Banner */}
+      <Tilt max={4}>
       <Card className="p-6 bg-gradient-to-r from-zinc-900 to-iris-800 text-white border-0 rounded-2xl shadow-lg">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-sm">
@@ -79,6 +80,7 @@ export function AdmissionResults({ recommendations, alternatives, onComplete }: 
           </div>
         </div>
       </Card>
+      </Tilt>
 
       {/* 배치표 (Placement Table) */}
       <Card className="p-6 rounded-2xl">
@@ -300,9 +302,9 @@ export function AdmissionResults({ recommendations, alternatives, onComplete }: 
           <GraduationCap className="w-6 h-6 text-iris-600" />
           대안 전공 추천
         </h3>
-        <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ScrollStagger className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {alternatives.map((alt) => (
-            <Stagger.Item key={alt.name}>
+            <ScrollStagger.Item key={alt.name}>
               <Press className="block bg-zinc-50 border border-zinc-200/80 rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-semibold text-zinc-900">{alt.name}</h4>
@@ -320,9 +322,9 @@ export function AdmissionResults({ recommendations, alternatives, onComplete }: 
                   )}
                 </div>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
           ))}
-        </Stagger>
+        </ScrollStagger>
       </Card>
 
       {/* Next Steps */}

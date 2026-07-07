@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -76,8 +77,8 @@ const mockDisputes: Dispute[] = [
     status: 'pending',
     title: '세션 노쇼에 대한 환불 요청',
     description: '예약된 세션 시간에 러너가 접속하지 않아 세션이 진행되지 못했습니다. 결제한 80,000원의 전액 환불을 요청합니다. 세션 시작 시간 전후 30분간 대기했으나 러너의 접속이 없었고, 사전 연락도 받지 못했습니다.',
-    reporter: { name: '박지훈', role: '멘티', avatar: '👨‍🎓' },
-    reported: { name: '김서연', role: '러너', avatar: '👩‍🎓' },
+    reporter: { name: '박지훈', role: '멘티', avatar: '' },
+    reported: { name: '김서연', role: '러너', avatar: '' },
     sessionId: 'S-20250205-001',
     sessionDate: '2026.02.05 14:00',
     amount: 80000,
@@ -95,8 +96,8 @@ const mockDisputes: Dispute[] = [
     status: 'investigating',
     title: '부적절한 언행 신고',
     description: '세션 중 러너가 반복적으로 비하 발언을 하고, 학업계획서 피드백 대신 개인적인 질문만 계속했습니다. 전문적이지 않은 태도로 세션 시간의 대부분을 낭비했습니다.',
-    reporter: { name: '이수민', role: '멘티', avatar: '👩‍💼' },
-    reported: { name: '최동현', role: '러너', avatar: '👨‍💼' },
+    reporter: { name: '이수민', role: '멘티', avatar: '' },
+    reported: { name: '최동현', role: '러너', avatar: '' },
     sessionId: 'S-20250203-005',
     sessionDate: '2026.02.03 16:00',
     amount: 60000,
@@ -118,8 +119,8 @@ const mockDisputes: Dispute[] = [
     status: 'pending',
     title: '허위 프로필 의심 신고',
     description: '러너 프로필에 연세대 경영학과 편입 합격이라고 되어 있으나, 세션 중 대화 내용에서 해당 학교에 대한 기본적인 지식이 전혀 없는 것으로 확인되었습니다. 학과 커리큘럼이나 교수님 이름도 모르는 상태였습니다.',
-    reporter: { name: '정하은', role: '멘티', avatar: '👩‍🎓' },
-    reported: { name: '한민수', role: '러너', avatar: '👨‍🎓' },
+    reporter: { name: '정하은', role: '멘티', avatar: '' },
+    reported: { name: '한민수', role: '러너', avatar: '' },
     sessionId: 'S-20250206-003',
     sessionDate: '2026.02.06 11:00',
     amount: 70000,
@@ -137,8 +138,8 @@ const mockDisputes: Dispute[] = [
     status: 'pending',
     title: '세션 품질 불만 신고',
     description: '60분 세션을 예약했으나 러너가 30분만에 세션을 종료했습니다. 첨삭 피드백도 매우 피상적이었으며, 준비되지 않은 상태로 세션에 참여한 것으로 보입니다.',
-    reporter: { name: '강유진', role: '멘티', avatar: '👩‍💼' },
-    reported: { name: '윤태영', role: '러너', avatar: '👨‍💼' },
+    reporter: { name: '강유진', role: '멘티', avatar: '' },
+    reported: { name: '윤태영', role: '러너', avatar: '' },
     sessionId: 'S-20250204-007',
     sessionDate: '2026.02.04 10:00',
     amount: 80000,
@@ -156,8 +157,8 @@ const mockDisputes: Dispute[] = [
     status: 'resolved',
     title: '일정 변경 불가에 따른 환불 요청',
     description: '개인 사정으로 세션 일정을 변경하고 싶었으나 24시간 이내 변경 불가 정책으로 인해 변경이 되지 않았습니다. 부분 환불이라도 요청드립니다.',
-    reporter: { name: '송민재', role: '멘티', avatar: '👨‍🎓' },
-    reported: { name: '이지은', role: '러너', avatar: '👩‍🎓' },
+    reporter: { name: '송민재', role: '멘티', avatar: '' },
+    reported: { name: '이지은', role: '러너', avatar: '' },
     sessionId: 'S-20250201-002',
     sessionDate: '2026.02.01 15:00',
     amount: 60000,
@@ -179,8 +180,8 @@ const mockDisputes: Dispute[] = [
     status: 'dismissed',
     title: '멘티의 반복적 지각',
     description: '동일 멘티가 3회 연속 세션에 15분 이상 지각하여 세션 운영에 차질이 발생합니다. 멘티에게 경고 조치를 요청합니다.',
-    reporter: { name: '박소영', role: '러너', avatar: '👩‍🎓' },
-    reported: { name: '김태현', role: '멘티', avatar: '👨‍🎓' },
+    reporter: { name: '박소영', role: '러너', avatar: '' },
+    reported: { name: '김태현', role: '멘티', avatar: '' },
     submittedAt: '2026.01.28 18:00',
     updatedAt: '2026.02.01 11:00',
     adminNotes: '멘티에게 경고 메시지 발송. 반복 시 이용 제한 안내. 분쟁 종결 처리.',
@@ -251,8 +252,8 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
           status: d.status || 'pending',
           title: d.title || d.reason || '',
           description: d.description || '',
-          reporter: d.reporter || { name: '신고자', role: '멘티' as const, avatar: '👤' },
-          reported: d.reported || { name: '피신고자', role: '러너' as const, avatar: '👤' },
+          reporter: d.reporter || { name: '신고자', role: '멘티' as const, avatar: '' },
+          reported: d.reported || { name: '피신고자', role: '러너' as const, avatar: '' },
           sessionId: d.sessionId,
           sessionDate: d.sessionDate,
           amount: d.amount,
@@ -536,10 +537,10 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
 
                                 <div className="flex items-center gap-4 text-sm text-zinc-500">
                                   <div className="flex items-center gap-1.5">
-                                    <span>{dispute.reporter.avatar}</span>
+                                    <RunnerAvatar name={dispute.reporter.name} size="xs" variant={dispute.reporter.role === '러너' ? 'runner' : 'user'} />
                                     <span>{dispute.reporter.name}</span>
                                     <span className="text-zinc-300">→</span>
-                                    <span>{dispute.reported.avatar}</span>
+                                    <RunnerAvatar name={dispute.reported.name} size="xs" variant={dispute.reported.role === '러너' ? 'runner' : 'user'} />
                                     <span>{dispute.reported.name}</span>
                                   </div>
                                   <span className="text-zinc-300">|</span>
@@ -625,9 +626,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                       <Flag className="w-3 h-3" /> 신고자
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-lg">
-                        {selectedDispute.reporter.avatar}
-                      </div>
+                      <RunnerAvatar name={selectedDispute.reporter.name} size="sm" variant={selectedDispute.reporter.role === '러너' ? 'runner' : 'user'} className="!rounded-full" />
                       <div>
                         <div className="font-semibold text-zinc-900">{selectedDispute.reporter.name}</div>
                         <Badge variant="outline" className="text-xs">{selectedDispute.reporter.role}</Badge>
@@ -639,9 +638,7 @@ export function AdminDisputeManagement({ onBack }: AdminDisputeManagementProps) 
                       <User className="w-3 h-3" /> 피신고자
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-lg">
-                        {selectedDispute.reported.avatar}
-                      </div>
+                      <RunnerAvatar name={selectedDispute.reported.name} size="sm" variant={selectedDispute.reported.role === '러너' ? 'runner' : 'user'} className="!rounded-full" />
                       <div>
                         <div className="font-semibold text-zinc-900">{selectedDispute.reported.name}</div>
                         <Badge variant="outline" className="text-xs">{selectedDispute.reported.role}</Badge>

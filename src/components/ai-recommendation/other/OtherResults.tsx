@@ -21,7 +21,7 @@ import {
   ClipboardCheck,
 } from 'lucide-react';
 import { NextStepsCard } from '../shared/NextStepsCard';
-import { FadeIn, Stagger, Press, CountUp } from '../../ui/motion';
+import { FadeIn, Stagger, Press, CountUp, Tilt, ScrollReveal, ScrollStagger } from '../../ui/motion';
 import { OTHER_CONFIG } from '../../../lib/recommendation-data/otherData';
 import type { OtherRecommendation, OtherAlternative } from '../../../lib/recommendation-data/otherData';
 
@@ -43,6 +43,7 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
     >
       {/* Success Banner */}
       <FadeIn>
+        <Tilt max={4}>
         <Card className="p-8 rounded-2xl bg-gradient-to-br from-zinc-900 to-iris-800 text-white border-0 shadow-lg">
           <div className="flex items-start gap-6">
             <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -56,7 +57,7 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
               </p>
               <div className="flex gap-4 text-sm">
                 <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                  평균 매칭도: <span className="tnum">{Math.round(recommendations.reduce((sum, r) => sum + r.matchScore, 0) / recommendations.length)}%</span>
+                  평균 매칭도: <CountUp value={Math.round(recommendations.reduce((sum, r) => sum + r.matchScore, 0) / recommendations.length)} suffix="%" />
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
                   최고 매칭: {recommendations[0].pathName}
@@ -65,6 +66,7 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
             </div>
           </div>
         </Card>
+        </Tilt>
       </FadeIn>
 
       {/* Milestone Timeline */}
@@ -377,7 +379,7 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
                         {/* Actions */}
                         <div className="flex gap-3">
                           <Press className="flex-1">
-                            <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6">
+                            <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 shine">
                               <Users className="w-5 h-5 mr-2" />
                               릴레이 러너 찾기
                             </Button>
@@ -397,14 +399,15 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
       </div>
 
       {/* Alternatives */}
+      <ScrollReveal>
       <Card className="p-6 rounded-2xl">
         <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
           <Target className="w-6 h-6 text-iris-600" />
           다른 경로 후보
         </h3>
-        <Stagger className="grid md:grid-cols-2 gap-4">
+        <ScrollStagger className="grid md:grid-cols-2 gap-4">
           {alternatives.map((alt, index) => (
-            <Stagger.Item key={index}>
+            <ScrollStagger.Item key={index}>
               <Press>
                 <Card className="p-5 bg-white border border-zinc-200/80 rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                   <div className="flex items-start justify-between mb-3">
@@ -425,10 +428,11 @@ export function OtherResults({ recommendations, alternatives, onComplete }: Othe
                   </Button>
                 </Card>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
           ))}
-        </Stagger>
+        </ScrollStagger>
       </Card>
+      </ScrollReveal>
 
       {/* Next Steps */}
       <NextStepsCard steps={OTHER_CONFIG.nextSteps} onComplete={onComplete} />

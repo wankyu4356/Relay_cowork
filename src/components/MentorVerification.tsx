@@ -7,7 +7,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
-import { 
+import { TextReveal } from './ui/motion';
+import {
   ArrowLeft, 
   Upload, 
   CheckCircle2, 
@@ -177,7 +178,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
             </motion.div>
             <div className="flex-1">
               <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-                러너 인증
+                <TextReveal text="러너 인증" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">편입 합격을 인증하고 러너로 활동하세요</p>
             </div>
@@ -377,7 +378,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1"
+                    className="flex-1 shine"
                     disabled={!studentIdFile || !studentId || !university || !major}
                   >
                     다음
@@ -523,7 +524,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1"
+                    className="flex-1 shine"
                     disabled={!admissionFile || !admissionYear || !previousUniversity}
                   >
                     다음
@@ -640,7 +641,7 @@ export function MentorVerification({ onBack, onComplete }: MentorVerificationPro
                   </Button>
                   <Button
                     onClick={handleNext}
-                    className="flex-1"
+                    className="flex-1 shine"
                   >
                     제출하기
                   </Button>

@@ -8,8 +8,8 @@ import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Progress } from './ui/progress';
 import { Switch } from './ui/switch';
-import { FadeIn } from './ui/motion';
-import { ArrowLeft, ArrowRight, Upload, FileText } from 'lucide-react';
+import { FadeIn, TextReveal } from './ui/motion';
+import { ArrowLeft, ArrowRight, Upload, FileText, GraduationCap, BarChart3, PenLine, Lock, Lightbulb } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface MentorEAWizardProps {
@@ -69,7 +69,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Experience Asset 등록</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900"><TextReveal text="Experience Asset 등록" delay={0.05} /></h1>
             <p className="text-zinc-600 mt-1">합격 경험을 체계적으로 정리해주세요</p>
           </div>
         </FadeIn>
@@ -99,7 +99,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               className="space-y-6"
             >
               <div className="text-center mb-8">
-                <div className="text-5xl mb-4">🎓</div>
+                <div className="w-16 h-16 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <GraduationCap className="w-8 h-8 text-iris-600" />
+                </div>
                 <h2 className="text-2xl font-semibold tracking-tight mb-2">Step 1: 합격 기본 정보</h2>
                 <p className="text-zinc-600">편입 전후 학교와 학과를 알려주세요</p>
               </div>
@@ -194,7 +196,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               className="space-y-6"
             >
               <div className="text-center mb-8">
-                <div className="text-5xl mb-4">📊</div>
+                <div className="w-16 h-16 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="w-8 h-8 text-iris-600" />
+                </div>
                 <h2 className="text-2xl font-semibold tracking-tight mb-2">Step 2: 정량 데이터</h2>
                 <p className="text-zinc-600">학점과 증빙 서류를 등록해주세요</p>
               </div>
@@ -257,7 +261,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               className="space-y-6"
             >
               <div className="text-center mb-8">
-                <div className="text-5xl mb-4">✍️</div>
+                <div className="w-16 h-16 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <PenLine className="w-8 h-8 text-iris-600" />
+                </div>
                 <h2 className="text-2xl font-semibold tracking-tight mb-2">Step 3: 정성 경험</h2>
                 <p className="text-zinc-600">실제 준비 과정과 노하우를 공유해주세요</p>
               </div>
@@ -324,7 +330,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               className="space-y-6"
             >
               <div className="text-center mb-8">
-                <div className="text-5xl mb-4">📝</div>
+                <div className="w-16 h-16 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-iris-600" />
+                </div>
                 <h2 className="text-2xl font-semibold tracking-tight mb-2">Step 4: 자소서</h2>
                 <p className="text-zinc-600">합격 자소서를 공유하시겠어요?</p>
               </div>
@@ -379,7 +387,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               className="space-y-6"
             >
               <div className="text-center mb-8">
-                <div className="text-5xl mb-4">🔒</div>
+                <div className="w-16 h-16 bg-iris-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Lock className="w-8 h-8 text-iris-600" />
+                </div>
                 <h2 className="text-2xl font-semibold tracking-tight mb-2">Step 5: 공개 범위 설정</h2>
                 <p className="text-zinc-600">항목별로 공개 범위를 설정해주세요</p>
               </div>
@@ -439,8 +449,9 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
               </div>
 
               <Card className="p-4 bg-amber-50 border-amber-200">
-                <div className="text-sm text-zinc-700">
-                  <strong>💡 Tip:</strong> 더 많은 정보를 공개할수록 멘티들의 신뢰도가 높아져 매칭율이 올라갑니다.
+                <div className="text-sm text-zinc-700 flex items-start gap-2">
+                  <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Tip:</strong> 더 많은 정보를 공개할수록 멘티들의 신뢰도가 높아져 매칭율이 올라갑니다.</span>
                 </div>
               </Card>
             </motion.div>
@@ -461,7 +472,7 @@ export function MentorEAWizard({ onBack, onComplete }: MentorEAWizardProps) {
             )}
             <Button
               onClick={handleNext}
-              className="flex-1"
+              className="flex-1 shine"
               size="lg"
             >
               {step === 5 ? '제출하기' : '다음'}

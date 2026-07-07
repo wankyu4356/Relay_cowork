@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { Stagger, Press, CountUp, TextReveal, ScrollReveal } from './ui/motion';
 import { ArrowLeft, DollarSign, TrendingUp, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
@@ -66,7 +66,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex-1">
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">수익 & 정산</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="수익 & 정산" delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">릴레이 수익을 확인하고 출금하세요</p>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                     <div className="text-3xl font-semibold tracking-tight text-iris-600"><CountUp value={640000} />원</div>
                   </div>
                 </div>
-                <Button className="w-full" onClick={handleWithdraw}>출금 신청</Button>
+                <Button className="w-full shine" onClick={handleWithdraw}>출금 신청</Button>
               </Card>
             </Stagger.Item>
 
@@ -124,7 +124,7 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
           </Stagger>
 
           {/* Chart */}
-          <FadeIn>
+          <ScrollReveal>
           <Card className="p-6">
             <h3 className="font-semibold text-lg text-zinc-900 mb-4">월별 수익 추이</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -146,10 +146,10 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
               </BarChart>
             </ResponsiveContainer>
           </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Transactions */}
-          <FadeIn>
+          <ScrollReveal>
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg text-zinc-900">최근 거래 내역</h3>
@@ -177,38 +177,38 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
               ))}
             </Stagger>
           </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Dynamic Pricing Tier Info */}
-          <FadeIn>
+          <ScrollReveal>
           <Card className="p-6 bg-iris-50 border-iris-100">
-            <h3 className="font-semibold text-zinc-900 mb-4">💰 다이나믹 프라이싱 등급</h3>
+            <h3 className="font-semibold text-zinc-900 mb-4">다이나믹 프라이싱 등급</h3>
             <p className="text-sm text-zinc-600 mb-4">실적이 쌓일수록 더 높은 가격을 설정할 수 있습니다</p>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
-                  <span>🥉 브론즈 (0-10건)</span>
+                  <span>브론즈 (0-10건)</span>
                   <div className="text-xs text-zinc-400 tnum">15,000~30,000원</div>
                 </div>
                 <span className="font-semibold tnum">수수료 25%</span>
               </div>
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
-                  <span>🥈 실버 (11-30건)</span>
+                  <span>실버 (11-30건)</span>
                   <div className="text-xs text-zinc-400 tnum">30,000~50,000원</div>
                 </div>
                 <span className="font-semibold tnum">수수료 22%</span>
               </div>
               <div className="flex justify-between items-center p-2 rounded-lg bg-white border border-iris-200">
                 <div>
-                  <span className="text-iris-700 font-semibold">🥇 골드 (31-60건) - 현재 등급</span>
+                  <span className="text-iris-700 font-semibold">골드 (31-60건) - 현재 등급</span>
                   <div className="text-xs text-iris-600 tnum">50,000~80,000원</div>
                 </div>
                 <span className="font-semibold text-iris-700 tnum">수수료 18%</span>
               </div>
               <div className="flex justify-between items-center p-2 rounded-lg">
                 <div>
-                  <span>💎 플래티넘 (61건+)</span>
+                  <span>플래티넘 (61건+)</span>
                   <div className="text-xs text-zinc-400 tnum">80,000~120,000원</div>
                 </div>
                 <span className="font-semibold tnum">수수료 15%</span>
@@ -220,12 +220,12 @@ export function MentorRevenue({ onBack }: MentorRevenueProps) {
                 <div className="flex-1 bg-zinc-200 rounded-full h-2">
                   <motion.div className="bg-iris-600 h-2 rounded-full" initial={{ width: 0 }} animate={{ width: '70%' }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}></motion.div>
                 </div>
-                <span className="text-xs text-zinc-600 whitespace-nowrap">💎 플래티넘</span>
+                <span className="text-xs text-zinc-600 whitespace-nowrap">플래티넘</span>
               </div>
               <div className="text-xs text-zinc-400">세션 19건 더 / 리뷰 8건 더 필요</div>
             </div>
           </Card>
-          </FadeIn>
+          </ScrollReveal>
         </div>
       </div>
     </div>

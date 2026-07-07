@@ -230,7 +230,7 @@ export function TransferForm({ onSubmit }: TransferFormProps) {
         <Press>
           <Button
             size="lg"
-            className="bg-zinc-900 text-white hover:bg-zinc-800 px-8 py-6 text-lg rounded-xl"
+            className="bg-zinc-900 text-white hover:bg-zinc-800 px-8 py-6 text-lg rounded-xl shine"
             onClick={handleSubmit}
             disabled={!formData.currentUniversity || !formData.gpa}
           >

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, ScrollReveal, Press, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -37,7 +38,6 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
   const session = {
     id: '1',
     mentee: '러너 B',
-    menteeAvatar: '👨‍🎓',
     date: '2025.02.20',
     time: '14:00',
     duration: 60,
@@ -104,7 +104,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
             </Button>
           </Press>
           <div className="flex-1">
-            <h1 className="text-4xl text-zinc-900 font-semibold tracking-tight mb-2">릴레이 세션 상세</h1>
+            <h1 className="text-4xl text-zinc-900 font-semibold tracking-tight mb-2"><TextReveal text="릴레이 세션 상세" delay={0.05} /></h1>
             <p className="text-zinc-600">세션 정보를 확인하고 관리하세요</p>
           </div>
           {getStatusBadge()}
@@ -117,9 +117,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
             <Card className="p-6 rounded-2xl border-zinc-200/80 shadow-sm">
               <div className="flex items-start gap-4 mb-6">
                 <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center text-4xl shadow-md">
-                    {session.menteeAvatar}
-                  </div>
+                  <RunnerAvatar name={session.mentee} size="xl" variant="user" />
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white" />
                 </div>
                 <div className="flex-1">
@@ -169,6 +167,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
             </Card>
 
             {/* Tabs */}
+            <ScrollReveal>
             <Tabs value={activeTab} onValueChange={(v: string) => setActiveTab(v as any)}>
               <TabsList className="grid grid-cols-3 h-12 bg-zinc-100 p-1 rounded-xl">
                 <TabsTrigger value="details" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
@@ -318,7 +317,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                   />
                   <div className="mt-4 flex justify-end">
                     <Press lift={false}>
-                      <Button className="bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl" onClick={() => {
+                      <Button className="bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl shine" onClick={() => {
                         if (!sessionNotes.trim()) {
                           toast.error('노트 내용을 입력해주세요');
                           return;
@@ -333,6 +332,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                 </Card>
               </TabsContent>
             </Tabs>
+            </ScrollReveal>
           </FadeIn>
 
           {/* Right: Actions */}
@@ -345,7 +345,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                 <div className="space-y-3">
                   <Press lift={false}>
                     <Button
-                      className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl h-12"
+                      className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl h-12 shine"
                       onClick={handleConfirmSession}
                     >
                       <CheckCircle2 className="w-4 h-4 mr-2" />
@@ -369,7 +369,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                 <div className="space-y-3">
                   <Press lift={false}>
                     <Button
-                      className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl h-12 font-semibold"
+                      className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl h-12 font-semibold shine"
                       onClick={handleStartSession}
                     >
                       <Video className="w-4 h-4 mr-2" />
@@ -407,7 +407,7 @@ export function SessionDetail({ onBack, onNavigate }: SessionDetailProps) {
                   <p className="text-sm text-zinc-600 mb-4">경험 전달이 완료되었습니다</p>
                   <Press lift={false}>
                     <Button
-                      className="bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl"
+                      className="bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl shine"
                       onClick={() => onNavigate('review-write')}
                     >
                       후기 작성하기

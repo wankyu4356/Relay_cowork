@@ -3,7 +3,8 @@ import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { FadeIn, Stagger, CountUp } from './ui/motion';
+import { Stagger, CountUp, TextReveal, ScrollReveal, ScrollStagger, Tilt } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   TrendingUp,
@@ -28,7 +29,6 @@ interface MentorStatsProps {
 interface MenteeSuccess {
   id: string;
   name: string;
-  avatar: string;
   university: string;
   major: string;
   status: 'success' | 'in-progress' | 'failed';
@@ -42,7 +42,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '1',
     name: '러너 E',
-    avatar: '👨‍🎓',
     university: '연세대',
     major: '경영학과',
     status: 'success',
@@ -54,7 +53,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '2',
     name: '러너 F',
-    avatar: '👩‍💼',
     university: '고려대',
     major: '경제학과',
     status: 'success',
@@ -66,7 +64,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '3',
     name: '러너 G',
-    avatar: '👨‍💼',
     university: '서강대',
     major: '경영학과',
     status: 'success',
@@ -78,7 +75,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '4',
     name: '러너 H',
-    avatar: '👩‍🎓',
     university: '성균관대',
     major: '글로벌경영',
     status: 'in-progress',
@@ -90,7 +86,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '5',
     name: '러너 I',
-    avatar: '👨‍🎓',
     university: '한양대',
     major: '경영학과',
     status: 'success',
@@ -102,7 +97,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '6',
     name: '러너 J',
-    avatar: '👩‍💼',
     university: '중앙대',
     major: '경영학과',
     status: 'success',
@@ -114,7 +108,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '7',
     name: '러너 K',
-    avatar: '👨‍💼',
     university: '경희대',
     major: '경영학과',
     status: 'failed',
@@ -126,7 +119,6 @@ const menteeData: MenteeSuccess[] = [
   {
     id: '8',
     name: '러너 L',
-    avatar: '👩‍🎓',
     university: '연세대',
     major: '경영학과',
     status: 'success',
@@ -158,7 +150,6 @@ export function MentorStats({ onBack }: MentorStatsProps) {
         const mapped: MenteeSuccess[] = res.sessions.map((s, idx: number) => ({
           id: s.id || `api-${idx}`,
           name: s.mentee_name || '러너',
-          avatar: s.mentee_avatar || '👤',
           university: s.university || '',
           major: s.major || '',
           status: s.result === 'passed' ? 'success' : s.result === 'failed' ? 'failed' : 'in-progress',
@@ -192,7 +183,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">릴레이 성과 분석</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="릴레이 성과 분석" delay={0.05} /></h1>
               <p className="text-sm text-zinc-600">전체 러너들의 합격 현황과 통계</p>
             </div>
           </div>
@@ -249,7 +240,8 @@ export function MentorStats({ onBack }: MentorStatsProps) {
           </Stagger>
 
           {/* Success Universities */}
-          <FadeIn delay={0.1}>
+          <ScrollReveal>
+            <Tilt max={4}>
             <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -270,10 +262,11 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 </div>
               </div>
             </Card>
-          </FadeIn>
+            </Tilt>
+          </ScrollReveal>
 
           {/* Success Timeline */}
-          <FadeIn delay={0.15}>
+          <ScrollReveal>
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 bg-iris-50 rounded-xl flex items-center justify-center">
@@ -285,7 +278,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
               </div>
             </div>
 
-            <Stagger className="space-y-3">
+            <ScrollStagger className="space-y-3">
               {mentees.map((mentee) => {
                 const statusConfig = {
                   success: {
@@ -318,13 +311,11 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                 const StatusIcon = config.icon;
 
                 return (
-                  <Stagger.Item key={mentee.id}>
+                  <ScrollStagger.Item key={mentee.id}>
                     <Card className={`p-5 ${config.bgColor} ${config.borderColor} border`}>
                       <div className="flex items-center gap-4">
                         {/* Avatar */}
-                        <div className={`w-16 h-16 ${config.color} rounded-2xl flex items-center justify-center text-2xl flex-shrink-0`}>
-                          {mentee.avatar}
-                        </div>
+                        <RunnerAvatar name={mentee.name} size="lg" variant="user" />
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
@@ -374,22 +365,22 @@ export function MentorStats({ onBack }: MentorStatsProps) {
                         </div>
                       </div>
                     </Card>
-                  </Stagger.Item>
+                  </ScrollStagger.Item>
                 );
               })}
-            </Stagger>
+            </ScrollStagger>
           </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Insights */}
-          <FadeIn delay={0.2}>
+          <ScrollReveal>
           <Card className="p-6 bg-iris-50 border-iris-100">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-iris-600 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-zinc-900 mb-3 text-lg">💡 인사이트</h3>
+                <h3 className="font-semibold text-zinc-900 mb-3 text-lg">인사이트</h3>
                 <div className="space-y-2 text-sm text-zinc-700">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-iris-600 mt-0.5 flex-shrink-0" />
@@ -419,7 +410,7 @@ export function MentorStats({ onBack }: MentorStatsProps) {
               </div>
             </div>
           </Card>
-          </FadeIn>
+          </ScrollReveal>
         </div>
       </div>
     </div>

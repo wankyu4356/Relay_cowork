@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, TextReveal, ScrollReveal, ScrollStagger } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   Star,
@@ -27,7 +28,6 @@ interface MentorReviewsProps {
 interface Review {
   id: string;
   menteeName: string;
-  menteeAvatar: string;
   rating: number;
   date: string;
   content: string;
@@ -41,7 +41,6 @@ const mockReviews: Review[] = [
   {
     id: '1',
     menteeName: '정수민',
-    menteeAvatar: '👩‍💼',
     rating: 5.0,
     date: '2024.12.25',
     content: '김서연 러너님 덕분에 성균관대 글로벌경영에 합격했습니다! 학업계획서 첨삭이 정말 꼼꼼하고 세밀했어요. 특히 제 경험을 스토리텔링하는 방법을 알려주셔서 큰 도움이 됐습니다. 면접 준비도 함께 해주셔서 자신감 있게 임할 수 있었어요. 정말 감사합니다!',
@@ -53,7 +52,6 @@ const mockReviews: Review[] = [
   {
     id: '2',
     menteeName: '최현우',
-    menteeAvatar: '👨‍🎓',
     rating: 4.9,
     date: '2024.12.18',
     content: '한양대 경영학과 합격했습니다! 러너님이 실제 합격생이셔서 현실적인 조언을 많이 해주셨어요. 학계서 구조를 잡는 것부터 디테일까지 하나하나 봐주셔서 좋았습니다. 특히 제 강점을 부각하는 방법을 알려주신 게 결정적이었던 것 같아요.',
@@ -65,7 +63,6 @@ const mockReviews: Review[] = [
   {
     id: '3',
     menteeName: '박지원',
-    menteeAvatar: '👨‍🎓',
     rating: 5.0,
     date: '2025.02.18',
     content: '아직 결과는 안 나왔지만 러너님과 준비하면서 많이 성장한 것 같아요. 세션마다 피드백이 구체적이고 실용적이어서 바로 적용할 수 있었습니다. 응답도 빠르시고 질문에 항상 친절하게 답변해주세요. 좋은 결과 있길 기대합니다!',
@@ -77,7 +74,6 @@ const mockReviews: Review[] = [
   {
     id: '4',
     menteeName: '김민준',
-    menteeAvatar: '👨‍💼',
     rating: 4.8,
     date: '2025.02.10',
     content: '러너님이 정말 열정적으로 가르쳐주세요. 학계서 작성하는 법뿐만 아니라 편입 준비 전반에 대한 조언도 많이 해주셔서 큰 도움이 됐어요. 제 상황을 이해하고 맞춤형으로 피드백 주시는 점이 좋았습니다.',
@@ -89,7 +85,6 @@ const mockReviews: Review[] = [
   {
     id: '5',
     menteeName: '이서연',
-    menteeAvatar: '👩‍🎓',
     rating: 5.0,
     date: '2025.01.28',
     content: '첫 세션부터 기대 이상이었어요! 제가 어떤 부분이 부족한지 정확히 짚어주시고, 개선 방향도 명확하게 제시해주셨습니다. 학계서 작성 노하우를 아낌없이 공유해주셔서 감사합니다.',
@@ -128,7 +123,6 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
           setReviews((res.reviews as ApiReview[]).map((r) => ({
             id: r.id,
             menteeName: r.mentee_name || '러너',
-            menteeAvatar: r.mentee_avatar || '👤',
             rating: r.rating,
             date: r.date || r.created_at || '',
             content: r.content,
@@ -198,7 +192,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
       <div className="container-web py-8">
         {/* Header */}
         <FadeIn className="mb-8">
-          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2">내 리뷰 & 평점</h1>
+          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2"><TextReveal text="내 리뷰 & 평점" delay={0.05} /></h1>
           <p className="text-zinc-600">러너들이 남긴 솔직한 후기를 확인하세요</p>
         </FadeIn>
 
@@ -287,6 +281,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
         </div>
 
         {/* Top Tags */}
+        <ScrollReveal>
         <Card className="p-6 mb-8">
           <h3 className="font-semibold text-zinc-900 mb-4 flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-iris-600" />
@@ -303,6 +298,7 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
             ))}
           </div>
         </Card>
+        </ScrollReveal>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
@@ -335,28 +331,28 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
             variant={filterRating === 5 ? 'default' : 'outline'}
             onClick={() => setFilterRating(5)}
           >
-            ⭐ 5점
+            <Star className="w-4 h-4 mr-1 fill-amber-400 text-amber-400" />
+            5점
           </Button>
           <Button
             variant={filterRating === 4 ? 'default' : 'outline'}
             onClick={() => setFilterRating(4)}
           >
-            ⭐ 4점 이상
+            <Star className="w-4 h-4 mr-1 fill-amber-400 text-amber-400" />
+            4점 이상
           </Button>
         </div>
 
         {/* Reviews List */}
-        <Stagger className="space-y-4">
+        <ScrollStagger className="space-y-4">
           {filteredReviews.map((review) => (
-            <Stagger.Item key={review.id}>
+            <ScrollStagger.Item key={review.id}>
               <Press lift={false}>
               <Card className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center text-2xl">
-                      {review.menteeAvatar}
-                    </div>
+                    <RunnerAvatar name={review.menteeName} size="md" variant="user" />
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="font-semibold text-zinc-900">{review.menteeName}</h4>
@@ -410,9 +406,9 @@ export function MentorReviews({ onBack, onNavigate }: MentorReviewsProps) {
                 </div>
               </Card>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
           ))}
-        </Stagger>
+        </ScrollStagger>
 
         {/* Empty State */}
         {filteredReviews.length === 0 && (

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { 
+import {
   ArrowLeft,
   Edit,
   Trash2,
@@ -18,8 +18,13 @@ import {
   Copy,
   Share2,
   MoreVertical,
-  X
+  X,
+  Check,
+  Pencil,
+  Gift,
+  Star
 } from 'lucide-react';
+import { TextReveal, Tilt, CountUp, ScrollReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { AIData, Screen } from '../App';
 import * as apiClient from './api';
@@ -156,11 +161,11 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-zinc-900 text-white border-0">✓ 완료</Badge>;
+        return <Badge className="bg-zinc-900 text-white border-0"><Check className="w-3 h-3 mr-1" />완료</Badge>;
       case 'with-mentor':
-        return <Badge className="bg-iris-600 text-white border-0">👤 러너 첨삭 중</Badge>;
+        return <Badge className="bg-iris-600 text-white border-0"><Users className="w-3 h-3 mr-1" />러너 첨삭 중</Badge>;
       case 'draft':
-        return <Badge variant="outline" className="text-zinc-600">✏️ 편집 중</Badge>;
+        return <Badge variant="outline" className="text-zinc-600"><Pencil className="w-3 h-3 mr-1" />편집 중</Badge>;
       default:
         return null;
     }
@@ -179,13 +184,13 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
             </motion.div>
             <div className="flex-1">
               <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-                내 AI 초안
+                <TextReveal text="내 AI 초안" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">AI로 생성한 초안을 한곳에서 관리하세요</p>
             </div>
             <Badge className="bg-zinc-900 text-white border-0 px-4 py-2 shadow-sm tnum">
               <Sparkles className="w-4 h-4 mr-2" />
-              {credits}회
+              <CountUp value={credits} suffix="회" />
             </Badge>
           </div>
         </div>
@@ -197,10 +202,10 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.02 }}
             className="cursor-pointer"
             onClick={() => onNavigate?.('ai-experience')}
           >
+            <Tilt max={4}>
             <Card className="relative overflow-hidden border-0 shadow-lg">
               <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-iris-800"></div>
               <div className="relative p-8 flex items-center justify-between">
@@ -226,6 +231,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 </div>
               </div>
             </Card>
+            </Tilt>
           </motion.div>
 
           {/* Credit Purchase Banner */}
@@ -237,14 +243,14 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               <Card className="p-6 bg-iris-50 border-iris-100">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2 text-zinc-900 tracking-tight">💡 크레딧이 부족해요</h3>
+                    <h3 className="font-semibold text-lg mb-2 text-zinc-900 tracking-tight">크레딧이 부족해요</h3>
                     <p className="text-zinc-600 mb-4">
                       추가 크레딧을 구매하거나 릴레이 세션 결과 보고를 작성하여 크레딧을 받으세요
                     </p>
                     <div className="flex gap-2">
                       <Button
                         onClick={handlePurchaseCredit}
-                        className="bg-zinc-900 hover:bg-zinc-800 text-white"
+                        className="bg-zinc-900 hover:bg-zinc-800 text-white shine"
                       >
                         크레딧 구매
                       </Button>
@@ -276,7 +282,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 </p>
                 <Button
                   onClick={() => onNavigate?.('ai-experience')}
-                  className="bg-zinc-900 hover:bg-zinc-800 text-white"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white shine"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   첫 AI 초안 만들기
@@ -457,10 +463,11 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
           </div>
 
           {/* Tips Section */}
+          <ScrollReveal>
           <Card className="p-6 bg-iris-50 border-iris-100">
             <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-zinc-900 tracking-tight">
               <Sparkles className="w-5 h-5 text-iris-600" />
-              💡 작성 팁
+              작성 팁
             </h3>
             <ul className="space-y-2 text-sm text-zinc-600">
               <li className="flex items-start gap-2">
@@ -477,6 +484,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </li>
             </ul>
           </Card>
+          </ScrollReveal>
         </div>
       </div>
 
@@ -506,7 +514,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               <div className="space-y-4">
                 <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">📝</span>
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-4 h-4 text-white" />
+                    </div>
                     <div>
                       <div className="font-semibold mb-1 text-zinc-900">결과 보고 작성</div>
                       <div className="text-sm text-zinc-600">
@@ -517,7 +527,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 </Card>
                 <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">👥</span>
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Users className="w-4 h-4 text-white" />
+                    </div>
                     <div>
                       <div className="font-semibold mb-1 text-zinc-900">친구 초대</div>
                       <div className="text-sm text-zinc-600">
@@ -528,7 +540,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 </Card>
                 <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">🎉</span>
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Gift className="w-4 h-4 text-white" />
+                    </div>
                     <div>
                       <div className="font-semibold mb-1 text-zinc-900">프로모션 이벤트</div>
                       <div className="text-sm text-zinc-600">
@@ -539,7 +553,9 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
                 </Card>
                 <Card className="p-4 bg-zinc-50 border-zinc-200/80">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">⭐</span>
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Star className="w-4 h-4 text-white fill-white" />
+                    </div>
                     <div>
                       <div className="font-semibold mb-1 text-zinc-900">리뷰 작성</div>
                       <div className="text-sm text-zinc-600">
@@ -551,7 +567,7 @@ export function AIManagement({ onBack, onEdit, onMentorConnect, onNavigate }: AI
               </div>
               <div className="mt-6">
                 <Button
-                  className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
+                  className="w-full bg-zinc-900 hover:bg-zinc-800 text-white shine"
                   onClick={() => setShowCreditInfoModal(false)}
                 >
                   확인

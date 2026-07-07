@@ -5,7 +5,7 @@ import { Badge } from '../../ui/badge';
 import { Button } from '../../ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { NextStepsCard } from '../shared/NextStepsCard';
-import { FadeIn, CountUp, Press } from '../../ui/motion';
+import { FadeIn, CountUp, Press, Tilt, ScrollReveal } from '../../ui/motion';
 import { TRANSFER_CONFIG } from '../../../lib/recommendation-data/transferData';
 import type { TransferRecommendation, TransferAlternative } from '../../../lib/recommendation-data/transferData';
 import {
@@ -48,6 +48,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
       >
+        <Tilt max={4}>
         <Card className="p-8 rounded-2xl bg-gradient-to-br from-zinc-900 to-iris-800 text-white border-0 shadow-lg">
           <div className="flex items-start gap-6">
             <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -70,6 +71,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
             </div>
           </div>
         </Card>
+        </Tilt>
       </motion.div>
 
       {/* Filter Tabs */}
@@ -256,7 +258,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
                         {/* Actions */}
                         <div className="flex gap-3">
                           <Press className="flex-1">
-                            <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6">
+                            <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 shine">
                               <Users className="w-5 h-5 mr-2" />
                               릴레이 러너 찾기
                             </Button>
@@ -276,6 +278,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
       </div>
 
       {/* Alternatives */}
+      <ScrollReveal>
       <Card className="p-6 rounded-2xl">
         <h3 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4 flex items-center gap-2">
           <Target className="w-6 h-6 text-iris-600" />
@@ -312,6 +315,7 @@ export function TransferResults({ recommendations, alternatives, onComplete }: T
           ))}
         </div>
       </Card>
+      </ScrollReveal>
 
       {/* Next Steps */}
       <NextStepsCard steps={TRANSFER_CONFIG.nextSteps} onComplete={onComplete} />

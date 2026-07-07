@@ -21,6 +21,10 @@ vi.mock('lucide-react', () => {
     Frown: icon,
     ArrowLeft: icon,
     Loader2: icon,
+    Check: icon,
+    GraduationCap: icon,
+    User: icon,
+    ShieldCheck: icon,
   };
 });
 
@@ -53,7 +57,7 @@ const mockMentor = {
   price: 50000,
   badge: 'gold' as const,
   verified: true,
-  avatar: '👩‍🏫',
+  avatar: '',
 };
 
 describe('OutcomeReport', () => {
@@ -72,7 +76,7 @@ describe('OutcomeReport', () => {
 
   it('renders without crashing', () => {
     render(<OutcomeReport {...defaultProps} />);
-    expect(screen.getByText('릴레이 성과 보고')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('릴레이 성과 보고');
   });
 
   it('displays mentor information and purpose', () => {
@@ -149,7 +153,7 @@ describe('OutcomeReport', () => {
     });
 
     expect(mockOnSubmit).toHaveBeenCalledWith('success', detailText);
-    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
+    expect(toast.success).toHaveBeenCalledWith('축하합니다! 합격 크레딧 10,000원이 지급되었습니다');
   });
 
   it('submits fail outcome with valid data', async () => {
@@ -195,7 +199,7 @@ describe('OutcomeReport', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith('success', detailText);
     });
 
-    expect(toast.success).toHaveBeenCalledWith('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
+    expect(toast.success).toHaveBeenCalledWith('축하합니다! 합격 크레딧 10,000원이 지급되었습니다');
   });
 
   it('calls onBack via "나중에 하기" button', async () => {

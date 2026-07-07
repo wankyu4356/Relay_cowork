@@ -4,7 +4,8 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, TextReveal, ScrollReveal, Tilt } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { RelayChainVisualization } from './RelayChainVisualization';
 import {
   Calendar,
@@ -143,9 +144,9 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl text-zinc-900 font-semibold tracking-tight">
-                러너 대시보드
+                <TextReveal text="러너 대시보드" delay={0.05} />
               </h1>
-              <p className="text-zinc-600 mt-2">환영합니다, 러너 #2847님 👋</p>
+              <p className="text-zinc-600 mt-2">환영합니다, 러너 #2847님</p>
             </div>
             <div className="flex gap-2">
               <Press lift={false}>
@@ -243,27 +244,28 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
 
           {/* EA Status Banner */}
           <FadeIn delay={0.1}>
-            <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Award className="w-8 h-8" />
-                    <Badge className="bg-white/15 text-white border-0">🥇 골드 러너</Badge>
+            <Tilt max={4}>
+              <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 text-white">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Award className="w-8 h-8" />
+                      <Badge className="bg-white/15 text-white border-0">골드 러너</Badge>
+                    </div>
+                    <h3 className="text-2xl font-semibold tracking-tight mb-2">골드 러너 - 세션 가격 50,000~80,000원</h3>
+                    <p className="text-white/80 mb-4">
+                      실적이 쌓이면 더 높은 가격을 설정할 수 있어요! 플래티넘까지 세션 19건 남았습니다.
+                    </p>
+                    <Button
+                      className="bg-white text-zinc-900 hover:bg-zinc-100"
+                      onClick={() => onNavigate('mentor-ea-wizard')}
+                    >
+                      EA 수정하기
+                    </Button>
                   </div>
-                  <h3 className="text-2xl font-semibold tracking-tight mb-2">골드 러너 - 세션 가격 50,000~80,000원</h3>
-                  <p className="text-white/80 mb-4">
-                    실적이 쌓이면 더 높은 가격을 설정할 수 있어요! 플래티넘까지 세션 19건 남았습니다.
-                  </p>
-                  <Button
-                    className="bg-white text-zinc-900 hover:bg-zinc-100"
-                    onClick={() => onNavigate('mentor-ea-wizard')}
-                  >
-                    EA 수정하기
-                  </Button>
                 </div>
-                <div className="text-8xl opacity-20">✨</div>
-              </div>
-            </Card>
+              </Card>
+            </Tilt>
           </FadeIn>
 
           <div className="grid lg:grid-cols-2 gap-6">
@@ -294,9 +296,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center text-iris-700 text-xl">
-                                👤
-                              </div>
+                              <RunnerAvatar name={session.mentee} size="md" variant="user" />
                               <div>
                                 <div className="font-semibold text-zinc-900">{session.mentee}</div>
                                 <div className="text-sm text-zinc-600 tnum">
@@ -333,7 +333,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 </Stagger>
 
                 <Button
-                  className="w-full mt-4"
+                  className="w-full mt-4 shine"
                   onClick={() => onNavigate('mentor-schedule')}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -344,7 +344,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
           </div>
 
           {/* Quick Actions */}
-          <FadeIn delay={0.2}>
+          <ScrollReveal>
             <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-4">빠른 액션</h2>
             <Stagger className="grid md:grid-cols-3 gap-4">
               <Stagger.Item>
@@ -404,10 +404,10 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 </Press>
               </Stagger.Item>
             </Stagger>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Performance */}
-          <FadeIn delay={0.25}>
+          <ScrollReveal>
             <Card className="p-6">
               <h2 className="text-xl font-semibold tracking-tight text-zinc-900 mb-6 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-iris-600" />
@@ -438,10 +438,10 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
                 </div>
               </div>
             </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Relay Network Visualization */}
-          <FadeIn delay={0.3}>
+          <ScrollReveal>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
                 <Network className="w-7 h-7 text-iris-600" />
@@ -452,7 +452,7 @@ export function MentorDashboard({ onNavigate, onRoleChange }: MentorDashboardPro
               currentUserName="러너 #2847"
               onNodeClick={(node) => logger.log('Node clicked:', node)}
             />
-          </FadeIn>
+          </ScrollReveal>
         </div>
       </div>
     </div>

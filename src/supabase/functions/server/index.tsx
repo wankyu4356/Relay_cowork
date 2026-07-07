@@ -603,7 +603,7 @@ app.get(`${PREFIX}/mentors`, async (c) => {
       ...m,
       name: m.profiles?.name || '러너',
       email: m.profiles?.email || '',
-      avatar: m.profiles?.avatar || '👨‍🎓',
+      avatar: m.profiles?.avatar || '',
     }));
 
     return c.json({ mentors: result });
@@ -705,7 +705,7 @@ app.get(`${PREFIX}/admin/mentors/pending`, async (c) => {
       ...m,
       name: m.profiles?.name || '러너',
       email: m.profiles?.email || '',
-      avatar: m.profiles?.avatar || '👨‍🎓',
+      avatar: m.profiles?.avatar || '',
     }));
 
     return c.json({ mentors: result });

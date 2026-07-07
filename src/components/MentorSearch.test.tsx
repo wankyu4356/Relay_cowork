@@ -4,9 +4,9 @@ import { MentorSearch } from './MentorSearch';
 import type { Mentor } from '../App';
 
 const mockMentors: Mentor[] = [
-  { id: '1', name: '러너 #2847', university: '연세대', major: '경영학과', year: '22학번', rating: 4.9, reviews: 23, sessions: 35, successRate: 87, responseTime: '2시간', price: 80000, badge: 'gold', verified: true, avatar: '👩‍🎓' },
-  { id: '2', name: '러너 #1923', university: '고려대', major: '경제학과', year: '23학번', rating: 4.8, reviews: 18, sessions: 22, successRate: 82, responseTime: '1시간', price: 70000, badge: 'silver', verified: true, avatar: '👨‍🎓' },
-  { id: '3', name: '러너 #5621', university: '성균관대', major: '경영학과', year: '23학번', rating: 4.7, reviews: 12, sessions: 15, successRate: 80, responseTime: '3시간', price: 60000, badge: 'silver', verified: true, avatar: '👩‍💼' },
+  { id: '1', name: '러너 #2847', university: '연세대', major: '경영학과', year: '22학번', rating: 4.9, reviews: 23, sessions: 35, successRate: 87, responseTime: '2시간', price: 80000, badge: 'gold', verified: true, avatar: '' },
+  { id: '2', name: '러너 #1923', university: '고려대', major: '경제학과', year: '23학번', rating: 4.8, reviews: 18, sessions: 22, successRate: 82, responseTime: '1시간', price: 70000, badge: 'silver', verified: true, avatar: '' },
+  { id: '3', name: '러너 #5621', university: '성균관대', major: '경영학과', year: '23학번', rating: 4.7, reviews: 12, sessions: 15, successRate: 80, responseTime: '3시간', price: 60000, badge: 'silver', verified: true, avatar: '' },
 ];
 
 // Mock dependencies
@@ -40,6 +40,9 @@ vi.mock('lucide-react', () => {
     Calendar: icon,
     Target: icon,
     Sparkles: icon,
+    GraduationCap: icon,
+    User: icon,
+    ShieldCheck: icon,
   };
 });
 
@@ -62,7 +65,7 @@ vi.mock('../hooks/useMentors', () => ({
 
 vi.mock('../lib/runnerUtils', () => ({
   getRunnerColor: () => 'bg-blue-100',
-  getRunnerAvatar: (name: string) => name.charAt(0),
+  getRunnerInitials: (name: string) => name.charAt(0),
 }));
 
 import { useMentors } from '../hooks/useMentors';
@@ -139,7 +142,7 @@ describe('MentorSearch', () => {
     // The onBack prop is passed but the component itself relies on parent navigation.
     // We verify the prop is accepted and the component renders correctly.
     const { unmount } = render(<MentorSearch onBack={mockOnBack} onMentorSelect={mockOnMentorSelect} />);
-    expect(screen.getByText('러너 찾기')).toBeInTheDocument();
+    expect(screen.getByLabelText('러너 찾기')).toBeInTheDocument();
     unmount();
   });
 });

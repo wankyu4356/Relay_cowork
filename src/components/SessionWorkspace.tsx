@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -102,7 +103,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
               </Button>
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-white font-semibold tracking-tight">릴레이 진행 중</h1>
+                  <h1 className="text-white font-semibold tracking-tight"><TextReveal text="릴레이 진행 중" delay={0.05} /></h1>
                   <Badge className="bg-red-500 text-white animate-pulse">● LIVE</Badge>
                 </div>
                 <p className="text-zinc-400 text-sm mt-1 tnum">
@@ -135,9 +136,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
               <Card className="bg-zinc-900 border-zinc-800 overflow-hidden relative aspect-video rounded-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-iris-950 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-zinc-800 to-iris-800 rounded-full flex items-center justify-center text-6xl mb-4 mx-auto">
-                      {mentor.avatar}
-                    </div>
+                    <RunnerAvatar name={mentor.name} size="xl" variant="runner" className="mb-4 mx-auto" />
                     <div className="text-white font-semibold tracking-tight text-lg">{mentor.name} 러너</div>
                     <Badge className="bg-emerald-500 text-white mt-2">
                       <Mic className="w-3 h-3 mr-1" />
@@ -155,9 +154,7 @@ export function SessionWorkspace({ onBack, onComplete, mentor }: SessionWorkspac
                   <div className="text-center">
                     {isCameraOn ? (
                       <>
-                        <div className="w-24 h-24 bg-gradient-to-br from-zinc-700 to-zinc-600 rounded-full flex items-center justify-center text-4xl mb-3 mx-auto">
-                          👤
-                        </div>
+                        <RunnerAvatar name="나" size="xl" variant="user" className="mb-3 mx-auto" />
                         <div className="text-white font-semibold tracking-tight">나</div>
                       </>
                     ) : (

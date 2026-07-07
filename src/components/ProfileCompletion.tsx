@@ -37,19 +37,19 @@ export function ProfileCompletion({
       case 'email':
         return (
           <Badge className="bg-blue-100 text-blue-700 border-blue-300">
-            ✓ Email Verified
+            Email Verified
           </Badge>
         );
       case 'document':
         return (
           <Badge className="bg-green-100 text-green-700 border-green-300">
-            ✓ Document Verified
+            Document Verified
           </Badge>
         );
       case 'platform':
         return (
           <Badge className="bg-purple-100 text-purple-700 border-purple-300">
-            ✓ Platform Verified
+            Platform Verified
           </Badge>
         );
       default:
@@ -92,7 +92,7 @@ export function ProfileCompletion({
 
         {totalCompletion < 100 && (
           <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-zinc-600">
-            💡 프로필 완성도가 높을수록 검색 결과에서 상위 노출됩니다
+            프로필 완성도가 높을수록 검색 결과에서 상위 노출됩니다
           </div>
         )}
       </Card>

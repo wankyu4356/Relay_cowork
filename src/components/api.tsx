@@ -359,7 +359,7 @@ function mapMentorRow(m: any) {
     ...m,
     name: m.profiles?.name || '러너',
     email: m.profiles?.email || '',
-    avatar: m.profiles?.avatar || '👨‍🎓',
+    avatar: m.profiles?.avatar || '',
   };
 }
 

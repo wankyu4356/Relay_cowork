@@ -56,67 +56,67 @@ interface Connection {
 
 const relayChain: RelayNode[] = [
   {
-    id: '1', name: '김민준', avatar: '👨‍🎓', university: '연세대', major: '경영학과', year: '20학번',
+    id: '1', name: '러너 #1024', avatar: '', university: '연세대', major: '경영학과', year: '20학번',
     generation: 1, status: 'completed', experiences: ['학생회', '창업동아리', '해외인턴'],
     passedTo: 3, childIds: ['2', '5', '6'], sessions: 15, rating: 4.9,
     bio: '연세대 경영학과에 편입 후 창업 동아리와 학생회 활동을 통해 다양한 경험을 쌓았습니다. 현재는 스타트업에서 PM으로 근무 중입니다.',
   },
   {
-    id: '2', name: '이서연', avatar: '👩‍🎓', university: '연세대', major: '경영학과', year: '22학번',
+    id: '2', name: '러너 #2847', avatar: '', university: '연세대', major: '경영학과', year: '22학번',
     generation: 2, status: 'active', experiences: ['마케팅 동아리', '봉사활동', '교환학생'],
     receivedFrom: '김민준', passedTo: 4, childIds: ['3', '4', '7', '8'], sessions: 8, rating: 4.8,
     bio: '마케팅에 관심이 많아 관련 동아리와 인턴 경험을 쌓고 있습니다. 현재는 후배들에게 편입 경험을 적극적으로 공유하고 있습니다.',
   },
   {
-    id: '5', name: '박지우', avatar: '👨‍💼', university: '고려대', major: '경영학과', year: '21학번',
+    id: '5', name: '러너 #5621', avatar: '', university: '고려대', major: '경영학과', year: '21학번',
     generation: 2, status: 'completed', experiences: ['학생회', 'IT 동아리', '릴레이 세션'],
     receivedFrom: '김민준', passedTo: 2, childIds: ['9', '10'], sessions: 12, rating: 4.7,
     bio: 'IT와 경영의 융합에 관심이 많아 관련 활동을 적극적으로 하고 있습니다.',
   },
   {
-    id: '6', name: '최예은', avatar: '👩‍💼', university: '성균관대', major: '경영학과', year: '22학번',
+    id: '6', name: '러너 #3142', avatar: '', university: '성균관대', major: '경영학과', year: '22학번',
     generation: 2, status: 'active', experiences: ['해외봉사', '창업경진대회'],
     receivedFrom: '김민준', passedTo: 1, childIds: ['11'], sessions: 5, rating: 4.9,
     bio: '글로벌 비즈니스에 관심이 많아 해외 봉사와 교환학생 프로그램에 참여했습니다.',
   },
   {
-    id: '3', name: '정도윤', avatar: '👨‍🎓', university: '연세대', major: '경영학과', year: '24학번',
+    id: '3', name: '러너 #7810', avatar: '', university: '연세대', major: '경영학과', year: '24학번',
     generation: 3, status: 'active', experiences: ['스타트업 인턴', '학술동아리'],
     receivedFrom: '이서연', sessions: 2, rating: 4.6,
     bio: '스타트업 생태계에 관심이 많아 다양한 인턴 경험을 쌓고 있습니다.',
   },
   {
-    id: '4', name: '강서준', avatar: '👩‍💼', university: '고려대', major: '글로벌경영', year: '24학번',
+    id: '4', name: '러너 #4406', avatar: '', university: '고려대', major: '글로벌경영', year: '24학번',
     generation: 3, status: 'preparing', experiences: ['해외봉사', '창업경진대회'],
     receivedFrom: '이서연', sessions: 1, rating: 4.5,
     bio: '편입 준비 중이며, 다양한 대외활동을 통해 경험을 쌓고 있습니다.',
   },
   {
-    id: '7', name: '조유진', avatar: '👨‍💼', university: '서강대', major: '경제학과', year: '24학번',
+    id: '7', name: '러너 #6153', avatar: '', university: '서강대', major: '경제학과', year: '24학번',
     generation: 3, status: 'active', experiences: ['금융동아리', '학생회'],
     receivedFrom: '이서연', sessions: 3, rating: 4.7,
     bio: '금융권 취업을 목표로 관련 동아리와 인턴 활동에 집중하고 있습니다.',
   },
   {
-    id: '8', name: '윤시우', avatar: '👩‍🎓', university: '성균관대', major: '경영학과', year: '24학번',
+    id: '8', name: '러너 #8027', avatar: '', university: '성균관대', major: '경영학과', year: '24학번',
     generation: 3, status: 'preparing', experiences: ['마케팅 인턴', '봉사활동'],
     receivedFrom: '이서연', sessions: 1, rating: 4.4,
     bio: '마케팅 분야로 진로를 정하고 관련 경험을 쌓아가고 있습니다.',
   },
   {
-    id: '9', name: '임채원', avatar: '👨‍🎓', university: '고려대', major: '경제학과', year: '24학번',
+    id: '9', name: '러너 #9384', avatar: '', university: '고려대', major: '경제학과', year: '24학번',
     generation: 3, status: 'active', experiences: ['금융 인턴', '학생회'],
     receivedFrom: '박지우', sessions: 4, rating: 4.8,
     bio: '금융 분야에 관심이 많아 관련 인턴과 자격증을 준비하고 있습니다.',
   },
   {
-    id: '10', name: '한지호', avatar: '👩‍💼', university: '한양대', major: '경영학과', year: '24학번',
+    id: '10', name: '러너 #1741', avatar: '', university: '한양대', major: '경영학과', year: '24학번',
     generation: 3, status: 'preparing', experiences: ['창업동아리', '봉사활동'],
     receivedFrom: '박지우', sessions: 2, rating: 4.5,
     bio: '창업에 관심이 많아 관련 동아리와 경진대회에 참여하고 있습니다.',
   },
   {
-    id: '11', name: '오수민', avatar: '👨‍💼', university: '성균관대', major: '글로벌경영', year: '24학번',
+    id: '11', name: '러너 #2290', avatar: '', university: '성균관대', major: '글로벌경영', year: '24학번',
     generation: 3, status: 'active', experiences: ['해외인턴', '학술동아리'],
     receivedFrom: '최예은', sessions: 3, rating: 4.6,
     bio: '글로벌 비즈니스 경험을 쌓기 위해 해외 인턴십에 도전하고 있습니다.',
@@ -418,8 +418,8 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
             </div>
           )}
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 bg-gradient-to-br ${getStatusColor(node.status)} rounded-xl flex items-center justify-center text-xl shadow-sm flex-shrink-0 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}>
-              {node.avatar}
+            <div className={`w-12 h-12 bg-gradient-to-br ${getStatusColor(node.status)} rounded-xl flex items-center justify-center shadow-sm flex-shrink-0 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`}>
+              <span className="text-white text-xs font-semibold tnum">{node.name.match(/#(\d+)/)?.[1]?.slice(-2) ?? 'R'}</span>
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-zinc-900 truncate">{node.name}</div>
@@ -468,8 +468,8 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
             </div>
           )}
           <div className="flex items-start gap-3 mb-4">
-            <div className={`relative w-14 h-14 bg-gradient-to-br ${getStatusColor(node.status)} rounded-2xl flex items-center justify-center text-2xl shadow-sm transform transition-transform duration-300 ${isHovered ? 'scale-110 rotate-3' : ''}`}>
-              {node.avatar}
+            <div className={`relative w-14 h-14 bg-gradient-to-br ${getStatusColor(node.status)} rounded-2xl flex items-center justify-center shadow-sm transform transition-transform duration-300 ${isHovered ? 'scale-110 rotate-3' : ''}`}>
+              <span className="text-white text-sm font-semibold tnum">{node.name.match(/#(\d+)/)?.[1]?.slice(-2) ?? 'R'}</span>
               <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${status.color} rounded-full border-2 border-white`} />
             </div>
             <div className="flex-1 min-w-0">
@@ -757,8 +757,8 @@ export function RelayChainVisualization({ currentUserName, onNodeClick, onStartM
                     <X className="w-5 h-5" />
                   </Button>
                   <div className="flex items-start gap-6">
-                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-5xl shadow-md">
-                      {selectedNode.avatar}
+                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shadow-md">
+                      <span className="text-white text-xl font-semibold tnum">{selectedNode.name.match(/#(\d+)/)?.[1]?.slice(-2) ?? 'R'}</span>
                     </div>
                     <div className="flex-1">
                       <h2 className="text-3xl font-semibold tracking-tight mb-2">{selectedNode.name}</h2>

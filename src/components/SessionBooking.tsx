@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, ScrollReveal, Press, CountUp, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -74,7 +75,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
       logger.log('Session booking to server failed:', e);
     }
 
-    toast.success('예약이 완료되었습니다! 🎉');
+    toast.success('예약이 완료되었습니다!');
     setTimeout(() => onConfirm(), 1000);
   };
 
@@ -87,7 +88,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">릴레이 세션 예약</h1>
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight"><TextReveal text="릴레이 세션 예약" delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">{mentor.name} 러너</p>
             </div>
           </div>
@@ -97,14 +98,12 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
       <div className="container-web py-8">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr,400px] gap-6">
           {/* Main Content */}
-          <Stagger className="space-y-6">
+          <div className="space-y-6">
             {/* Mentor Info */}
-            <Stagger.Item>
+            <FadeIn>
               <Card className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center text-3xl text-white">
-                    {mentor.avatar}
-                  </div>
+                  <RunnerAvatar name={mentor.name} size="lg" variant="runner" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-xl text-zinc-900 font-semibold tracking-tight">{mentor.name}</h3>
@@ -113,7 +112,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                         mentor.badge === 'gold' ? 'badge-gold border-0' :
                         mentor.badge === 'silver' ? 'badge-silver border-0' : 'badge-bronze border-0'
                       }>
-                        {mentor.badge === 'platinum' ? '💎 플래티넘' : mentor.badge === 'gold' ? '🥇 골드' : mentor.badge === 'silver' ? '🥈 실버' : '🥉 브론즈'}
+                        {mentor.badge === 'platinum' ? '플래티넘' : mentor.badge === 'gold' ? '골드' : mentor.badge === 'silver' ? '실버' : '브론즈'}
                       </Badge>
                     </div>
                     <p className="text-zinc-600">
@@ -128,10 +127,10 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                   </div>
                 </div>
               </Card>
-            </Stagger.Item>
+            </FadeIn>
 
             {/* Date Selection */}
-            <Stagger.Item>
+            <ScrollReveal>
             <Card className="p-6">
               <h3 className="text-zinc-900 font-semibold tracking-tight text-lg mb-4 flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5 text-iris-600" />
@@ -147,10 +146,10 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 />
               </div>
             </Card>
-            </Stagger.Item>
+            </ScrollReveal>
 
             {/* Time & Duration */}
-            <Stagger.Item>
+            <ScrollReveal>
             <Card className="p-6">
               <h3 className="text-zinc-900 font-semibold tracking-tight text-lg mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-iris-600" />
@@ -227,10 +226,10 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 </p>
               </div>
             </Card>
-            </Stagger.Item>
+            </ScrollReveal>
 
             {/* Request */}
-            <Stagger.Item>
+            <ScrollReveal>
             <Card className="p-6">
               <h3 className="text-zinc-900 font-semibold tracking-tight text-lg mb-4 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-iris-600" />
@@ -266,10 +265,10 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 </div>
               </div>
             </Card>
-            </Stagger.Item>
+            </ScrollReveal>
 
             {/* Payment */}
-            <Stagger.Item>
+            <ScrollReveal>
             <Card className="p-6">
               <h3 className="text-zinc-900 font-semibold tracking-tight text-lg mb-4 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-iris-600" />
@@ -305,10 +304,10 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 </div>
               </RadioGroup>
             </Card>
-            </Stagger.Item>
+            </ScrollReveal>
 
             {/* Terms */}
-            <Stagger.Item>
+            <ScrollReveal>
             <Card className="p-6 bg-amber-50 border-amber-200">
               <div className="flex items-start gap-3">
                 <Checkbox
@@ -327,8 +326,8 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
                 </label>
               </div>
             </Card>
-            </Stagger.Item>
-          </Stagger>
+            </ScrollReveal>
+          </div>
 
           {/* Summary Sidebar */}
           <FadeIn delay={0.1} className="space-y-4">
@@ -375,7 +374,7 @@ export function SessionBooking({ onBack, onConfirm, mentor }: SessionBookingProp
 
               <Press className="mb-3">
               <Button
-                className="w-full bg-zinc-900 hover:bg-zinc-800 text-white tnum"
+                className="w-full bg-zinc-900 hover:bg-zinc-800 text-white tnum shine"
                 size="lg"
                 onClick={handleConfirm}
                 disabled={!selectedDate || !selectedTime || !agreedToTerms}

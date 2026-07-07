@@ -3,16 +3,17 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
-import { 
-  ArrowLeft, 
-  Sparkles, 
+import { FadeIn, ScrollStagger, Press, CountUp, TextReveal, Tilt } from './ui/motion';
+import {
+  ArrowLeft,
+  Sparkles,
   Check,
   CreditCard,
   Wallet,
   Gift,
   Zap,
-  Star
+  Star,
+  MessageCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
@@ -110,7 +111,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
             </Press>
             <div className="flex-1">
               <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
-                크레딧 충전
+                <TextReveal text="크레딧 충전" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">{catContent.aiToolTitle} 크레딧을 구매하세요</p>
             </div>
@@ -126,6 +127,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Benefits */}
           <FadeIn>
+            <Tilt max={4}>
             <Card className="p-6 bg-gradient-to-br from-zinc-900 to-iris-800 border-0 text-white rounded-2xl shadow-lg">
               <h2 className="text-xl font-semibold tracking-tight mb-4">{catContent.docLabel} 크레딧으로 할 수 있어요</h2>
               <div className="grid md:grid-cols-3 gap-4">
@@ -152,14 +154,15 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 </div>
               </div>
             </Card>
+            </Tilt>
           </FadeIn>
 
           {/* Packages */}
           <FadeIn delay={0.05}>
             <h2 className="text-xl text-zinc-900 font-semibold tracking-tight mb-4">크레딧 패키지 선택</h2>
-            <Stagger className="grid md:grid-cols-2 gap-4">
+            <ScrollStagger className="grid md:grid-cols-2 gap-4">
               {packages.map((pkg) => (
-                <Stagger.Item key={pkg.id} onClick={() => setSelectedPackage(pkg.id)}>
+                <ScrollStagger.Item key={pkg.id} onClick={() => setSelectedPackage(pkg.id)}>
                   <Press>
                   <Card
                     className={`p-6 cursor-pointer transition-all rounded-2xl ${
@@ -235,16 +238,16 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                     )}
                   </Card>
                   </Press>
-                </Stagger.Item>
+                </ScrollStagger.Item>
               ))}
-            </Stagger>
+            </ScrollStagger>
           </FadeIn>
 
           {/* Payment Method */}
           <FadeIn delay={0.1}>
             <h2 className="text-xl text-zinc-900 font-semibold tracking-tight mb-4">결제 수단</h2>
-            <Stagger className="grid md:grid-cols-3 gap-4">
-              <Stagger.Item onClick={() => setPaymentMethod('card')}>
+            <ScrollStagger className="grid md:grid-cols-3 gap-4">
+              <ScrollStagger.Item onClick={() => setPaymentMethod('card')}>
               <Press>
               <Card
                 className={`p-4 cursor-pointer transition-all rounded-xl ${
@@ -269,9 +272,9 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 )}
               </Card>
               </Press>
-              </Stagger.Item>
+              </ScrollStagger.Item>
 
-              <Stagger.Item onClick={() => setPaymentMethod('kakao')}>
+              <ScrollStagger.Item onClick={() => setPaymentMethod('kakao')}>
               <Press>
               <Card
                 className={`p-4 cursor-pointer transition-all rounded-xl ${
@@ -281,8 +284,8 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center text-2xl">
-                    💬
+                  <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-yellow-600" />
                   </div>
                   <div>
                     <div className="font-semibold text-zinc-900">카카오페이</div>
@@ -296,9 +299,9 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 )}
               </Card>
               </Press>
-              </Stagger.Item>
+              </ScrollStagger.Item>
 
-              <Stagger.Item onClick={() => setPaymentMethod('toss')}>
+              <ScrollStagger.Item onClick={() => setPaymentMethod('toss')}>
               <Press>
               <Card
                 className={`p-4 cursor-pointer transition-all rounded-xl ${
@@ -308,8 +311,8 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center text-2xl">
-                    💙
+                  <div className="w-12 h-12 bg-iris-100 rounded-xl flex items-center justify-center">
+                    <Wallet className="w-6 h-6 text-iris-600" />
                   </div>
                   <div>
                     <div className="font-semibold text-zinc-900">토스페이</div>
@@ -323,8 +326,8 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
                 )}
               </Card>
               </Press>
-              </Stagger.Item>
-            </Stagger>
+              </ScrollStagger.Item>
+            </ScrollStagger>
           </FadeIn>
 
           {/* Summary */}
@@ -367,7 +370,7 @@ export function CreditPurchase({ onBack, currentCredits, onPurchaseComplete, sel
           <Button
             onClick={handlePurchase}
             disabled={isProcessing}
-            className="w-full h-14 text-lg bg-zinc-900 hover:bg-zinc-800 text-white shadow-md"
+            className="w-full h-14 text-lg bg-zinc-900 hover:bg-zinc-800 text-white shadow-md shine"
           >
             {isProcessing ? (
               <>

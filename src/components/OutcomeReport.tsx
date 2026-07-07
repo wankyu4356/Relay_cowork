@@ -4,8 +4,9 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { FadeIn, Stagger } from './ui/motion';
-import { PartyPopper, Frown, ArrowLeft, Loader2 } from 'lucide-react';
+import { FadeIn, Stagger, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
+import { PartyPopper, Frown, ArrowLeft, Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
 import { logger } from '../utils/logger';
@@ -45,7 +46,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       onSubmit(outcome, detail);
 
       if (outcome === 'success') {
-        toast.success('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
+        toast.success('축하합니다! 합격 크레딧 10,000원이 지급되었습니다');
       } else {
         toast.success('재도전 크레딧 15,000원이 지급되었습니다. 다시 도전하세요!');
       }
@@ -55,7 +56,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
       onSubmit(outcome, detail);
 
       if (outcome === 'success') {
-        toast.success('축하합니다! 🎉 합격 크레딧 10,000원이 지급되었습니다');
+        toast.success('축하합니다! 합격 크레딧 10,000원이 지급되었습니다');
       } else {
         toast.success('재도전 크레딧 15,000원이 지급되었습니다. 다시 도전하세요!');
       }
@@ -74,7 +75,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">릴레이 성과 보고</h1>
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight"><TextReveal text="릴레이 성과 보고" delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">릴레이 세션 결과를 알려주세요</p>
             </div>
           </div>
@@ -87,9 +88,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           <Stagger.Item>
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-3xl">
-                  {mentor.avatar}
-                </div>
+                <RunnerAvatar name={mentor.name} size="lg" variant="runner" />
                 <div className="flex-1">
                   <h3 className="text-xl text-zinc-900 font-semibold tracking-tight mb-1">{mentor.name} 러너</h3>
                   <p className="text-zinc-600">
@@ -187,22 +186,22 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
           {/* Benefits */}
           <Stagger.Item>
             <Card className="p-6 bg-iris-50 border-iris-100">
-              <h4 className="text-zinc-900 font-semibold tracking-tight mb-3">📌 릴레이 성과 보고 시 혜택</h4>
+              <h4 className="text-zinc-900 font-semibold tracking-tight mb-3">릴레이 성과 보고 시 혜택</h4>
               <div className="space-y-2 text-sm text-zinc-600">
                 <div className="flex items-start gap-2">
-                  <span className="text-iris-600">✓</span>
+                  <Check className="w-4 h-4 text-iris-600 flex-shrink-0 mt-0.5" />
                   <span>
                     <strong className="text-zinc-900">러너:</strong> 성공률 지표 업데이트, 프로필 강화
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-iris-600">✓</span>
+                  <Check className="w-4 h-4 text-iris-600 flex-shrink-0 mt-0.5" />
                   <span>
                     <strong className="text-zinc-900">멘티:</strong> 크레딧 지급, 다음 릴레이 세션 할인
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-iris-600">✓</span>
+                  <Check className="w-4 h-4 text-iris-600 flex-shrink-0 mt-0.5" />
                   <span>
                     <strong className="text-zinc-900">플랫폼:</strong> 데이터 축적으로 더 나은 매칭
                   </span>
@@ -224,7 +223,7 @@ export function OutcomeReport({ onBack, onSubmit, mentor, purpose }: OutcomeRepo
               </Button>
               <Button
                 onClick={handleSubmit}
-                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800"
+                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800 shine"
                 size="lg"
                 disabled={!outcome || detail.length < 10 || submitting}
               >

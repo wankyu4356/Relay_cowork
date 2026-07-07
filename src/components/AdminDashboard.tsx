@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, TextReveal, ScrollReveal, ScrollStagger } from './ui/motion';
 import { Users, DollarSign, Calendar, TrendingUp, Sparkles, AlertCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { Screen } from '../App';
@@ -56,7 +56,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
         <div className="container-web py-6">
           <FadeIn>
             <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
-              릴레이 관리 센터
+              <TextReveal text="릴레이 관리 센터" delay={0.05} />
             </h1>
             <p className="text-zinc-600 mt-2">릴레이 플랫폼 운영 현황을 모니터링하세요</p>
           </FadeIn>
@@ -153,7 +153,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
           </Stagger>
 
           {/* AI Stats */}
-          <FadeIn>
+          <ScrollReveal>
             <Card className="p-6 rounded-2xl shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -161,37 +161,37 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold tracking-tight text-zinc-900 text-lg">✨ AI 초안 서비스</h3>
+                    <h3 className="font-semibold tracking-tight text-zinc-900 text-lg">AI 초안 서비스</h3>
                     <p className="text-sm text-zinc-600">러너 전환 퍼널 성과</p>
                   </div>
                 </div>
               </div>
-              <Stagger className="grid md:grid-cols-4 gap-4">
-                <Stagger.Item className="bg-zinc-50 rounded-xl p-4">
+              <ScrollStagger className="grid md:grid-cols-4 gap-4">
+                <ScrollStagger.Item className="bg-zinc-50 rounded-xl p-4">
                   <div className="text-sm text-zinc-600 mb-1">AI 이용</div>
                   <div className="text-2xl font-semibold tracking-tight text-iris-600 tnum">847건</div>
-                </Stagger.Item>
-                <Stagger.Item className="bg-zinc-50 rounded-xl p-4">
+                </ScrollStagger.Item>
+                <ScrollStagger.Item className="bg-zinc-50 rounded-xl p-4">
                   <div className="text-sm text-zinc-600 mb-1">러너 프로필 클릭</div>
                   <div className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">312건</div>
                   <div className="text-xs text-zinc-400 tnum">전환율 36.8%</div>
-                </Stagger.Item>
-                <Stagger.Item className="bg-zinc-50 rounded-xl p-4">
+                </ScrollStagger.Item>
+                <ScrollStagger.Item className="bg-zinc-50 rounded-xl p-4">
                   <div className="text-sm text-zinc-600 mb-1">세션 예약</div>
                   <div className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">195건</div>
                   <div className="text-xs text-zinc-400 tnum">전환율 62.5%</div>
-                </Stagger.Item>
-                <Stagger.Item className="bg-zinc-50 rounded-xl p-4">
+                </ScrollStagger.Item>
+                <ScrollStagger.Item className="bg-zinc-50 rounded-xl p-4">
                   <div className="text-sm text-zinc-600 mb-1">결제 완료</div>
                   <div className="text-2xl font-semibold tracking-tight text-zinc-900 tnum">158건</div>
                   <div className="text-xs text-emerald-700 font-medium tnum">전체 전환율 18.7%</div>
-                </Stagger.Item>
-              </Stagger>
+                </ScrollStagger.Item>
+              </ScrollStagger>
             </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Growth Chart */}
-          <FadeIn>
+          <ScrollReveal>
             <Card className="p-6 rounded-2xl shadow-sm">
               <h3 className="font-semibold tracking-tight text-zinc-900 text-lg mb-4">성장 지표</h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -207,11 +207,11 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 </LineChart>
               </ResponsiveContainer>
             </Card>
-          </FadeIn>
+          </ScrollReveal>
 
           {/* Quick Actions */}
-          <Stagger className="grid md:grid-cols-3 gap-6">
-            <Stagger.Item>
+          <ScrollStagger className="grid md:grid-cols-3 gap-6">
+            <ScrollStagger.Item>
               <Press lift>
                 <Card className="p-6 rounded-2xl shadow-sm cursor-pointer h-full" onClick={() => onNavigate('admin-mentor-approval')}>
                   <div className="flex items-center gap-3 mb-3">
@@ -224,9 +224,9 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   <p className="text-sm text-zinc-600">신규 러너 신청 검토 및 승인</p>
                 </Card>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
 
-            <Stagger.Item>
+            <ScrollStagger.Item>
               <Press lift>
                 <Card className="p-6 rounded-2xl shadow-sm cursor-pointer h-full" onClick={() => onNavigate('admin-dispute-management')}>
                   <div className="flex items-center gap-3 mb-3">
@@ -239,9 +239,9 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   <p className="text-sm text-zinc-600">신고 및 분쟁 사항 관리</p>
                 </Card>
               </Press>
-            </Stagger.Item>
+            </ScrollStagger.Item>
 
-            <Stagger.Item>
+            <ScrollStagger.Item>
               <Press lift>
                 <Card className="p-6 rounded-2xl shadow-sm cursor-pointer h-full" onClick={() => onNavigate('admin-ai-service-management')}>
                   <div className="flex items-center gap-3 mb-3">
@@ -253,8 +253,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   <p className="text-sm text-zinc-600">크레딧 가격 및 설정 관리</p>
                 </Card>
               </Press>
-            </Stagger.Item>
-          </Stagger>
+            </ScrollStagger.Item>
+          </ScrollStagger>
         </div>
       </div>
     </div>

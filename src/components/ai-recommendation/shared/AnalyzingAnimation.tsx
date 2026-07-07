@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Card } from '../../ui/card';
-import { Brain } from 'lucide-react';
+import { Brain, Check } from 'lucide-react';
 
 interface AnalyzingAnimationProps {
   message?: string;
@@ -44,8 +44,10 @@ export function AnalyzingAnimation({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 + index * 0.5 }}
+              className="flex items-center justify-center gap-2"
             >
-              {stepText}
+              <Check className="w-3.5 h-3.5 text-iris-600 flex-shrink-0" />
+              <span>{stepText}</span>
             </motion.div>
           ))}
         </div>

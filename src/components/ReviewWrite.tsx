@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { ArrowLeft, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Mentor } from '../App';
@@ -58,7 +59,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
       logger.log('Review save to server failed:', e);
     }
 
-    toast.success('릴레이 후기가 등록되었습니다! 🎉');
+    toast.success('릴레이 후기가 등록되었습니다!');
     setTimeout(() => onSubmit(), 1000);
   };
 
@@ -72,7 +73,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">릴레이 후기 작성</h1>
+              <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight"><TextReveal text="릴레이 후기 작성" delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">릴레이 세션 경험을 공유해주세요</p>
             </div>
           </div>
@@ -85,16 +86,14 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
           <Stagger.Item>
             <Card className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-3xl">
-                  {mentor.avatar}
-                </div>
+                <RunnerAvatar name={mentor.name} size="lg" variant="runner" />
                 <div className="flex-1">
                   <h3 className="text-xl text-zinc-900 font-semibold tracking-tight mb-1">{mentor.name} 러너</h3>
                   <p className="text-zinc-600">
                     {mentor.university} {mentor.major} {mentor.year}
                   </p>
                 </div>
-                <Badge className="badge-gold border-0">🥇 Gold</Badge>
+                <Badge className="badge-gold border-0">Gold</Badge>
               </div>
             </Card>
           </Stagger.Item>
@@ -137,11 +136,11 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
                   animate={{ opacity: 1 }}
                   className="text-center text-xl text-zinc-900 font-semibold tracking-tight"
                 >
-                  {rating === 5 && '정말 훌륭했어요! ⭐'}
-                  {rating === 4 && '만족스러웠어요! 😊'}
-                  {rating === 3 && '괜찮았어요 👍'}
-                  {rating === 2 && '아쉬웠어요 😐'}
-                  {rating === 1 && '별로였어요 😞'}
+                  {rating === 5 && '정말 훌륭했어요!'}
+                  {rating === 4 && '만족스러웠어요!'}
+                  {rating === 3 && '괜찮았어요'}
+                  {rating === 2 && '아쉬웠어요'}
+                  {rating === 1 && '별로였어요'}
                 </motion.p>
               )}
             </Card>
@@ -196,7 +195,6 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
           <Stagger.Item>
             <Card className="p-4 bg-iris-50 border-iris-100">
               <div className="flex gap-2 text-sm text-zinc-600">
-                <span className="text-iris-600">💡</span>
                 <div>
                   <strong className="text-zinc-900">후기 공개 안내</strong>
                   <p className="mt-1">
@@ -221,7 +219,7 @@ export function ReviewWrite({ onBack, onSubmit, mentor }: ReviewWriteProps) {
               </Button>
               <Button
                 onClick={handleSubmit}
-                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800"
+                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800 shine"
                 size="lg"
                 disabled={rating === 0 || reviewText.length < 30}
               >

@@ -6,7 +6,6 @@ export type TierKey = 'bronze' | 'silver' | 'gold' | 'platinum';
 export interface PricingTier {
   key: TierKey;
   name: string;
-  emoji: string;
   minSessions: number;
   minReviews: number;
   minRating: number;
@@ -19,7 +18,6 @@ export const PRICING_TIERS: Record<TierKey, PricingTier> = {
   bronze: {
     key: 'bronze',
     name: '브론즈',
-    emoji: '🥉',
     minSessions: 0,
     minReviews: 0,
     minRating: 0,
@@ -30,7 +28,6 @@ export const PRICING_TIERS: Record<TierKey, PricingTier> = {
   silver: {
     key: 'silver',
     name: '실버',
-    emoji: '🥈',
     minSessions: 11,
     minReviews: 8,
     minRating: 4.5,
@@ -41,7 +38,6 @@ export const PRICING_TIERS: Record<TierKey, PricingTier> = {
   gold: {
     key: 'gold',
     name: '골드',
-    emoji: '🥇',
     minSessions: 31,
     minReviews: 21,
     minRating: 4.7,
@@ -52,7 +48,6 @@ export const PRICING_TIERS: Record<TierKey, PricingTier> = {
   platinum: {
     key: 'platinum',
     name: '플래티넘',
-    emoji: '💎',
     minSessions: 61,
     minReviews: 35,
     minRating: 4.8,

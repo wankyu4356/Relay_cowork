@@ -28,7 +28,7 @@ import {
   Star,
 } from 'lucide-react';
 import { NextStepsCard } from '../shared/NextStepsCard';
-import { FadeIn, Stagger, Press, CountUp } from '../../ui/motion';
+import { FadeIn, Press, ScrollStagger } from '../../ui/motion';
 import {
   careerNextSteps,
   type CareerRecommendation,
@@ -391,9 +391,9 @@ export function CareerResults({
           <h3 className="text-lg font-semibold tracking-tight text-zinc-900 mb-4">
             다른 추천 직무
           </h3>
-          <Stagger className="space-y-3">
+          <ScrollStagger className="space-y-3">
             {alternatives.map((alt, index) => (
-              <Stagger.Item key={index}>
+              <ScrollStagger.Item key={index}>
                 <Press lift={false}>
                   <div className="flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200/80 rounded-xl">
                     <div>
@@ -409,9 +409,9 @@ export function CareerResults({
                     </Badge>
                   </div>
                 </Press>
-              </Stagger.Item>
+              </ScrollStagger.Item>
             ))}
-          </Stagger>
+          </ScrollStagger>
         </Card>
       </FadeIn>
 

@@ -51,7 +51,7 @@ describe('useMentors', () => {
         price: 90000,
         badge: 'gold',
         verified: true,
-        avatar: '🎓',
+        avatar: '',
       },
     ];
     mockedGetMentors.mockResolvedValue({ mentors: apiMentors });
@@ -74,7 +74,7 @@ describe('useMentors', () => {
         price: 90000,
         badge: 'gold',
         verified: true,
-        avatar: '🎓',
+        avatar: '',
       },
     ]);
     expect(result.current.error).toBeNull();
@@ -108,7 +108,7 @@ describe('useMentors', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     const apiMentors = [
-      { id: 'new-1', name: 'New', university: 'X', major: 'Y', year: '24', rating: 4, review_count: 1, session_count: 1, success_rate: 80, response_time: '1h', price: 50000, badge: 'bronze', verified: false, avatar: '👤' },
+      { id: 'new-1', name: 'New', university: 'X', major: 'Y', year: '24', rating: 4, review_count: 1, session_count: 1, success_rate: 80, response_time: '1h', price: 50000, badge: 'bronze', verified: false, avatar: '' },
     ];
     mockedGetMentors.mockResolvedValue({ mentors: apiMentors });
 
@@ -134,6 +134,6 @@ describe('useMentors', () => {
     expect(mentor.price).toBe(30000);
     expect(mentor.badge).toBe('bronze');
     expect(mentor.verified).toBe(false);
-    expect(mentor.avatar).toBe('👨‍🎓');
+    expect(mentor.avatar).toBe('');
   });
 });

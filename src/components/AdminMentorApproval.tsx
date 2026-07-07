@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { Stagger, Press, CountUp, TextReveal, ScrollStagger } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   CheckCircle,
@@ -203,13 +204,11 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
   };
 
   const ApplicationCard = ({ app, index }: { app: MentorApplication; index: number }) => (
-    <Stagger.Item>
+    <ScrollStagger.Item>
       <Press lift scale={0.99}>
       <Card className="p-6 rounded-2xl shadow-sm cursor-pointer" onClick={() => setSelectedApp(app)}>
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center text-3xl flex-shrink-0">
-            👤
-          </div>
+          <RunnerAvatar name={app.name} size="lg" variant="runner" />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-3">
@@ -261,7 +260,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
         </div>
       </Card>
       </Press>
-    </Stagger.Item>
+    </ScrollStagger.Item>
   );
 
   return (
@@ -277,7 +276,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
             </Press>
             <div className="flex-1">
               <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-                러너 승인 관리
+                <TextReveal text="러너 승인 관리" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">신규 러너 신청을 검토하고 승인하세요</p>
             </div>
@@ -335,7 +334,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
             </TabsList>
 
             <TabsContent value="pending" className="mt-0">
-              <Stagger className="space-y-4">
+              <ScrollStagger className="space-y-4">
                 {pendingApps.length === 0 ? (
                   <Card className="p-12 text-center rounded-2xl shadow-sm">
                     <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -347,11 +346,11 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                 ) : (
                   pendingApps.map((app, index) => <ApplicationCard key={app.id} app={app} index={index} />)
                 )}
-              </Stagger>
+              </ScrollStagger>
             </TabsContent>
 
             <TabsContent value="approved" className="mt-0">
-              <Stagger className="space-y-4">
+              <ScrollStagger className="space-y-4">
                 {approvedApps.length === 0 ? (
                   <Card className="p-12 text-center rounded-2xl shadow-sm">
                     <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -361,7 +360,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                   </Card>
                 ) : (
                   approvedApps.map((app, index) => (
-                    <Stagger.Item key={app.id}>
+                    <ScrollStagger.Item key={app.id}>
                       <Card className="p-6 rounded-2xl shadow-sm">
                         <div className="flex items-center justify-between">
                           <div>
@@ -374,14 +373,14 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                           </Badge>
                         </div>
                       </Card>
-                    </Stagger.Item>
+                    </ScrollStagger.Item>
                   ))
                 )}
-              </Stagger>
+              </ScrollStagger>
             </TabsContent>
 
             <TabsContent value="rejected" className="mt-0">
-              <Stagger className="space-y-4">
+              <ScrollStagger className="space-y-4">
                 {rejectedApps.length === 0 ? (
                   <Card className="p-12 text-center rounded-2xl shadow-sm">
                     <div className="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -391,7 +390,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                   </Card>
                 ) : (
                   rejectedApps.map((app, index) => (
-                    <Stagger.Item key={app.id}>
+                    <ScrollStagger.Item key={app.id}>
                       <Card className="p-6 rounded-2xl shadow-sm">
                         <div className="flex items-center justify-between mb-3">
                           <div>
@@ -410,10 +409,10 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                           </div>
                         )}
                       </Card>
-                    </Stagger.Item>
+                    </ScrollStagger.Item>
                   ))
                 )}
-              </Stagger>
+              </ScrollStagger>
             </TabsContent>
           </Tabs>
         </div>
@@ -568,7 +567,7 @@ export function AdminMentorApproval({ onBack }: AdminMentorApprovalProps) {
                   반려하기
                 </Button>
                 <Button
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shine"
                   onClick={() => handleApprove(selectedApp)}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />

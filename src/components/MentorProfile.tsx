@@ -5,20 +5,26 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn } from './ui/motion';
+import { FadeIn, TextReveal, ScrollReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
-  Star, 
-  TrendingUp, 
-  Clock, 
+  Star,
+  TrendingUp,
+  Clock,
   Award,
   Calendar,
   MessageSquare,
+  Check,
   CheckCircle,
   FileText,
   Network,
   Users,
-  Loader2
+  Loader2,
+  PenLine,
+  Target,
+  Zap,
+  HeartHandshake
 } from 'lucide-react';
 import type { Mentor } from '../App';
 import * as api from './api';
@@ -60,7 +66,7 @@ const mockReviewsFallback: Review[] = [
   },
   {
     id: '3',
-    author: '이��연',
+    author: '이서연',
     rating: 4,
     date: '2025.01.28',
     content: '첨삭이 매우 구체적이고 실용적이었습니다. 다만 조금 더 빠르게 답변 주시면 더 좋을 것 같아요.',
@@ -118,16 +124,6 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
     }
   };
 
-  const getBadgeIcon = (badge: string) => {
-    switch (badge) {
-      case 'platinum': return '💎';
-      case 'gold': return '🥇';
-      case 'silver': return '🥈';
-      case 'bronze': return '🥉';
-      default: return '';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-zinc-50 pb-20 md:pb-0">
       {/* Header */}
@@ -137,7 +133,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">러너 프로필</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="러너 프로필" delay={0.05} /></h1>
           </div>
         </div>
       </div>
@@ -150,19 +146,18 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             <FadeIn>
               <Card className="p-8">
                 <div className="flex gap-6 mb-6">
-                  <div className="w-24 h-24 bg-iris-100 rounded-2xl flex items-center justify-center text-5xl flex-shrink-0">
-                    {mentor.avatar}
-                  </div>
+                  <RunnerAvatar name={mentor.name} size="xl" variant="runner" />
 
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-3xl font-semibold tracking-tight text-zinc-900">{mentor.name}</h2>
                       <Badge className={`${getBadgeStyle(mentor.badge)} border-0`}>
-                        {getBadgeIcon(mentor.badge)} {mentor.badge === 'platinum' ? '플래티넘' : mentor.badge === 'gold' ? '골드' : mentor.badge === 'silver' ? '실버' : '브론즈'}
+                        {mentor.badge === 'platinum' ? '플래티넘' : mentor.badge === 'gold' ? '골드' : mentor.badge === 'silver' ? '실버' : '브론즈'}
                       </Badge>
                       {mentor.verified && (
                         <Badge className="bg-iris-600 text-white">
-                          ✅ 합격증 인증
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          합격증 인증
                         </Badge>
                       )}
                     </div>
@@ -190,7 +185,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
                 <div className="flex gap-3">
                   <Button
-                    className="flex-1"
+                    className="flex-1 shine"
                     size="lg"
                     onClick={onBook}
                   >
@@ -212,9 +207,9 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   <Network className="w-6 h-6 text-iris-600 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="font-semibold text-iris-900 mb-1">
-                      {networkDistance === 1 && '🔗 1촌 러너 (직접 연결)'}
-                      {networkDistance === 2 && '🔗 2촌 러너 (친구의 친구)'}
-                      {networkDistance === 3 && '🔗 3촌 러너 (간접 연결)'}
+                      {networkDistance === 1 && '1촌 러너 (직접 연결)'}
+                      {networkDistance === 2 && '2촌 러너 (친구의 친구)'}
+                      {networkDistance === 3 && '3촌 러너 (간접 연결)'}
                     </div>
                     {connectionPath && connectionPath.length > 0 && (
                       <div className="text-sm text-iris-700">
@@ -222,13 +217,15 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                       </div>
                     )}
                     {networkDistance === 1 && (
-                      <div className="text-sm text-iris-600 mt-2">
-                        ✓ 즉시 메시지 가능 • 기본 수수료 (20%)
+                      <div className="text-sm text-iris-600 mt-2 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" />
+                        즉시 메시지 가능 • 기본 수수료 (20%)
                       </div>
                     )}
                     {networkDistance === 2 && (
-                      <div className="text-sm text-iris-600 mt-2">
-                        ✓ 소개 요청 가능 • 소개비 +5%
+                      <div className="text-sm text-iris-600 mt-2 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" />
+                        소개 요청 가능 • 소개비 +5%
                       </div>
                     )}
                   </div>
@@ -252,6 +249,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
             )}
 
             {/* Tabs */}
+            <ScrollReveal>
             <Card className="p-6">
               <Tabs value={selectedTab} onValueChange={setSelectedTab}>
                 <TabsList className="grid w-full grid-cols-4 mb-6">
@@ -264,7 +262,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                 {/* About */}
                 <TabsContent value="about" className="space-y-6">
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">📝 자기소개</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">자기소개</h3>
                     <p className="text-zinc-700 leading-relaxed">
                       안녕하세요! 건국대 정치외교학과에서 연세대 경영학과로 편입한 김서연입니다. 
                       저도 편입 준비하면서 학업계획서를 어떻게 써야 할지 정말 막막했어요. 
@@ -276,17 +274,19 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">💪 강점</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">강점</h3>
                     <div className="grid md:grid-cols-2 gap-3">
                       {[
-                        { icon: '✍️', title: '학업계획서 전문', desc: '35건 이상 첨삭 경험' },
-                        { icon: '🎯', title: '전공전환 노하우', desc: '다른 전공 → 경영 합격' },
-                        { icon: '⚡', title: '빠른 피드백', desc: '평균 2시간 이내 응답' },
-                        { icon: '🤝', title: '진심 어린 릴레이', desc: '합격까지 끝까지 함께' },
+                        { icon: PenLine, title: '학업계획서 전문', desc: '35건 이상 첨삭 경험' },
+                        { icon: Target, title: '전공전환 노하우', desc: '다른 전공 → 경영 합격' },
+                        { icon: Zap, title: '빠른 피드백', desc: '평균 2시간 이내 응답' },
+                        { icon: HeartHandshake, title: '진심 어린 릴레이', desc: '합격까지 끝까지 함께' },
                       ].map((item, index) => (
                         <Card key={index} className="p-4 bg-iris-50 border-iris-100">
                           <div className="flex items-start gap-3">
-                            <span className="text-3xl">{item.icon}</span>
+                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 border border-iris-100">
+                              <item.icon className="w-5 h-5 text-iris-600" />
+                            </div>
                             <div>
                               <div className="font-semibold mb-1">{item.title}</div>
                               <div className="text-sm text-zinc-600">{item.desc}</div>
@@ -298,7 +298,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">📚 제공 서비스</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">제공 서비스</h3>
                     <div className="space-y-2">
                       {[
                         '학업계획서 1:1 첨삭 (구조, 내용, 표현)',
@@ -320,7 +320,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                 {/* Experience */}
                 <TabsContent value="experience" className="space-y-6">
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-4">🎓 편입 타임라인</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-4">편입 타임라인</h3>
                     <div className="space-y-3">
                       {mockTimeline.map((item, index) => (
                         <motion.div
@@ -342,7 +342,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">📊 성과</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">성과</h3>
                     <div className="grid md:grid-cols-3 gap-4">
                       <Card className="p-4 text-center bg-iris-50 border-iris-100">
                         <div className="text-3xl font-semibold tracking-tight text-iris-600 mb-1 tnum">87%</div>
@@ -360,7 +360,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">🏆 합격 대학 (후배 러너)</h3>
+                    <h3 className="font-semibold text-lg text-zinc-900 mb-3">합격 대학 (후배 러너)</h3>
                     <div className="flex flex-wrap gap-2">
                       {['연세대 경영 12명', '고려대 경영 8명', '서강대 경영 5명', '성균관대 경영 6명', '한양대 경영 4명'].map((achievement, index) => (
                         <Badge key={index} variant="outline" className="text-sm px-3 py-1">
@@ -484,7 +484,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
 
                   <Button
                     className={`w-full text-white ${selectedTimeSlot
-                      ? 'bg-zinc-900 hover:bg-zinc-800'
+                      ? 'bg-zinc-900 hover:bg-zinc-800 shine'
                       : 'bg-zinc-300 cursor-not-allowed'}`}
                     size="lg"
                     disabled={!selectedTimeSlot}
@@ -495,6 +495,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
                 </TabsContent>
               </Tabs>
             </Card>
+            </ScrollReveal>
           </div>
 
           {/* Sidebar */}
@@ -529,7 +530,7 @@ export function MentorProfile({ onBack, onBook, mentor, networkDistance, connect
               </div>
 
               <Button
-                className="w-full mb-3"
+                className="w-full mb-3 shine"
                 size="lg"
                 onClick={onBook}
               >

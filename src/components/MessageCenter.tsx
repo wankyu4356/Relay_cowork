@@ -4,13 +4,13 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   Send,
   Paperclip,
   Image as ImageIcon,
-  Smile,
   MoreVertical,
   Search,
   Check,
@@ -19,13 +19,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
-
-const EMOJI_LIST = [
-  '😊', '👍', '❤️', '😂', '🎉', '👏',
-  '🔥', '💪', '✨', '😍', '🙏', '💯',
-  '😢', '🤔', '😎', '🥳', '💕', '👋',
-  '🙌', '😅', '🤗', '💡', '📌', '🎯',
-];
 
 interface MessageCenterProps {
   onBack: () => void;
@@ -57,7 +50,7 @@ const mockConversations: Conversation[] = [
     id: '1',
     userId: '1',
     userName: '러너 #2847',
-    userAvatar: '👩‍🎓',
+    userAvatar: '',
     userRole: '러너',
     lastMessage: '학업계획서 초안 검토 완료했습니다.',
     lastMessageTime: '2분 전',
@@ -68,7 +61,7 @@ const mockConversations: Conversation[] = [
     id: '2',
     userId: '2',
     userName: '러너 #1923',
-    userAvatar: '👨‍🎓',
+    userAvatar: '',
     userRole: '러너',
     lastMessage: '다음 세션 일정 조율하고 싶어요',
     lastMessageTime: '1시간 전',
@@ -79,7 +72,7 @@ const mockConversations: Conversation[] = [
     id: '3',
     userId: '3',
     userName: '러너 #5621',
-    userAvatar: '👩‍💼',
+    userAvatar: '',
     userRole: '러너',
     lastMessage: '면접 준비 자료 보내드렸습니다',
     lastMessageTime: '3시간 전',
@@ -141,22 +134,17 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [attachedFile, setAttachedFile] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
-  const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
         setShowMoreMenu(false);
-      }
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
-        setShowEmojiPicker(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -179,11 +167,6 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
       toast.success(`이미지 첨부: ${file.name}`);
     }
     e.target.value = '';
-  };
-
-  const handleEmojiSelect = (emoji: string) => {
-    setNewMessage(prev => prev + emoji);
-    setShowEmojiPicker(false);
   };
 
   const handleMoreMenuAction = (action: string) => {
@@ -223,7 +206,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
           id: c.id,
           userId: c.userId || c.id,
           userName: c.userName || c.name || '사용자',
-          userAvatar: c.userAvatar || c.avatar || '👤',
+          userAvatar: c.userAvatar || c.avatar || '',
           userRole: (c.userRole === '러너' || c.userRole === '멘티' ? c.userRole : '러너') as '러너' | '멘티',
           lastMessage: c.lastMessage || '',
           lastMessageTime: c.lastMessageTime || '',
@@ -337,7 +320,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
             </Press>
             <div className="flex-1">
               <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
-                릴레이 톡
+                <TextReveal text="릴레이 톡" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">러너와 실시간으로 소통하세요</p>
             </div>
@@ -388,9 +371,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                   >
                     <div className="flex items-start gap-3">
                       <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-2xl">
-                          {conv.userAvatar}
-                        </div>
+                        <RunnerAvatar name={conv.userName} size="md" variant="monogram" />
                         {conv.online && (
                           <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                         )}
@@ -432,9 +413,7 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-xl">
-                          {selectedConversation.userAvatar}
-                        </div>
+                        <RunnerAvatar name={selectedConversation.userName} size="sm" variant="monogram" />
                         {selectedConversation.online && (
                           <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                         )}
@@ -595,44 +574,11 @@ export function MessageCenter({ onBack }: MessageCenterProps) {
                         className="min-h-[44px]"
                       />
                     </div>
-                    <div className="relative" ref={emojiPickerRef}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="flex-shrink-0"
-                        onClick={() => setShowEmojiPicker(prev => !prev)}
-                      >
-                        <Smile className="w-5 h-5" />
-                      </Button>
-                      <AnimatePresence>
-                        {showEmojiPicker && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 4 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 4 }}
-                            transition={{ duration: 0.15 }}
-                            className="absolute bottom-full right-0 mb-2 bg-white rounded-xl shadow-lg border border-zinc-200/80 p-3 z-50"
-                          >
-                            <div className="grid grid-cols-6 gap-1 w-[220px]">
-                              {EMOJI_LIST.map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="w-8 h-8 flex items-center justify-center text-lg hover:bg-zinc-100 rounded-md transition-colors"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
                     <Press lift={false}>
                     <Button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim() || sendingMessage}
-                      className="flex-shrink-0 bg-zinc-900 hover:bg-zinc-800 text-white"
+                      className="flex-shrink-0 bg-zinc-900 hover:bg-zinc-800 text-white shine"
                     >
                       <Send className="w-5 h-5" />
                     </Button>

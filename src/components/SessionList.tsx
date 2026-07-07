@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, ScrollStagger, Press, CountUp, TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -15,6 +16,7 @@ import {
   FileText,
   MoreVertical,
   X,
+  Check,
   AlertCircle,
   Loader2
 } from 'lucide-react';
@@ -66,13 +68,13 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'upcoming':
-        return <Badge className="bg-iris-600 text-white border-0">📅 예정</Badge>;
+        return <Badge className="bg-iris-600 text-white border-0">예정</Badge>;
       case 'ongoing':
-        return <Badge className="bg-emerald-600 text-white border-0">🔴 진행중</Badge>;
+        return <Badge className="bg-emerald-600 text-white border-0"><span className="w-1.5 h-1.5 rounded-full bg-white mr-1.5 inline-block" />진행중</Badge>;
       case 'completed':
-        return <Badge className="bg-zinc-900 text-white border-0">✓ 완료</Badge>;
+        return <Badge className="bg-zinc-900 text-white border-0"><Check className="w-3 h-3 mr-1" />완료</Badge>;
       case 'cancelled':
-        return <Badge className="bg-red-500 text-white border-0">✕ 취소</Badge>;
+        return <Badge className="bg-red-500 text-white border-0"><X className="w-3 h-3 mr-1" />취소</Badge>;
       default:
         return null;
     }
@@ -140,9 +142,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
         )}
 
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-900 to-iris-800 flex items-center justify-center text-3xl flex-shrink-0 shadow-md">
-            {session.mentorAvatar}
-          </div>
+          <RunnerAvatar name={session.mentorName} size="lg" variant="runner" />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-3">
@@ -181,7 +181,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   <Button
                     size="sm"
                     onClick={() => onSessionSelect(session)}
-                    className="bg-zinc-900 text-white hover:bg-zinc-800"
+                    className="bg-zinc-900 text-white hover:bg-zinc-800 shine"
                   >
                     <Video className="w-4 h-4 mr-1" />
                     세션 입장
@@ -202,7 +202,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   <Button
                     size="sm"
                     onClick={() => onReviewWrite(session)}
-                    className="bg-zinc-900 text-white hover:bg-zinc-800"
+                    className="bg-zinc-900 text-white hover:bg-zinc-800 shine"
                   >
                     <Star className="w-4 h-4 mr-1" />
                     리뷰 작성
@@ -244,7 +244,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             </Press>
             <div>
               <h1 className="text-2xl text-zinc-900 font-semibold tracking-tight">
-                릴레이 세션
+                <TextReveal text="릴레이 세션" delay={0.05} />
               </h1>
               <p className="text-zinc-600 mt-1">릴레이 세션을 관리하세요</p>
             </div>
@@ -283,7 +283,7 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
             <Stagger.Item className="col-span-2 md:col-span-1">
               <Card className="p-4 text-center rounded-2xl border-zinc-200/80 shadow-sm">
                 <div className="text-3xl font-semibold tracking-tight text-zinc-900 mb-1 tnum">
-                  {completedSessions.reduce((sum, s) => sum + s.price, 0).toLocaleString()}원
+                  <CountUp value={completedSessions.reduce((sum, s) => sum + s.price, 0)} suffix="원" />
                 </div>
                 <div className="text-sm text-zinc-600">총 투자 금액</div>
               </Card>
@@ -338,18 +338,18 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                     </p>
                     <Button
                       onClick={onBack}
-                      className="bg-zinc-900 text-white hover:bg-zinc-800"
+                      className="bg-zinc-900 text-white hover:bg-zinc-800 shine"
                     >
                       러너 찾기
                     </Button>
                   </Card>
                 </FadeIn>
               ) : (
-                <Stagger className="space-y-4">
+                <ScrollStagger className="space-y-4">
                   {upcomingSessions.map((session, index) => (
                     <SessionCard key={session.id} session={session} index={index} />
                   ))}
-                </Stagger>
+                </ScrollStagger>
               )}
             </TabsContent>
 
@@ -367,11 +367,11 @@ export function SessionList({ onBack, onSessionSelect, onReviewWrite, onNavigate
                   </Card>
                 </FadeIn>
               ) : (
-                <Stagger className="space-y-4">
+                <ScrollStagger className="space-y-4">
                   {completedSessions.map((session, index) => (
                     <SessionCard key={session.id} session={session} index={index} />
                   ))}
-                </Stagger>
+                </ScrollStagger>
               )}
             </TabsContent>
           </Tabs>

@@ -15,11 +15,11 @@ const daysFromNow = (days: number) => {
 
 // 러너는 익명 번호로만 노출한다 (러너 #XXXX 익명 시스템)
 const MOCK_SESSIONS: Session[] = [
-  { id: '1', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '👩‍🎓', date: daysFromNow(3), time: '14:00', duration: 60, price: 65000, status: 'upcoming' },
-  { id: '2', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '👩‍🎓', date: daysFromNow(8), time: '16:00', duration: 60, price: 65000, status: 'upcoming' },
-  { id: '3', mentorId: '2', mentorName: '러너 #1923', mentorAvatar: '👨‍🎓', date: daysFromNow(0), time: '10:00', duration: 60, price: 45000, status: 'ongoing' },
-  { id: '4', mentorId: '3', mentorName: '러너 #5621', mentorAvatar: '👨‍💼', date: daysFromNow(-21), time: '15:00', duration: 60, price: 38000, status: 'completed' },
-  { id: '5', mentorId: '4', mentorName: '러너 #3142', mentorAvatar: '👩‍💼', date: daysFromNow(-26), time: '11:00', duration: 60, price: 50000, status: 'completed' },
+  { id: '1', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '', date: daysFromNow(3), time: '14:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '2', mentorId: '1', mentorName: '러너 #2847', mentorAvatar: '', date: daysFromNow(8), time: '16:00', duration: 60, price: 65000, status: 'upcoming' },
+  { id: '3', mentorId: '2', mentorName: '러너 #1923', mentorAvatar: '', date: daysFromNow(0), time: '10:00', duration: 60, price: 45000, status: 'ongoing' },
+  { id: '4', mentorId: '3', mentorName: '러너 #5621', mentorAvatar: '', date: daysFromNow(-21), time: '15:00', duration: 60, price: 38000, status: 'completed' },
+  { id: '5', mentorId: '4', mentorName: '러너 #3142', mentorAvatar: '', date: daysFromNow(-26), time: '11:00', duration: 60, price: 50000, status: 'completed' },
 ];
 
 export function useSessions() {
@@ -48,7 +48,7 @@ export function useSessions() {
             id: s.id,
             mentorId: s.mentor_id,
             mentorName: s.mentor_name || '러너',
-            mentorAvatar: s.mentor_avatar || '👨‍🎓',
+            mentorAvatar: s.mentor_avatar || '',
             date: s.date,
             time: s.time,
             duration: s.duration || 60,

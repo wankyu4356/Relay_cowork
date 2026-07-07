@@ -29,7 +29,6 @@ export interface CardTheme {
   documentIcon: string;
   documentSteps: string[];
   runnerTitle: string;
-  runnerAvatars: string[];
   runnerCount: number;
   runnerLabel: string;
 }
@@ -131,7 +130,6 @@ export const CATEGORY_CONTENT: Record<Category, CategoryContent> = {
       documentIcon: 'FileEdit',
       documentSteps: ['경험 입력', '스토리라인', '학업계획서'],
       runnerTitle: '합격 선배 찾기',
-      runnerAvatars: ['🎓', '👩‍🎓', '👨‍🎓'],
       runnerCount: 55,
       runnerLabel: '검증된 합격 선배',
     },
@@ -196,7 +194,6 @@ export const CATEGORY_CONTENT: Record<Category, CategoryContent> = {
       documentIcon: 'PenTool',
       documentSteps: ['활동 입력', '스토리라인', '자소서 완성'],
       runnerTitle: '입시 선배 찾기',
-      runnerAvatars: ['📚', '👩‍🎓', '👨‍🎓'],
       runnerCount: 48,
       runnerLabel: '검증된 합격 선배',
     },
@@ -261,7 +258,6 @@ export const CATEGORY_CONTENT: Record<Category, CategoryContent> = {
       documentIcon: 'FileText',
       documentSteps: ['경력 입력', '역량 분석', '자소서 완성'],
       runnerTitle: '현직자 찾기',
-      runnerAvatars: ['💼', '👩‍💻', '👨‍💼'],
       runnerCount: 42,
       runnerLabel: '검증된 현직자',
     },
@@ -326,7 +322,6 @@ export const CATEGORY_CONTENT: Record<Category, CategoryContent> = {
       documentIcon: 'BookOpen',
       documentSteps: ['경험 입력', '구성 분석', '포트폴리오'],
       runnerTitle: '합격자 찾기',
-      runnerAvatars: ['📋', '👩‍💼', '👨‍🎓'],
       runnerCount: 38,
       runnerLabel: '검증된 합격자',
     },
@@ -391,7 +386,6 @@ export const CATEGORY_CONTENT: Record<Category, CategoryContent> = {
       documentIcon: 'File',
       documentSteps: ['정보 입력', '분석', '문서 완성'],
       runnerTitle: '경험자 찾기',
-      runnerAvatars: ['🌍', '👩‍💻', '👨‍💼'],
       runnerCount: 35,
       runnerLabel: '검증된 경험자',
     },

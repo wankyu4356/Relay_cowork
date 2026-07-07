@@ -247,7 +247,7 @@ export function AdmissionForm({ onSubmit }: AdmissionFormProps) {
             <Button
               type="submit"
               size="lg"
-              className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 text-lg"
+              className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 text-lg shine"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               AI 맞춤 추천 받기

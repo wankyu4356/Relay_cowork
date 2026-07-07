@@ -3,7 +3,8 @@ import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { FadeIn, Stagger, CountUp } from './ui/motion';
+import { FadeIn, Stagger, CountUp, TextReveal, ScrollReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   ArrowLeft,
   Calendar as CalendarIcon,
@@ -32,7 +33,6 @@ interface TimeSlot {
   isAvailable: boolean;
   session?: {
     mentee: string;
-    avatar: string;
     topic: string;
   };
 }
@@ -53,7 +53,6 @@ const mockSchedule: TimeSlot[] = [
     isAvailable: false,
     session: {
       mentee: '러너 B',
-      avatar: '👨‍🎓',
       topic: '학업계획서 첨삭',
     },
   },
@@ -72,7 +71,6 @@ const mockSchedule: TimeSlot[] = [
     isAvailable: false,
     session: {
       mentee: '러너 C',
-      avatar: '👩‍💼',
       topic: '면접 준비',
     },
   },
@@ -98,7 +96,6 @@ const mockSchedule: TimeSlot[] = [
     isAvailable: false,
     session: {
       mentee: '러너 D',
-      avatar: '👨‍💼',
       topic: '자기소개서 검토',
     },
   },
@@ -136,7 +133,6 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
             available?: boolean;
             session?: {
               mentee: string;
-              avatar?: string;
               topic?: string;
             };
           }
@@ -148,7 +144,6 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
             isAvailable: s.available !== false,
             session: s.session ? {
               mentee: s.session.mentee,
-              avatar: s.session.avatar || '👤',
               topic: s.session.topic || '',
             } : undefined,
           })));
@@ -229,7 +224,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">일정 관리</h1>
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="일정 관리" delay={0.05} /></h1>
                 <p className="text-sm text-zinc-600">릴레이 가능 시간을 설정하세요</p>
               </div>
             </div>
@@ -283,7 +278,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                 <Stagger.Item key={slot.id}>
                   <Card className="p-4 border-zinc-200/80 bg-zinc-50">
                     <div className="flex items-start gap-3 mb-3">
-                      <div className="text-3xl">{slot.session!.avatar}</div>
+                      <RunnerAvatar name={slot.session!.mentee} size="sm" variant="user" />
                       <div className="flex-1">
                         <div className="font-semibold text-zinc-900">{slot.session!.mentee}</div>
                         <div className="text-xs text-zinc-600">{slot.session!.topic}</div>
@@ -333,7 +328,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
-              <Button className="rounded-xl">
+              <Button className="rounded-xl shine">
                 <Plus className="w-4 h-4 mr-2" />
                 가능 시간 추가
               </Button>
@@ -470,7 +465,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
                                       {slotData.session.topic}
                                     </div>
                                   </div>
-                                  <div className="text-lg">{slotData.session.avatar}</div>
+                                  <RunnerAvatar name={slotData.session.mentee} size="xs" variant="user" />
                                 </motion.div>
                               ) : slotData?.isAvailable ? (
                                 <div className="h-full flex flex-col justify-between">
@@ -602,6 +597,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
           </Card>
 
           {/* Legend */}
+          <ScrollReveal>
           <Card className="p-4 bg-zinc-50">
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
@@ -622,6 +618,7 @@ export function MentorSchedule({ onBack }: MentorScheduleProps) {
               </div>
             </div>
           </Card>
+          </ScrollReveal>
 
           {/* Action Buttons */}
           {selectedSlots.length > 0 && (

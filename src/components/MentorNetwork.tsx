@@ -4,7 +4,8 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, TextReveal, ScrollStagger } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { RelayChainVisualization } from './RelayChainVisualization';
 import { 
   ArrowLeft, 
@@ -30,7 +31,6 @@ interface MentorNetworkProps {
 const connectedRunners: Array<{
   id: string;
   name: string;
-  avatar: string;
   university: string;
   major: string;
   connectionType: 'mentor' | 'peer' | 'mentee';
@@ -44,7 +44,6 @@ const connectedRunners: Array<{
   {
     id: '1',
     name: '김민준',
-    avatar: '👨‍🎓',
     university: '연세대',
     major: '경영학과',
     connectionType: 'mentor',
@@ -58,7 +57,6 @@ const connectedRunners: Array<{
   {
     id: '2',
     name: '박지우',
-    avatar: '👨‍🎓',
     university: '고려대',
     major: '경영학과',
     connectionType: 'mentee',
@@ -70,7 +68,6 @@ const connectedRunners: Array<{
   {
     id: '3',
     name: '최예은',
-    avatar: '👨‍💼',
     university: '성균관대',
     major: '경영학과',
     connectionType: 'peer',
@@ -84,7 +81,6 @@ const connectedRunners: Array<{
   {
     id: '4',
     name: '정도윤',
-    avatar: '👩‍💼',
     university: '서강대',
     major: '글로벌경영',
     connectionType: 'mentee',
@@ -142,7 +138,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2">릴레이 네트워크</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-2"><TextReveal text="릴레이 네트워크" delay={0.05} /></h1>
             <p className="text-zinc-600">경험으로 연결된 러너들의 관계를 확인하세요</p>
           </div>
         </FadeIn>
@@ -225,15 +221,13 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   선배 러너 ({mentorConnections.length})
                 </h3>
-                <Stagger className="grid md:grid-cols-2 gap-4">
+                <ScrollStagger className="grid md:grid-cols-2 gap-4">
                   {mentorConnections.map((runner, index) => (
-                    <Stagger.Item key={runner.id}>
+                    <ScrollStagger.Item key={runner.id}>
                       <Press>
                       <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
-                          <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
-                            {runner.avatar}
-                          </div>
+                          <RunnerAvatar name={runner.name} size="lg" variant="runner" />
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="font-semibold text-zinc-900">러너 #{runner.id}</h4>
@@ -301,15 +295,15 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                           </div>
                         )}
 
-                        <Button className="w-full rounded-xl" size="sm">
+                        <Button className="w-full rounded-xl shine" size="sm">
                           <Calendar className="w-4 h-4 mr-2" />
                           릴레이 세션 예약
                         </Button>
                       </Card>
                       </Press>
-                    </Stagger.Item>
+                    </ScrollStagger.Item>
                   ))}
-                </Stagger>
+                </ScrollStagger>
               </div>
             )}
 
@@ -322,15 +316,13 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   동료 러너 ({peerConnections.length})
                 </h3>
-                <Stagger className="grid md:grid-cols-2 gap-4">
+                <ScrollStagger className="grid md:grid-cols-2 gap-4">
                   {peerConnections.map((runner, index) => (
-                    <Stagger.Item key={runner.id}>
+                    <ScrollStagger.Item key={runner.id}>
                       <Press>
                       <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
-                          <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
-                            {runner.avatar}
-                          </div>
+                          <RunnerAvatar name={runner.name} size="lg" variant="runner" />
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="font-semibold text-zinc-900">러너 #{runner.id}</h4>
@@ -403,9 +395,9 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                         </Button>
                       </Card>
                       </Press>
-                    </Stagger.Item>
+                    </ScrollStagger.Item>
                   ))}
-                </Stagger>
+                </ScrollStagger>
               </div>
             )}
 
@@ -418,14 +410,14 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                   </div>
                   후배 러너 ({menteeConnections.length})
                 </h3>
-                <Stagger className="grid md:grid-cols-2 gap-4">
+                <ScrollStagger className="grid md:grid-cols-2 gap-4">
                   {menteeConnections.map((runner, index) => (
-                    <Stagger.Item key={runner.id}>
+                    <ScrollStagger.Item key={runner.id}>
                       <Press>
                       <Card className="p-6 cursor-pointer">
                         <div className="flex items-start gap-4 mb-4">
-                          <div className={`relative w-14 h-14 bg-gradient-to-br ${getConnectionTypeColor(runner.connectionType)} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
-                            {runner.avatar}
+                          <div className="relative">
+                            <RunnerAvatar name={runner.name} size="lg" variant="user" />
                             {runner.successRate === 100 && (
                               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
                                 <Award className="w-3 h-3 text-white" />
@@ -482,7 +474,7 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                         {runner.successRate === 100 && (
                           <div className="mb-4 p-3 bg-iris-600 rounded-xl text-white text-center">
                             <Award className="w-6 h-6 mx-auto mb-1" />
-                            <div className="text-sm font-semibold">합격 완료! 🎉</div>
+                            <div className="text-sm font-semibold">합격 완료!</div>
                             <div className="text-xs opacity-90">릴레이 성공</div>
                           </div>
                         )}
@@ -502,9 +494,9 @@ export function MentorNetwork({ onBack, onMentorSelect, onStartMentoring }: Ment
                         </Button>
                       </Card>
                       </Press>
-                    </Stagger.Item>
+                    </ScrollStagger.Item>
                   ))}
-                </Stagger>
+                </ScrollStagger>
               </div>
             )}
           </TabsContent>

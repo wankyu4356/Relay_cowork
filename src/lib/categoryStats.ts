@@ -10,7 +10,6 @@ export interface InstitutionStat {
 export interface FieldStat {
   name: string;
   rate: number;
-  icon: string;
 }
 
 export interface MonthlyTrend {
@@ -49,12 +48,12 @@ export const CATEGORY_STATS: Record<Category, CategoryStats> = {
       { name: '경희대', rate: 84, count: 25, color: 'bg-purple-500' },
     ],
     fields: [
-      { name: '경영학과', rate: 90, icon: '📊' },
-      { name: '경제학과', rate: 88, icon: '📈' },
-      { name: '심리학과', rate: 87, icon: '🧠' },
-      { name: '미디어학과', rate: 85, icon: '📱' },
-      { name: '컴퓨터공학과', rate: 83, icon: '💻' },
-      { name: '간호학과', rate: 82, icon: '🏥' },
+      { name: '경영학과', rate: 90 },
+      { name: '경제학과', rate: 88 },
+      { name: '심리학과', rate: 87 },
+      { name: '미디어학과', rate: 85 },
+      { name: '컴퓨터공학과', rate: 83 },
+      { name: '간호학과', rate: 82 },
     ],
     monthlyTrend: [
       { month: '9월', rate: 78 },
@@ -82,12 +81,12 @@ export const CATEGORY_STATS: Record<Category, CategoryStats> = {
       { name: '한양대', rate: 84, count: 38, color: 'bg-sky-500' },
     ],
     fields: [
-      { name: '컴퓨터공학부', rate: 86, icon: '💻' },
-      { name: '경영학과', rate: 88, icon: '📊' },
-      { name: '의예과', rate: 78, icon: '🏥' },
-      { name: '전기전자공학부', rate: 85, icon: '⚡' },
-      { name: '경제학과', rate: 87, icon: '📈' },
-      { name: '심리학과', rate: 84, icon: '🧠' },
+      { name: '컴퓨터공학부', rate: 86 },
+      { name: '경영학과', rate: 88 },
+      { name: '의예과', rate: 78 },
+      { name: '전기전자공학부', rate: 85 },
+      { name: '경제학과', rate: 87 },
+      { name: '심리학과', rate: 84 },
     ],
     monthlyTrend: [
       { month: '6월', rate: 75 },
@@ -115,12 +114,12 @@ export const CATEGORY_STATS: Record<Category, CategoryStats> = {
       { name: '카카오', rate: 83, count: 33, color: 'bg-yellow-500' },
     ],
     fields: [
-      { name: '소프트웨어 개발', rate: 86, icon: '💻' },
-      { name: '마케팅', rate: 82, icon: '📢' },
-      { name: '재무/회계', rate: 80, icon: '💰' },
-      { name: 'PM/기획', rate: 84, icon: '📋' },
-      { name: '데이터 분석', rate: 85, icon: '📊' },
-      { name: '디자인', rate: 81, icon: '🎨' },
+      { name: '소프트웨어 개발', rate: 86 },
+      { name: '마케팅', rate: 82 },
+      { name: '재무/회계', rate: 80 },
+      { name: 'PM/기획', rate: 84 },
+      { name: '데이터 분석', rate: 85 },
+      { name: '디자인', rate: 81 },
     ],
     monthlyTrend: [
       { month: '상반기', rate: 74 },
@@ -148,12 +147,12 @@ export const CATEGORY_STATS: Record<Category, CategoryStats> = {
       { name: 'TOEIC 900+', rate: 85, count: 41, color: 'bg-purple-500' },
     ],
     fields: [
-      { name: 'IT/정보통신', rate: 86, icon: '💻' },
-      { name: '회계/세무', rate: 74, icon: '💰' },
-      { name: '법률', rate: 70, icon: '⚖️' },
-      { name: '어학', rate: 85, icon: '🌐' },
-      { name: '의료/보건', rate: 76, icon: '🏥' },
-      { name: '디자인/미디어', rate: 82, icon: '🎨' },
+      { name: 'IT/정보통신', rate: 86 },
+      { name: '회계/세무', rate: 74 },
+      { name: '법률', rate: 70 },
+      { name: '어학', rate: 85 },
+      { name: '의료/보건', rate: 76 },
+      { name: '디자인/미디어', rate: 82 },
     ],
     monthlyTrend: [
       { month: '1월', rate: 70 },
@@ -181,12 +180,12 @@ export const CATEGORY_STATS: Record<Category, CategoryStats> = {
       { name: '전과/복수전공', rate: 85, count: 24, color: 'bg-teal-500' },
     ],
     fields: [
-      { name: '경영/경제', rate: 80, icon: '📊' },
-      { name: '공학', rate: 78, icon: '⚙️' },
-      { name: '인문/사회', rate: 76, icon: '📚' },
-      { name: '자연과학', rate: 74, icon: '🔬' },
-      { name: '예체능', rate: 72, icon: '🎨' },
-      { name: '의약학', rate: 70, icon: '🏥' },
+      { name: '경영/경제', rate: 80 },
+      { name: '공학', rate: 78 },
+      { name: '인문/사회', rate: 76 },
+      { name: '자연과학', rate: 74 },
+      { name: '예체능', rate: 72 },
+      { name: '의약학', rate: 70 },
     ],
     monthlyTrend: [
       { month: '1분기', rate: 68 },

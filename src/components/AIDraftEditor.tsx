@@ -5,7 +5,7 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
 import { ArrowLeft, Sparkles, Download, RefreshCw, Users, Loader2, Save, Wand2 } from 'lucide-react';
-import { Stagger } from './ui/motion';
+import { Stagger, TextReveal } from './ui/motion';
 import { toast } from 'sonner';
 import type { Storyline, AIData } from '../App';
 import * as api from './api';
@@ -68,7 +68,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
       } else {
         clearInterval(typingInterval);
         setLoading(false);
-        toast.success('AI 초안이 완료되었습니다! ✨');
+        toast.success('AI 초안이 완료되었습니다!');
       }
     }, 8);
     return () => clearInterval(typingInterval);
@@ -88,7 +88,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
         });
         if (!cancelled) {
           setLoading(false);
-          toast.success('AI 초안이 완료되었습니다! ✨');
+          toast.success('AI 초안이 완료되었습니다!');
         }
       } catch (e) {
         logger.warn('AI draft generation fallback to mock:', e);
@@ -114,7 +114,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
     const toastId = toast.loading('릴레이 AI가 첨삭하고 있습니다...');
     try {
       await proofreadStream(draft, instruction, aiData, (full) => updateDraft(full));
-      toast.success('AI 첨삭이 완료되었습니다 ✨', { id: toastId });
+      toast.success('AI 첨삭이 완료되었습니다', { id: toastId });
     } catch (e) {
       logger.error('AI proofread error:', e);
       toast.error('AI 첨삭을 사용할 수 없습니다. 키 설정을 확인해주세요.', { id: toastId });
@@ -151,7 +151,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">AI 초안 작성</h1>
+                <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="AI 초안 작성" delay={0.05} /></h1>
                 <p className="text-zinc-600 mt-1">
                   {aiData.university} {aiData.major} · 스토리라인 {storyline.id}
                 </p>
@@ -307,7 +307,7 @@ export function AIDraftEditor({ onBack, onMentorConnect, onManage, storyline, ai
                     1:1로 완성해드려요
                   </p>
                   <Button
-                    className="w-full bg-zinc-900 hover:bg-zinc-800 text-white shadow-sm"
+                    className="w-full bg-zinc-900 hover:bg-zinc-800 text-white shadow-sm shine"
                     onClick={onMentorConnect}
                   >
                     러너 첨삭받기 →

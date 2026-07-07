@@ -19,6 +19,9 @@ vi.mock('lucide-react', () => {
   return {
     ArrowLeft: icon,
     Star: icon,
+    GraduationCap: icon,
+    User: icon,
+    ShieldCheck: icon,
   };
 });
 
@@ -51,7 +54,7 @@ const mockMentor = {
   price: 50000,
   badge: 'gold' as const,
   verified: true,
-  avatar: '👩‍🏫',
+  avatar: '',
 };
 
 describe('ReviewWrite', () => {
@@ -64,7 +67,7 @@ describe('ReviewWrite', () => {
 
   it('renders without crashing', () => {
     render(<ReviewWrite onBack={mockOnBack} onSubmit={mockOnSubmit} mentor={mockMentor} />);
-    expect(screen.getByText('릴레이 후기 작성')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('릴레이 후기 작성');
   });
 
   it('displays mentor information', () => {
@@ -151,7 +154,7 @@ describe('ReviewWrite', () => {
       });
     });
 
-    expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다! 🎉');
+    expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다!');
   });
 
   it('still shows success toast when API call fails', async () => {
@@ -170,7 +173,7 @@ describe('ReviewWrite', () => {
     fireEvent.click(screen.getByText('후기 등록하기'));
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다! 🎉');
+      expect(toast.success).toHaveBeenCalledWith('릴레이 후기가 등록되었습니다!');
     });
   });
 

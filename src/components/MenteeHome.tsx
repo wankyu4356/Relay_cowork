@@ -45,10 +45,10 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
-      case 'platinum': return '💎';
-      case 'gold': return '🥇';
-      case 'silver': return '🥈';
-      case 'bronze': return '🥉';
+      case 'platinum': return '';
+      case 'gold': return '';
+      case 'silver': return '';
+      case 'bronze': return '';
       default: return '';
     }
   };
@@ -61,7 +61,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                안녕하세요 👋
+                안녕하세요
               </h1>
               <p className="text-gray-600 mt-1">편입 준비 어떻게 진행되고 있나요?</p>
             </div>
@@ -113,7 +113,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                       </Badge>
                     </div>
                     <h2 className="text-3xl font-bold text-white mb-3">
-                      ✨ AI로 학업계획서 초안 만들기
+                      AI로 학업계획서 초안 만들기
                     </h2>
                     <p className="text-white/90 text-lg mb-6">
                       경험을 입력하면, 지원 학과에 맞는<br />
@@ -126,7 +126,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                       지금 시작하기 →
                     </Button>
                   </div>
-                  <div className="text-8xl opacity-20 animate-float">✨</div>
+                  
                 </div>
               </div>
             </Card>
@@ -178,7 +178,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
           {/* Recommended Mentors */}
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">⭐ 추천 러너</h2>
+              <h2 className="text-2xl font-bold">추천 러너</h2>
               <Button 
                 variant="ghost"
                 onClick={() => onNavigate('mentor-search')}
@@ -210,7 +210,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                             {getBadgeIcon(mentor.badge)}
                           </Badge>
                           {mentor.verified && (
-                            <span className="text-blue-500" title="합격증 인증">✅</span>
+                            
                           )}
                         </div>
                         <p className="text-sm text-gray-600">
@@ -259,7 +259,7 @@ export function MenteeHome({ onNavigate, onMentorSelect, credits }: MenteeHomePr
                   <Award className="w-8 h-8 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">🎉 이번 달 합격 소식</h3>
+                  <h3 className="text-xl font-bold mb-2">이번 달 합격 소식</h3>
                   <p className="text-gray-700 mb-4">
                     릴레이를 통해 87명이 편입에 성공했어요
                   </p>

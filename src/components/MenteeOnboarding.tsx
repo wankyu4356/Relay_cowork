@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { FadeIn, Stagger } from './ui/motion';
+import { FadeIn, Stagger, TextReveal } from './ui/motion';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Progress } from './ui/progress';
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, GraduationCap, Target, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import * as api from './api';
 import { logger } from '../utils/logger';
@@ -123,10 +123,10 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
             gpaMax: formData.gpaMax,
           },
         });
-        toast.success('프로필이 저장되었습니다! 🎉');
+        toast.success('프로필이 저장되었습니다!');
       } catch (e) {
         logger.log('Profile save during onboarding failed (guest mode?):', e);
-        toast.success('릴레이에 오신 것을 환영합니다! 🎉');
+        toast.success('릴레이에 오신 것을 환영합니다!');
       } finally {
         setSaving(false);
       }
@@ -141,7 +141,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 mb-4">
-              릴레이 시작하기
+              <TextReveal text="릴레이 시작하기" delay={0.05} />
             </h1>
             <p className="text-xl text-zinc-600">
               맞춤 러너 추천을 위한 정보를 입력해주세요
@@ -166,7 +166,9 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
-                  <div className="text-5xl mb-4">🎓</div>
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-iris-50 flex items-center justify-center">
+                    <GraduationCap className="w-8 h-8 text-iris-600" />
+                  </div>
                   <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-2">{step1.title}</h2>
                   <p className="text-zinc-600">{step1.description}</p>
                 </div>
@@ -231,7 +233,9 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
-                  <div className="text-5xl mb-4">🎯</div>
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-iris-50 flex items-center justify-center">
+                    <Target className="w-8 h-8 text-iris-600" />
+                  </div>
                   <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-2">{content.field1Label} 정보</h2>
                   <p className="text-zinc-600">{STEP2_DESCRIPTION[selectedCategory ?? 'transfer']}</p>
                 </div>
@@ -268,11 +272,14 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
                 className="text-center py-12"
               >
                 <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 1 }}
-                  className="text-8xl mb-6"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  className="mb-6 flex justify-center"
                 >
-                  🎉
+                  <div className="w-20 h-20 rounded-full bg-zinc-900 flex items-center justify-center shadow-lg">
+                    <Check className="w-10 h-10 text-white" />
+                  </div>
                 </motion.div>
                 <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 mb-4">릴레이 준비 완료!</h2>
                 <p className="text-xl text-zinc-600 mb-8">
@@ -322,7 +329,7 @@ export function MenteeOnboarding({ onComplete, selectedCategory = 'transfer' }: 
               <Button
                 onClick={handleNext}
                 disabled={saving}
-                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800"
+                className="flex-1 bg-zinc-900 text-white hover:bg-zinc-800 shine"
                 size="lg"
               >
                 {saving ? (

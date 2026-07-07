@@ -11,6 +11,7 @@ import { Badge } from './ui/badge';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { FadeIn, Press } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import {
   Dialog,
   DialogContent,
@@ -177,9 +178,7 @@ export function Settings({ onBack, credits = 3, isMentorActive = false, isGuest 
             <Card className="p-6 rounded-2xl">
               <div className="flex items-start gap-4">
                 <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-zinc-900 to-iris-800 rounded-2xl flex items-center justify-center text-3xl shadow-sm">
-                    👨‍🎓
-                  </div>
+                  <RunnerAvatar name={profileName} size="xl" variant="user" />
                   <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-md border-2 border-zinc-200/80 flex items-center justify-center hover:bg-zinc-50 transition-colors">
                     <Camera className="w-4 h-4 text-zinc-600" />
                   </button>

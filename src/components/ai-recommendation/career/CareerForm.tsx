@@ -288,7 +288,7 @@ export function CareerForm({ onSubmit }: CareerFormProps) {
       <Press className="w-full">
         <Button
           size="lg"
-          className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 text-lg"
+          className="w-full bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl py-6 text-lg shine"
           onClick={handleSubmit}
           disabled={skills.length === 0}
         >

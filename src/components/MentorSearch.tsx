@@ -27,7 +27,8 @@ import type { Mentor, Screen } from '../App';
 import type { Category } from './GlobalNav';
 import { CATEGORY_CONTENT } from '../lib/categoryContent';
 import { CATEGORY_MENTORS } from '../lib/categoryMentors';
-import { getRunnerColor, getRunnerAvatar } from '../lib/runnerUtils';
+import { TextReveal } from './ui/motion';
+import { RunnerAvatar } from './ui/runner-avatar';
 import { useMentors } from '../hooks/useMentors';
 
 interface MentorSearchProps {
@@ -108,7 +109,7 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900">러너 찾기</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900"><TextReveal text="러너 찾기" delay={0.05} /></h1>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -317,12 +318,9 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
                 <div className="p-6">
                   {/* Header */}
                   <div className="flex items-start gap-4 mb-6">
-                    {/* Avatar with gradient border */}
+                    {/* Avatar tile */}
                     <div className="relative">
-                      
-                      <div className={`relative w-20 h-20 ${getRunnerColor(mentor.name)} rounded-2xl flex items-center justify-center text-4xl shadow-sm`}>
-                        {getRunnerAvatar(mentor.name)}
-                      </div>
+                      <RunnerAvatar name={mentor.name} size="xl" variant="runner" />
                       {mentor.verified && (
                         <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-iris-600 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -409,8 +407,8 @@ export function MentorSearch({ onBack, onMentorSelect, onNavigate, selectedCateg
 
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <Button 
-                      className="flex-1 rounded-xl h-12 font-semibold transition-all"
+                    <Button
+                      className="flex-1 rounded-xl h-12 font-semibold transition-all shine"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.stopPropagation();
                         onMentorSelect(mentor);

@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import { FadeIn, Stagger, Press } from './ui/motion';
+import { FadeIn, Stagger, Press, TextReveal } from './ui/motion';
 import { generateStorylines } from '../lib/aiClient';
 import type { AIData, Storyline } from '../App';
 
@@ -107,7 +107,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">스토리라인 제안</h1>
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900"><TextReveal text="스토리라인 제안" delay={0.05} /></h1>
               <p className="text-zinc-600 mt-1">마음에 드는 스토리를 선택하세요</p>
             </div>
           </div>
@@ -173,7 +173,7 @@ export function AIStoryline({ onBack, onSelect, aiData }: AIStorylineProps) {
                     </div>
 
                     <Button
-                      className="w-full mt-6 bg-zinc-900 hover:bg-zinc-800 text-white"
+                      className="w-full mt-6 bg-zinc-900 hover:bg-zinc-800 text-white shine"
                       size="lg"
                       onClick={() => onSelect(storyline)}
                     >
