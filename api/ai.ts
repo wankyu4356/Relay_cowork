@@ -236,6 +236,12 @@ export default async function handler(req: any, res: any) {
         res.setHeader('x-relay-cache', 'hit');
         res.write(hit.output_text);
         res.end();
+        // 적중률 집계용 — 본문은 중복 저장하지 않음
+        db.from('ai_generations').insert({
+          user_id: userId, mode, model: MODEL,
+          input_refs: { cache: 'hit' }, input_hash: inputHash,
+          latency_ms: Date.now() - startedAt, status: 'ok',
+        }).then(() => {}, () => {});
         return;
       }
     } catch { /* 캐시 실패는 무시하고 생성 진행 */ }

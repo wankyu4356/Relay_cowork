@@ -839,6 +839,89 @@ export async function getRelayChain() {
   return { nodes };
 }
 
+// ============ AI LEDGER STATS (⑤ 관리자 대시보드) ============
+
+export interface AiLedgerStats {
+  totalCalls: number;
+  totalCostUsd: number;
+  cacheHitRate: number;      // 캐시 대상 모드 기준
+  acceptanceRate: number;    // 피드백 있는 생성 중 accepted 비율
+  avgEditedRatio: number | null;
+  byMode: Array<{
+    mode: string;
+    calls: number;
+    cacheHits: number;
+    promptTokens: number;
+    outputTokens: number;
+    costUsd: number;
+    avgLatencyMs: number;
+    errors: number;
+  }>;
+}
+
+// claude-opus-4-8: $5/M input · $25/M output
+const COST_IN = 5 / 1_000_000;
+const COST_OUT = 25 / 1_000_000;
+
+export async function getAiLedgerStats(): Promise<AiLedgerStats> {
+  const gens = check(
+    await sb().from('ai_generations')
+      .select('mode, input_refs, prompt_tokens, output_tokens, latency_ms, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(500),
+    'AI 원장 조회 실패',
+  ) as any[];
+
+  const fbs = (await sb().from('ai_feedback').select('accepted, edited_ratio').limit(500)).data as any[] | null;
+
+  const byModeMap = new Map<string, AiLedgerStats['byMode'][number]>();
+  let cacheable = 0, cacheHits = 0, totalCost = 0;
+
+  for (const g of gens || []) {
+    const isHit = g.input_refs?.cache === 'hit';
+    const m = byModeMap.get(g.mode) ?? {
+      mode: g.mode, calls: 0, cacheHits: 0, promptTokens: 0, outputTokens: 0,
+      costUsd: 0, avgLatencyMs: 0, errors: 0,
+    };
+    m.calls += 1;
+    if (isHit) m.cacheHits += 1;
+    if (g.status === 'error') m.errors += 1;
+    m.promptTokens += g.prompt_tokens || 0;
+    m.outputTokens += g.output_tokens || 0;
+    const cost = (g.prompt_tokens || 0) * COST_IN + (g.output_tokens || 0) * COST_OUT;
+    m.costUsd += cost;
+    totalCost += cost;
+    m.avgLatencyMs += g.latency_ms || 0;
+    byModeMap.set(g.mode, m);
+
+    if (['storylines', 'draft', 'advice', 'extract'].includes(g.mode)) {
+      cacheable += 1;
+      if (isHit) cacheHits += 1;
+    }
+  }
+  const byMode = [...byModeMap.values()].map((m) => ({
+    ...m,
+    avgLatencyMs: m.calls ? Math.round(m.avgLatencyMs / m.calls) : 0,
+    costUsd: Math.round(m.costUsd * 100) / 100,
+  })).sort((a, b) => b.calls - a.calls);
+
+  const withAccept = (fbs || []).filter((f) => f.accepted !== null);
+  const ratios = (fbs || []).map((f) => f.edited_ratio).filter((r) => r !== null) as number[];
+
+  return {
+    totalCalls: (gens || []).length,
+    totalCostUsd: Math.round(totalCost * 100) / 100,
+    cacheHitRate: cacheable ? Math.round((cacheHits / cacheable) * 100) : 0,
+    acceptanceRate: withAccept.length
+      ? Math.round((withAccept.filter((f) => f.accepted).length / withAccept.length) * 100)
+      : 0,
+    avgEditedRatio: ratios.length
+      ? Math.round((ratios.reduce((a, b) => a + Number(b), 0) / ratios.length) * 100) / 100
+      : null,
+    byMode,
+  };
+}
+
 // ============ WORKSPACE DOCUMENT (④ 세션 공동 편집) ============
 
 export interface WorkspaceDoc {

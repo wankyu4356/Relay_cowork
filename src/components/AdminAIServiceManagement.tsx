@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -6,7 +6,9 @@ import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Switch } from './ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { FadeIn, Stagger, Press, CountUp } from './ui/motion';
+import { FadeIn, Stagger, Press, CountUp, ScrollReveal } from './ui/motion';
+import * as api from './api';
+import type { AiLedgerStats } from './api';
 import {
   ArrowLeft,
   Sparkles,
@@ -102,6 +104,19 @@ const hourlyUsageData = [
 ];
 
 export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementProps) {
+  // ⑤ AI 원장 실데이터 (006/009 적용 + 관리자 로그인 시 표시)
+  const [ledger, setLedger] = useState<AiLedgerStats | null>(null);
+  useEffect(() => {
+    api.getAiLedgerStats()
+      .then((st) => { if (st.totalCalls > 0) setLedger(st); })
+      .catch(() => { /* 미연동 — 섹션 비노출 */ });
+  }, []);
+
+  const MODE_LABEL: Record<string, string> = {
+    storylines: '스토리라인', draft: '초안 생성', proofread: 'AI 첨삭',
+    analyze: '초안 분석', advice: '전략 총평', extract: '경험 추출',
+  };
+
   const [activeTab, setActiveTab] = useState('pricing');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showNewPromoModal, setShowNewPromoModal] = useState(false);
@@ -340,6 +355,74 @@ export function AdminAIServiceManagement({ onBack }: AdminAIServiceManagementPro
 
       <div className="container-web py-8">
         <div className="space-y-6">
+          {/* ⑤ AI 원장 — 실데이터 대시보드 */}
+          {ledger && (
+            <ScrollReveal>
+              <Card className="p-6 rounded-2xl shadow-sm border-iris-100">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h3 className="font-semibold text-lg tracking-tight text-zinc-900">AI 원장</h3>
+                    <p className="text-[12px] text-zinc-500">최근 {ledger.totalCalls.toLocaleString()}건 기준 · ai_generations 실데이터</p>
+                  </div>
+                  <Badge className="bg-iris-600 text-white border-0">LIVE</Badge>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                  <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                    <div className="text-[12px] text-zinc-500 mb-1">총 호출</div>
+                    <div className="text-2xl font-semibold text-zinc-900 tnum"><CountUp value={ledger.totalCalls} /></div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                    <div className="text-[12px] text-zinc-500 mb-1">추정 비용</div>
+                    <div className="text-2xl font-semibold text-zinc-900 tnum">$<CountUp value={ledger.totalCostUsd} /></div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                    <div className="text-[12px] text-zinc-500 mb-1">캐시 적중률</div>
+                    <div className="text-2xl font-semibold text-iris-700 tnum"><CountUp value={ledger.cacheHitRate} suffix="%" /></div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                    <div className="text-[12px] text-zinc-500 mb-1">채택률{ledger.avgEditedRatio !== null ? ' · 평균 수정률' : ''}</div>
+                    <div className="text-2xl font-semibold text-emerald-700 tnum">
+                      <CountUp value={ledger.acceptanceRate} suffix="%" />
+                      {ledger.avgEditedRatio !== null && (
+                        <span className="text-zinc-400 text-base"> · {Math.round(ledger.avgEditedRatio * 100)}%</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-[13px]">
+                    <thead>
+                      <tr className="text-left text-zinc-500 border-b border-zinc-100">
+                        <th className="py-2 pr-4 font-medium">모드</th>
+                        <th className="py-2 pr-4 font-medium tnum">호출</th>
+                        <th className="py-2 pr-4 font-medium tnum">캐시</th>
+                        <th className="py-2 pr-4 font-medium tnum">입력/출력 토큰</th>
+                        <th className="py-2 pr-4 font-medium tnum">비용</th>
+                        <th className="py-2 pr-4 font-medium tnum">평균 지연</th>
+                        <th className="py-2 font-medium tnum">오류</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ledger.byMode.map((m) => (
+                        <tr key={m.mode} className="border-b border-zinc-50 text-zinc-700">
+                          <td className="py-2.5 pr-4 font-medium text-zinc-900">{MODE_LABEL[m.mode] || m.mode}</td>
+                          <td className="py-2.5 pr-4 tnum">{m.calls.toLocaleString()}</td>
+                          <td className="py-2.5 pr-4 tnum">{m.cacheHits.toLocaleString()}</td>
+                          <td className="py-2.5 pr-4 tnum">{m.promptTokens.toLocaleString()} / {m.outputTokens.toLocaleString()}</td>
+                          <td className="py-2.5 pr-4 tnum">${m.costUsd.toFixed(2)}</td>
+                          <td className="py-2.5 pr-4 tnum">{(m.avgLatencyMs / 1000).toFixed(1)}s</td>
+                          <td className={`py-2.5 tnum ${m.errors > 0 ? 'text-red-600 font-medium' : ''}`}>{m.errors}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </ScrollReveal>
+          )}
+
           {/* Stats Overview */}
           <Stagger className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Stagger.Item>
